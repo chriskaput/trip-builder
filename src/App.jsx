@@ -891,8 +891,25 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 <div><div style={{ fontSize: 13, fontWeight: 700, color: "#546E7A" }}>Custom Event</div></div>
               </button>
               {/* Section header for favorites mode */}
-              {libSort === "favorites" && favs.length > 0 && avail.some(m => favs.includes(m.id)) && (
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#E91E63", textTransform: "uppercase", letterSpacing: 0.8, padding: "6px 0 4px" }}>❤️ Your favorites</div>
+              {libSort === "favorites" && favs.length > 0 && (
+                <div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#E91E63", textTransform: "uppercase", letterSpacing: 0.8, padding: "6px 0 4px" }}>❤️ Your favorites</div>
+                  {/* Show already-placed favorites as grayed out */}
+                  {favs.filter(fid => pIds.has(fid) && !avail.some(m => m.id === fid)).map(fid => {
+                    const fm = mods.find(m => m.id === fid);
+                    if (!fm) return null;
+                    const fc = CATS.find(c => c.id === fm.category);
+                    return (
+                      <div key={fid} style={{ display: "flex", gap: 10, padding: "8px 10px", borderRadius: 14, background: "#f8f8f8", marginBottom: 4, alignItems: "center", opacity: 0.5 }}>
+                        <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, overflow: "hidden" }}><Vis mod={fm} cat={fc} h={40} br={10} /></div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: 12, fontWeight: 700, color: "#aaa" }}>{fm.icon || fc?.icon} {fm.name}</div>
+                          <div style={{ fontSize: 9, color: "#ccc" }}>Already in itinerary</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               )}
               {libSort === "favorites" && favs.length === 0 && (
                 <div style={{ textAlign: "center", padding: "16px 10px 8px", color: "#ccc" }}>
