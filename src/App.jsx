@@ -78,51 +78,51 @@ const Vis = ({ mod, cat, h = 100, br = 0, st = {} }) => {
 
 const MODS = [
   // ═══ DRINKS ═══
-  { id:"d1", name:"El Olivo Wine Bar", category:"nightlife", duration:1, notes:"A cozy natural wine bar tucked away in El Cangrejo — Panama's most walkable, bohemian neighborhood. They specialize in organic and biodynamic wines with 100+ labels and 10-15 rotating wines by the glass. The sommelier gives personalized recommendations based on your taste. Pair with their excellent tapas, cheese platters, or the standout pulpo en palito. Perfect for a relaxed evening out.", rec:"recommended", mapsRating:4.6, mapsReviews:"280", hours:"Tue–Sat 5PM–12AM", address:"Av. 1ab Norte, El Cangrejo", tier:"curated", cost:"$15–30/pp", tags:["date-night"], photo:"https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop" },
-  { id:"d2", name:"Mangle", category:"nightlife", duration:1, notes:"One of Panama City's best cocktail bars, designed to feel like a tropical friend's living room. The mangrove-inspired decor features aged copper, sea-green wood, and vintage memorabilia. Try the mezcal paloma or the Strawberry Letter milk punch. Great food too — birria tacos, shrimp baguettes, and Anti Burger sliders. Killer happy hour from noon to 7PM with $10 lunch specials.", rec:"cantmiss", mapsRating:4.8, mapsReviews:"180", hours:"Daily 12PM–12AM", address:"C. República de Uruguay", tier:"curated", cost:"$10–15/cocktail", tags:["date-night"], photo:"https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=400&fit=crop" },
-  { id:"d3", name:"CasaCasco Rooftop", category:"nightlife", duration:1, notes:"A stunning rooftop terrace in Casco Viejo with panoramic views of the old town, the modern skyline, and the Pacific entrance to the Canal. The view alone is worth the visit — come at sunset for golden hour. Cocktails are decent, food is secondary to the scenery. Great for photos and a pre-dinner drink. Can get crowded on weekends.", rec:"recommended", mapsRating:4.3, mapsReviews:"1.5K", hours:"Daily 4PM–12AM", address:"Av. A, Casco Viejo", tier:"curated", cost:"$12–18/cocktail", tags:["sunset"], photo:"https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=400&fit=crop" },
-  { id:"d4", name:"Boticario", category:"nightlife", duration:1, notes:"A speakeasy-style cocktail bar in El Cangrejo with an apothecary theme — think vintage bottles, dim lighting, and carefully crafted drinks. The bartenders are serious about their craft and will make recommendations based on your flavor preferences. Intimate space, best for couples or small groups. One of the more sophisticated nights out in the city.", rec:"worthit", mapsRating:4.5, mapsReviews:"120", hours:"Wed–Sat 6PM–1AM", address:"El Cangrejo", tier:"extended", cost:"$12–16/cocktail", tags:["date-night"], photo:"https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=600&h=400&fit=crop" },
-  { id:"d5", name:"Colectivo LP", category:"nightlife", duration:1, notes:"A vinyl-focused bar with a curated collection of records and a laid-back atmosphere. Great for music lovers who want good drinks without the pretension. The crowd skews creative and local. Good cocktails, craft beer, and occasional DJ sets. A neighborhood favorite in the San Francisco district.", rec:"worthit", mapsRating:4.4, mapsReviews:"90", hours:"Thu–Sat 6PM–1AM", address:"San Francisco", tier:"extended", cost:"$8–12/drink", tags:[], photo:"https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=400&fit=crop" },
-  { id:"d6", name:"Sama Rooftop", category:"nightlife", duration:1, notes:"A sleek rooftop lounge on top of a boutique hotel in Casco Viejo, offering high-end Italian-inspired cuisine alongside panoramic views of the old quarter. Known for its elegant atmosphere and well-crafted cocktails. The sunset views rival CasaCasco but with a more refined, less touristy vibe. Reservations recommended for dinner.", rec:"recommended", mapsRating:4.5, mapsReviews:"650", hours:"Daily 5PM–11PM", address:"Casco Viejo", tier:"curated", cost:"$15–25/cocktail, $30–50 dinner", tags:["date-night","sunset"], photo:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop" },
+  { id:"d1", name:"El Olivo Wine Bar", category:"nightlife", icon:"🍷", vibe:"Wine Bar", duration:1, notes:"A cozy natural wine bar tucked away in El Cangrejo — Panama's most walkable, bohemian neighborhood. They specialize in organic and biodynamic wines with 100+ labels and 10-15 rotating wines by the glass. The sommelier gives personalized recommendations based on your taste. Pair with their excellent tapas, cheese platters, or the standout pulpo en palito. Perfect for a relaxed evening out.", rec:"recommended", mapsRating:4.6, mapsReviews:"280", hours:"Tue–Sat 5PM–12AM", address:"Av. 1ab Norte, El Cangrejo", tier:"curated", cost:"$15–30/pp", tags:["date-night"], photo:"https://images.unsplash.com/photo-1510812431401-41d2bd2722f3?w=600&h=400&fit=crop" },
+  { id:"d2", name:"Mangle", category:"nightlife", icon:"🍸", vibe:"Cocktail Bar", duration:1, notes:"One of Panama City's best cocktail bars, designed to feel like a tropical friend's living room. The mangrove-inspired decor features aged copper, sea-green wood, and vintage memorabilia. Try the mezcal paloma or the Strawberry Letter milk punch. Great food too — birria tacos, shrimp baguettes, and Anti Burger sliders. Killer happy hour from noon to 7PM with $10 lunch specials.", rec:"cantmiss", mapsRating:4.8, mapsReviews:"180", hours:"Daily 12PM–12AM", address:"C. República de Uruguay", tier:"curated", cost:"$10–15/cocktail", tags:["date-night"], photo:"https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=600&h=400&fit=crop" },
+  { id:"d3", name:"CasaCasco Rooftop", category:"nightlife", icon:"🌇", vibe:"Rooftop Bar", duration:1, notes:"A stunning rooftop terrace in Casco Viejo with panoramic views of the old town, the modern skyline, and the Pacific entrance to the Canal. The view alone is worth the visit — come at sunset for golden hour. Cocktails are decent, food is secondary to the scenery. Great for photos and a pre-dinner drink. Can get crowded on weekends.", rec:"recommended", mapsRating:4.3, mapsReviews:"1.5K", hours:"Daily 4PM–12AM", address:"Av. A, Casco Viejo", tier:"curated", cost:"$12–18/cocktail", tags:["sunset"], photo:"https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=600&h=400&fit=crop" },
+  { id:"d4", name:"Boticario", category:"nightlife", icon:"🧪", vibe:"Speakeasy", duration:1, notes:"A speakeasy-style cocktail bar in El Cangrejo with an apothecary theme — think vintage bottles, dim lighting, and carefully crafted drinks. The bartenders are serious about their craft and will make recommendations based on your flavor preferences. Intimate space, best for couples or small groups. One of the more sophisticated nights out in the city.", rec:"worthit", mapsRating:4.5, mapsReviews:"120", hours:"Wed–Sat 6PM–1AM", address:"El Cangrejo", tier:"extended", cost:"$12–16/cocktail", tags:["date-night"], photo:"https://images.unsplash.com/photo-1572116469696-31de0f17cc34?w=600&h=400&fit=crop" },
+  { id:"d5", name:"Colectivo LP", category:"nightlife", icon:"🎵", vibe:"Vinyl Bar", duration:1, notes:"A vinyl-focused bar with a curated collection of records and a laid-back atmosphere. Great for music lovers who want good drinks without the pretension. The crowd skews creative and local. Good cocktails, craft beer, and occasional DJ sets. A neighborhood favorite in the San Francisco district.", rec:"worthit", mapsRating:4.4, mapsReviews:"90", hours:"Thu–Sat 6PM–1AM", address:"San Francisco", tier:"extended", cost:"$8–12/drink", tags:[], photo:"https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=400&fit=crop" },
+  { id:"d6", name:"Sama Rooftop", category:"nightlife", icon:"🌇", vibe:"Rooftop Dining", duration:1, notes:"A sleek rooftop lounge on top of a boutique hotel in Casco Viejo, offering high-end Italian-inspired cuisine alongside panoramic views of the old quarter. Known for its elegant atmosphere and well-crafted cocktails. The sunset views rival CasaCasco but with a more refined, less touristy vibe. Reservations recommended for dinner.", rec:"recommended", mapsRating:4.5, mapsReviews:"650", hours:"Daily 5PM–11PM", address:"Casco Viejo", tier:"curated", cost:"$15–25/cocktail, $30–50 dinner", tags:["date-night","sunset"], photo:"https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=400&fit=crop" },
 
   // ═══ FOOD ═══
-  { id:"f1", name:"La Tapa del Coco", category:"restaurant", duration:1, notes:"A culinary movement as much as a restaurant — Chef Isaac Villaverde is rescuing Afro-Panamanian cuisine and putting it on the global map (ranked in Latin America's 50 Best). The One Pot Colonense is the signature: coconut rice with pork ribs, beans, and fresh shrimp. Also try the cod fritters, jerk chicken, and patties de carne. Vibrant atmosphere with Afro-Caribbean music. Come hungry, leave amazed.", rec:"cantmiss", mapsRating:4.7, mapsReviews:"1K", hours:"Tue–Sun 12–10PM", address:"San Francisco", tier:"curated", cost:"$20–35/pp", tags:["history"], photo:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop" },
-  { id:"f2", name:"Keene's Ice Cream", category:"restaurant", duration:1, notes:"Panama's best artisanal ice cream, made from scratch with all-local ingredients — Bocas del Toro cacao, Volcán milk, and even ají chombo peppers. 100% gluten-free with excellent vegan and dairy-free options. Flavors rotate monthly so there's always something new. The Via Argentina flagship is the recommended location — outdoor seating, eco-friendly practices, and friendly staff who'll let you taste everything.", rec:"recommended", mapsRating:4.7, mapsReviews:"150", hours:"Via Argentina: Mon/Wed 3:30–10PM, other days vary", address:"Via Argentina, El Cangrejo", tier:"curated", cost:"$4–8", tags:["kid-friendly"], photo:"https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&h=400&fit=crop" },
-  { id:"f3", name:"La Pulpería (Casco)", category:"restaurant", duration:1, notes:"One of Casco Viejo's most popular spots — ranked #3 on TripAdvisor for all of Panama City. Named after the 16th-century Latin American general stores that served as community hubs. Great cocktails (try the house specials in their wild presentation glasses), excellent ceviche, octopus tacos, and tapas for sharing. All-day happy hour Mon–Wed, amazing craft beer brewed in-house. Live music some nights.", rec:"cantmiss", mapsRating:4.7, mapsReviews:"1.5K", hours:"Mon–Thu 12PM–12AM, Fri–Sat til 2AM, Sun til 10PM", address:"Calle 9na Este, Casco Viejo", tier:"curated", cost:"$15–30/pp", tags:[], photo:"https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop" },
-  { id:"f4", name:"Gamboa Bakery", category:"restaurant", duration:1, notes:"A charming bakery and café in Ciudad del Saber (City of Knowledge), a repurposed former US military base turned innovation campus. Great pastries, bread, and light bites in a peaceful garden setting. Worth combining with a walk around the Ciudad del Saber campus itself — it's a beautiful, green, walkable area with interesting architecture. Perfect for a relaxed morning.", rec:"worthit", mapsRating:4.4, mapsReviews:"200", hours:"Mon–Sat 7AM–5PM", address:"Ciudad del Saber, Clayton", tier:"extended", cost:"$5–12", tags:["kid-friendly"], photo:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop" },
-  { id:"f5", name:"Sassy", category:"restaurant", duration:1, notes:"A popular lunch spot in the Marbella neighborhood known for fresh, health-conscious food with bold flavors. Great salads, bowls, and lighter fare — a welcome change from the heavier Panamanian staples. The vibe is modern and airy. Best visited for a weekday lunch. Gets busy during the noon rush, so arrive before 12:30 or after 1:30.", rec:"worthit", mapsRating:4.3, mapsReviews:"320", hours:"Mon–Fri 11:30AM–3PM", address:"Marbella", tier:"extended", cost:"$12–18/pp", tags:[], photo:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop" },
-  { id:"f6", name:"Fonda Lo Que Hay", category:"restaurant", duration:1, notes:"The best ceviche in Casco Viejo, hands down. This intimate spot is run by a passionate team and the menu changes based on what's fresh. Reserve ahead — it's small and fills up fast. Try the pulpo and the ceviche mixto. The wine selection is thoughtful and the atmosphere is warm and unpretentious. One of those places that makes you feel like a local took you to their secret spot.", rec:"cantmiss", mapsRating:4.5, mapsReviews:"1.2K", hours:"Tue–Sun 12–10PM, Closed Mon", address:"Calle 11, Casco Viejo", tier:"curated", cost:"$25–40/pp", tags:["date-night"], photo:"https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=600&h=400&fit=crop" },
-  { id:"f7", name:"Mercado de Mariscos", category:"restaurant", duration:1, notes:"Panama City's iconic fish market with a restaurant upstairs that serves the freshest, cheapest ceviche you'll find anywhere. Go upstairs to the ceviche stands — order a mixed ceviche and a cold Balboa beer. Downstairs is the raw fish market itself, worth a quick walk through for the experience. It's casual, bustling, and authentically Panamanian. Best visited mid-morning before the lunch crowds.", rec:"cantmiss", mapsRating:4.0, mapsReviews:"6.2K", hours:"Daily 5AM–5PM", address:"Av. Balboa, Casco Viejo", tier:"curated", cost:"$5–12/pp", tags:["kid-friendly","budget"], photo:"https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&h=400&fit=crop" },
-  { id:"f8", name:"Farmers Market (Casco)", category:"restaurant", duration:1, notes:"A weekend farmers market in or near Casco Viejo selling fresh produce, artisanal goods, local coffee, baked goods, and street food. Great way to experience local food culture and pick up unique Panamanian products. Combine with a Casco Viejo walk for a perfect morning. Check locally for exact location and days as it can move seasonally.", rec:"worthit", mapsRating:0, mapsReviews:"", hours:"Weekends, morning", address:"Near Casco Viejo", tier:"extended", cost:"$5–15", tags:["kid-friendly","walking"], photo:"https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&h=400&fit=crop" },
+  { id:"f1", name:"La Tapa del Coco", category:"restaurant", icon:"🌍", vibe:"Afro-Caribbean", duration:1, notes:"A culinary movement as much as a restaurant — Chef Isaac Villaverde is rescuing Afro-Panamanian cuisine and putting it on the global map (ranked in Latin America's 50 Best). The One Pot Colonense is the signature: coconut rice with pork ribs, beans, and fresh shrimp. Also try the cod fritters, jerk chicken, and patties de carne. Vibrant atmosphere with Afro-Caribbean music. Come hungry, leave amazed.", rec:"cantmiss", mapsRating:4.7, mapsReviews:"1K", hours:"Tue–Sun 12–10PM", address:"San Francisco", tier:"curated", cost:"$20–35/pp", tags:["history"], photo:"https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&h=400&fit=crop" },
+  { id:"f2", name:"Keene's Ice Cream", category:"restaurant", icon:"🍦", vibe:"Ice Cream", duration:1, notes:"Panama's best artisanal ice cream, made from scratch with all-local ingredients — Bocas del Toro cacao, Volcán milk, and even ají chombo peppers. 100% gluten-free with excellent vegan and dairy-free options. Flavors rotate monthly so there's always something new. The Via Argentina flagship is the recommended location — outdoor seating, eco-friendly practices, and friendly staff who'll let you taste everything.", rec:"recommended", mapsRating:4.7, mapsReviews:"150", hours:"Via Argentina: Mon/Wed 3:30–10PM, other days vary", address:"Via Argentina, El Cangrejo", tier:"curated", cost:"$4–8", tags:["kid-friendly"], photo:"https://images.unsplash.com/photo-1501443762994-82bd5dace89a?w=600&h=400&fit=crop" },
+  { id:"f3", name:"La Pulpería (Casco)", category:"restaurant", icon:"🍹", vibe:"Bar & Tapas", duration:1, notes:"One of Casco Viejo's most popular spots — ranked #3 on TripAdvisor for all of Panama City. Named after the 16th-century Latin American general stores that served as community hubs. Great cocktails (try the house specials in their wild presentation glasses), excellent ceviche, octopus tacos, and tapas for sharing. All-day happy hour Mon–Wed, amazing craft beer brewed in-house. Live music some nights.", rec:"cantmiss", mapsRating:4.7, mapsReviews:"1.5K", hours:"Mon–Thu 12PM–12AM, Fri–Sat til 2AM, Sun til 10PM", address:"Calle 9na Este, Casco Viejo", tier:"curated", cost:"$15–30/pp", tags:[], photo:"https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&h=400&fit=crop" },
+  { id:"f4", name:"Gamboa Bakery", category:"restaurant", icon:"🥐", vibe:"Bakery & Café", duration:1, notes:"A charming bakery and café in Ciudad del Saber (City of Knowledge), a repurposed former US military base turned innovation campus. Great pastries, bread, and light bites in a peaceful garden setting. Worth combining with a walk around the Ciudad del Saber campus itself — it's a beautiful, green, walkable area with interesting architecture. Perfect for a relaxed morning.", rec:"worthit", mapsRating:4.4, mapsReviews:"200", hours:"Mon–Sat 7AM–5PM", address:"Ciudad del Saber, Clayton", tier:"extended", cost:"$5–12", tags:["kid-friendly"], photo:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=600&h=400&fit=crop" },
+  { id:"f5", name:"Sassy", category:"restaurant", icon:"🥗", vibe:"Healthy Lunch", duration:1, notes:"A popular lunch spot in the Marbella neighborhood known for fresh, health-conscious food with bold flavors. Great salads, bowls, and lighter fare — a welcome change from the heavier Panamanian staples. The vibe is modern and airy. Best visited for a weekday lunch. Gets busy during the noon rush, so arrive before 12:30 or after 1:30.", rec:"worthit", mapsRating:4.3, mapsReviews:"320", hours:"Mon–Fri 11:30AM–3PM", address:"Marbella", tier:"extended", cost:"$12–18/pp", tags:[], photo:"https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop" },
+  { id:"f6", name:"Fonda Lo Que Hay", category:"restaurant", icon:"🐙", vibe:"Ceviche & Seafood", duration:1, notes:"The best ceviche in Casco Viejo, hands down. This intimate spot is run by a passionate team and the menu changes based on what's fresh. Reserve ahead — it's small and fills up fast. Try the pulpo and the ceviche mixto. The wine selection is thoughtful and the atmosphere is warm and unpretentious. One of those places that makes you feel like a local took you to their secret spot.", rec:"cantmiss", mapsRating:4.5, mapsReviews:"1.2K", hours:"Tue–Sun 12–10PM, Closed Mon", address:"Calle 11, Casco Viejo", tier:"curated", cost:"$25–40/pp", tags:["date-night"], photo:"https://images.unsplash.com/photo-1535399831218-d5bd36d1a6b3?w=600&h=400&fit=crop" },
+  { id:"f7", name:"Mercado de Mariscos", category:"restaurant", icon:"🐟", vibe:"Fish Market", duration:1, notes:"Panama City's iconic fish market with a restaurant upstairs that serves the freshest, cheapest ceviche you'll find anywhere. Go upstairs to the ceviche stands — order a mixed ceviche and a cold Balboa beer. Downstairs is the raw fish market itself, worth a quick walk through for the experience. It's casual, bustling, and authentically Panamanian. Best visited mid-morning before the lunch crowds.", rec:"cantmiss", mapsRating:4.0, mapsReviews:"6.2K", hours:"Daily 5AM–5PM", address:"Av. Balboa, Casco Viejo", tier:"curated", cost:"$5–12/pp", tags:["kid-friendly","budget"], photo:"https://images.unsplash.com/photo-1534482421-64566f976cfa?w=600&h=400&fit=crop" },
+  { id:"f8", name:"Farmers Market (Casco)", category:"restaurant", icon:"🧺", vibe:"Farmers Market", duration:1, notes:"A weekend farmers market in or near Casco Viejo selling fresh produce, artisanal goods, local coffee, baked goods, and street food. Great way to experience local food culture and pick up unique Panamanian products. Combine with a Casco Viejo walk for a perfect morning. Check locally for exact location and days as it can move seasonally.", rec:"worthit", mapsRating:0, mapsReviews:"", hours:"Weekends, morning", address:"Near Casco Viejo", tier:"extended", cost:"$5–15", tags:["kid-friendly","walking"], photo:"https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&h=400&fit=crop" },
 
   // ═══ ACTIVITIES ═══
-  { id:"a1", name:"Panama Canal (Miraflores)", category:"activity", duration:1, notes:"The must-see of Panama City — watch massive ships transit the locks from the viewing platform at Miraflores. Morning is best when the bigger vessels come through. The museum inside is excellent and explains the Canal's construction and impact. Allow at least 2 hours. The IMAX theater and interactive exhibits make it genuinely engaging even for people who aren't into engineering. Air-conditioned, great for hot days.", rec:"cantmiss", mapsRating:4.6, mapsReviews:"18K", bookingUrl:"https://visitcanaldepanama.com", hours:"Daily 8AM–5PM", address:"Miraflores Locks", tier:"curated", cost:"$20 adults / $10 kids", tags:["kid-friendly","history","indoor"], photo:"https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=600&h=400&fit=crop" },
-  { id:"a2", name:"Amador Causeway", category:"activity", duration:1, notes:"A scenic road connecting three islands at the Pacific entrance to the Canal. Rent bikes, walk, or drive along with stunning views of the Panama City skyline on one side and the Canal on the other. There's a playground and green spaces that are great for kids. At the end you'll find the Biodiversity Museum and several restaurants. Best in the late afternoon when the heat drops and the light is golden.", rec:"recommended", mapsRating:4.2, mapsReviews:"1.8K", hours:"Open 24hrs, bike rentals 8AM–6PM", address:"Amador Causeway", tier:"curated", cost:"$5–10 bike rental", tags:["kid-friendly","nature","sunset"], photo:"https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&h=400&fit=crop" },
-  { id:"a3", name:"Cerro Ancón Hike", category:"activity", duration:1, notes:"A short but rewarding hike to the highest point in Panama City with 360-degree panoramic views of the city, the Canal, the Bridge of the Americas, and the Pacific. The trail is paved and takes about 30–45 minutes up. Go early morning to avoid the heat and for the best chance of spotting toucans, sloths, and agoutis. It's surprisingly wild for being in the middle of a capital city.", rec:"recommended", mapsRating:4.3, mapsReviews:"2.4K", hours:"Daily 6AM–5PM", address:"Cerro Ancón", tier:"curated", cost:"Free", tags:["kid-friendly","nature","walking"], photo:"https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop" },
-  { id:"a4", name:"Metropolitan Natural Park", category:"activity", duration:1, notes:"A 265-hectare tropical rainforest right inside the city — one of the only urban national parks in the Americas. Multiple trails ranging from easy to moderate. Early morning is the magic hour: toucans, sloths, monkeys, and incredible birding. The Sendero de los Momótides trail offers the best canopy views. Bring water and insect repellent. A unique experience you can't get in any other capital city.", rec:"recommended", mapsRating:4.3, mapsReviews:"3.1K", hours:"Daily 6AM–5PM", address:"Av. Juan Pablo II", tier:"curated", cost:"$5 entry", tags:["kid-friendly","nature","walking"], photo:"https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=400&fit=crop" },
-  { id:"a5", name:"Casco Viejo Walking Tour", category:"activity", duration:1, notes:"Explore Panama's UNESCO-listed historic quarter on foot. Start at Plaza de la Independencia and wind through colonial streets, past colorful restoration projects, vibrant street art, and churches dating back to the 1600s. Stop for coffee, browse artisan shops, and end at one of the rooftop bars for a sunset drink. Best in the morning before the heat peaks. Self-guided is free; guided tours add great historical context.", rec:"recommended", mapsRating:4.1, mapsReviews:"340", hours:"Best 8–11AM", address:"Plaza de la Independencia", tier:"curated", cost:"Free self-guided / $20–30 guided", tags:["history","walking"], photo:"https://images.unsplash.com/photo-1569025743873-ea3a9ber09f?w=600&h=400&fit=crop" },
-  { id:"a6", name:"Monkey Island (Gamboa)", category:"activity", duration:1, notes:"A boat tour on Gatún Lake to see capuchin and howler monkeys up close on the small islands near Gamboa. The monkeys are habituated to boats and come right up to the edge. Absolutely amazing for kids and adults alike. The boat ride through the Canal waterway is scenic on its own. Book through local operators — tours depart from Gamboa and take about 2–3 hours including transport.", rec:"cantmiss", mapsRating:4.6, mapsReviews:"800", hours:"Tours typically 8AM–12PM", address:"Gamboa", tier:"curated", cost:"$60–90/pp", tags:["kid-friendly","nature","adventure"], photo:"https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=600&h=400&fit=crop" },
-  { id:"a7", name:"Summit Rainforest Park", category:"activity", duration:1, notes:"A botanical garden and wildlife rescue center about 30 minutes from the city. Home to Panama's national bird (the harpy eagle), jaguars, tapirs, monkeys, and over 300 tropical plant species. Manageable for families with small kids — paved paths, shaded areas. Less intense than a full jungle trip but still a real rainforest experience. Great for a half-day outing.", rec:"recommended", mapsRating:4.3, mapsReviews:"2.8K", hours:"Daily 9AM–5PM", address:"Gamboa Road, km 20", tier:"curated", cost:"$10 adults / $5 kids", tags:["kid-friendly","nature"], photo:"https://images.unsplash.com/photo-1440581572325-0bea30075d9d?w=600&h=400&fit=crop" },
-  { id:"a8", name:"Rainforest Discovery Center", category:"activity", duration:1, notes:"A canopy tower and observation deck in the heart of Soberanía National Park, one of the world's top birding sites. The 30-meter tower gives you eye-level views into the jungle canopy — spectacular for birdwatching and wildlife photography. Several easy trails at ground level too. Go at dawn for the most active wildlife. About 40 minutes from Panama City on the road to Gamboa.", rec:"worthit", mapsRating:4.5, mapsReviews:"600", hours:"Daily 6AM–4PM", address:"Pipeline Road, Gamboa", tier:"curated", cost:"$30 adults / $15 kids + tower access", tags:["nature","adventure"], photo:"https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&h=400&fit=crop" },
+  { id:"a1", name:"Panama Canal (Miraflores)", category:"activity", icon:"🚢", vibe:"Canal & Museum", duration:1, notes:"The must-see of Panama City — watch massive ships transit the locks from the viewing platform at Miraflores. Morning is best when the bigger vessels come through. The museum inside is excellent and explains the Canal's construction and impact. Allow at least 2 hours. The IMAX theater and interactive exhibits make it genuinely engaging even for people who aren't into engineering. Air-conditioned, great for hot days.", rec:"cantmiss", mapsRating:4.6, mapsReviews:"18K", bookingUrl:"https://visitcanaldepanama.com", hours:"Daily 8AM–5PM", address:"Miraflores Locks", tier:"curated", cost:"$20 adults / $10 kids", tags:["kid-friendly","history","indoor"], photo:"https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=600&h=400&fit=crop" },
+  { id:"a2", name:"Amador Causeway", category:"activity", icon:"🚲", vibe:"Bikes & Playground", duration:1, notes:"A scenic road connecting three islands at the Pacific entrance to the Canal. Rent bikes, walk, or drive along with stunning views of the Panama City skyline on one side and the Canal on the other. There's a playground and green spaces that are great for kids. At the end you'll find the Biodiversity Museum and several restaurants. Best in the late afternoon when the heat drops and the light is golden.", rec:"recommended", mapsRating:4.2, mapsReviews:"1.8K", hours:"Open 24hrs, bike rentals 8AM–6PM", address:"Amador Causeway", tier:"curated", cost:"$5–10 bike rental", tags:["kid-friendly","nature","sunset"], photo:"https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&h=400&fit=crop" },
+  { id:"a3", name:"Cerro Ancón Hike", category:"activity", icon:"🥾", vibe:"City Hike", duration:1, notes:"A short but rewarding hike to the highest point in Panama City with 360-degree panoramic views of the city, the Canal, the Bridge of the Americas, and the Pacific. The trail is paved and takes about 30–45 minutes up. Go early morning to avoid the heat and for the best chance of spotting toucans, sloths, and agoutis. It's surprisingly wild for being in the middle of a capital city.", rec:"recommended", mapsRating:4.3, mapsReviews:"2.4K", hours:"Daily 6AM–5PM", address:"Cerro Ancón", tier:"curated", cost:"Free", tags:["kid-friendly","nature","walking"], photo:"https://images.unsplash.com/photo-1551632811-561732d1e306?w=600&h=400&fit=crop" },
+  { id:"a4", name:"Metropolitan Natural Park", category:"activity", icon:"🌳", vibe:"Rainforest Hike", duration:1, notes:"A 265-hectare tropical rainforest right inside the city — one of the only urban national parks in the Americas. Multiple trails ranging from easy to moderate. Early morning is the magic hour: toucans, sloths, monkeys, and incredible birding. The Sendero de los Momótides trail offers the best canopy views. Bring water and insect repellent. A unique experience you can't get in any other capital city.", rec:"recommended", mapsRating:4.3, mapsReviews:"3.1K", hours:"Daily 6AM–5PM", address:"Av. Juan Pablo II", tier:"curated", cost:"$5 entry", tags:["kid-friendly","nature","walking"], photo:"https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=400&fit=crop" },
+  { id:"a5", name:"Casco Viejo Walking Tour", category:"activity", icon:"🏛️", vibe:"Historic Walk", duration:1, notes:"Explore Panama's UNESCO-listed historic quarter on foot. Start at Plaza de la Independencia and wind through colonial streets, past colorful restoration projects, vibrant street art, and churches dating back to the 1600s. Stop for coffee, browse artisan shops, and end at one of the rooftop bars for a sunset drink. Best in the morning before the heat peaks. Self-guided is free; guided tours add great historical context.", rec:"recommended", mapsRating:4.1, mapsReviews:"340", hours:"Best 8–11AM", address:"Plaza de la Independencia", tier:"curated", cost:"Free self-guided / $20–30 guided", tags:["history","walking"], photo:"https://images.unsplash.com/photo-1569025743873-ea3a9ber09f?w=600&h=400&fit=crop" },
+  { id:"a6", name:"Monkey Island (Gamboa)", category:"activity", icon:"🐒", vibe:"Boat Tour", duration:1, notes:"A boat tour on Gatún Lake to see capuchin and howler monkeys up close on the small islands near Gamboa. The monkeys are habituated to boats and come right up to the edge. Absolutely amazing for kids and adults alike. The boat ride through the Canal waterway is scenic on its own. Book through local operators — tours depart from Gamboa and take about 2–3 hours including transport.", rec:"cantmiss", mapsRating:4.6, mapsReviews:"800", hours:"Tours typically 8AM–12PM", address:"Gamboa", tier:"curated", cost:"$60–90/pp", tags:["kid-friendly","nature","adventure"], photo:"https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=600&h=400&fit=crop" },
+  { id:"a7", name:"Summit Rainforest Park", category:"activity", icon:"🦅", vibe:"Wildlife Park", duration:1, notes:"A botanical garden and wildlife rescue center about 30 minutes from the city. Home to Panama's national bird (the harpy eagle), jaguars, tapirs, monkeys, and over 300 tropical plant species. Manageable for families with small kids — paved paths, shaded areas. Less intense than a full jungle trip but still a real rainforest experience. Great for a half-day outing.", rec:"recommended", mapsRating:4.3, mapsReviews:"2.8K", hours:"Daily 9AM–5PM", address:"Gamboa Road, km 20", tier:"curated", cost:"$10 adults / $5 kids", tags:["kid-friendly","nature"], photo:"https://images.unsplash.com/photo-1440581572325-0bea30075d9d?w=600&h=400&fit=crop" },
+  { id:"a8", name:"Rainforest Discovery Center", category:"activity", icon:"🔭", vibe:"Canopy Tower", duration:1, notes:"A canopy tower and observation deck in the heart of Soberanía National Park, one of the world's top birding sites. The 30-meter tower gives you eye-level views into the jungle canopy — spectacular for birdwatching and wildlife photography. Several easy trails at ground level too. Go at dawn for the most active wildlife. About 40 minutes from Panama City on the road to Gamboa.", rec:"worthit", mapsRating:4.5, mapsReviews:"600", hours:"Daily 6AM–4PM", address:"Pipeline Road, Gamboa", tier:"curated", cost:"$30 adults / $15 kids + tower access", tags:["nature","adventure"], photo:"https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=600&h=400&fit=crop" },
 
   // ═══ CULTURE ═══
-  { id:"c1", name:"Biomuseo", category:"culture", duration:1, notes:"Frank Gehry's only building in Latin America — and it's spectacular. The museum tells the story of how the Isthmus of Panama rose from the sea and changed the world's climate, ocean currents, and biodiversity forever. Interactive exhibits, vivid colors, and a narrative that connects geology to ecology to human history. The building itself is the art. Allow 2 hours. Air-conditioned — great for a hot afternoon.", rec:"recommended", mapsRating:4.4, mapsReviews:"4.4K", hours:"Tue–Fri 10AM–4PM, Sat–Sun 10AM–5PM", address:"Amador Causeway", tier:"curated", cost:"$22 adults / $11 kids", tags:["kid-friendly","indoor","history"], photo:"https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600&h=400&fit=crop" },
-  { id:"c2", name:"Smithsonian Biodiversity Museum", category:"culture", duration:1, notes:"The Smithsonian Tropical Research Institute's public exhibition space on the Amador Causeway. Focuses on marine biodiversity in the tropical Eastern Pacific. Smaller than Biomuseo but more science-focused with touch tanks, aquariums, and research-grade exhibits. Pair with a Causeway bike ride and Biomuseo for a full Amador day. Great for curious kids who like marine life.", rec:"worthit", mapsRating:4.2, mapsReviews:"400", hours:"Tue–Sun 10AM–5PM", address:"Amador Causeway", tier:"curated", cost:"$10–15", tags:["kid-friendly","indoor","history"], photo:"https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop" },
-  { id:"c3", name:"Bahá'í Temple", category:"culture", duration:1, notes:"One of only eight Bahá'í Houses of Worship in the world, set on a hilltop with sweeping views of Panama City. The architecture is egg-shaped and ethereal — genuinely unlike anything else you'll see. The surrounding gardens are peaceful and beautifully maintained. It's a contemplative space, not a tourist attraction, which makes it feel special. About 20 minutes from the city center by car.", rec:"worthit", mapsRating:4.6, mapsReviews:"1.2K", hours:"Daily 9AM–6PM", address:"Las Cumbres", tier:"curated", cost:"Free", tags:["nature"], photo:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop" },
+  { id:"c1", name:"Biomuseo", category:"culture", icon:"🏗️", vibe:"Architecture & Museum", duration:1, notes:"Frank Gehry's only building in Latin America — and it's spectacular. The museum tells the story of how the Isthmus of Panama rose from the sea and changed the world's climate, ocean currents, and biodiversity forever. Interactive exhibits, vivid colors, and a narrative that connects geology to ecology to human history. The building itself is the art. Allow 2 hours. Air-conditioned — great for a hot afternoon.", rec:"recommended", mapsRating:4.4, mapsReviews:"4.4K", hours:"Tue–Fri 10AM–4PM, Sat–Sun 10AM–5PM", address:"Amador Causeway", tier:"curated", cost:"$22 adults / $11 kids", tags:["kid-friendly","indoor","history"], photo:"https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600&h=400&fit=crop" },
+  { id:"c2", name:"Smithsonian Biodiversity Museum", category:"culture", icon:"🌊", vibe:"Marine Science", duration:1, notes:"The Smithsonian Tropical Research Institute's public exhibition space on the Amador Causeway. Focuses on marine biodiversity in the tropical Eastern Pacific. Smaller than Biomuseo but more science-focused with touch tanks, aquariums, and research-grade exhibits. Pair with a Causeway bike ride and Biomuseo for a full Amador day. Great for curious kids who like marine life.", rec:"worthit", mapsRating:4.2, mapsReviews:"400", hours:"Tue–Sun 10AM–5PM", address:"Amador Causeway", tier:"curated", cost:"$10–15", tags:["kid-friendly","indoor","history"], photo:"https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&h=400&fit=crop" },
+  { id:"c3", name:"Bahá'í Temple", category:"culture", icon:"🕊️", vibe:"Spiritual Landmark", duration:1, notes:"One of only eight Bahá'í Houses of Worship in the world, set on a hilltop with sweeping views of Panama City. The architecture is egg-shaped and ethereal — genuinely unlike anything else you'll see. The surrounding gardens are peaceful and beautifully maintained. It's a contemplative space, not a tourist attraction, which makes it feel special. About 20 minutes from the city center by car.", rec:"worthit", mapsRating:4.6, mapsReviews:"1.2K", hours:"Daily 9AM–6PM", address:"Las Cumbres", tier:"curated", cost:"Free", tags:["nature"], photo:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop" },
 
   // ═══ DAY TRIPS ═══
-  { id:"t1", name:"Isla Contadora", category:"daytrip", duration:4, notes:"A 2-day beach escape in the Pearl Islands, about 1 hour by ferry from Amador Causeway. Crystal-clear water, white sand beaches, and excellent snorkeling. The island is small enough to walk everywhere. Great for families — calm, shallow water at Playa Larga. Book the morning ferry (7:30AM departure). Accommodation ranges from budget guesthouses to boutique hotels. Bring reef-safe sunscreen.", rec:"cantmiss", mapsRating:4.3, mapsReviews:"890", bookingUrl:"https://ferrylasperlaspanama.com", hours:"Ferry daily 7:30AM", address:"Amador Ferry Terminal", tier:"curated", cost:"$120 ferry + $80–200/night", tags:["kid-friendly","nature"], photo:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop" },
-  { id:"t2", name:"El Valle de Antón", category:"daytrip", duration:2, notes:"A charming mountain town nestled in the crater of an extinct volcano, about 2 hours from Panama City. Noticeably cooler temperatures — a welcome break from the city heat. Visit the Sunday market for crafts and produce, hike to waterfalls, see the golden frog at El Níspero Zoo, or soak in the hot springs. Can be done as a long day trip or an overnight. Great for families and nature lovers.", rec:"recommended", mapsRating:4.4, mapsReviews:"1.5K", hours:"Best to depart 7–8AM", address:"El Valle de Antón, Coclé", tier:"curated", cost:"$50–80 transport + activities", tags:["kid-friendly","nature","adventure"], photo:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop" },
-  { id:"t3", name:"Portobelo", category:"daytrip", duration:2, notes:"A historic Caribbean port town about 1.5 hours from the city. Once the most important Spanish colonial port in the Americas — the ruins of the old fortifications are a UNESCO World Heritage Site. The town has a relaxed Caribbean vibe, with colorful buildings, Afro-colonial culture, and nearby beaches. Visit the customs house museum, snorkel at Playa Blanca, and eat fresh seafood. A different Panama from the city.", rec:"recommended", mapsRating:4.2, mapsReviews:"1.1K", hours:"Day trip — depart 8AM", address:"Portobelo, Colón", tier:"curated", cost:"$60–100 transport + activities", tags:["history","nature","adventure"], photo:"https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&h=400&fit=crop" },
-  { id:"t4", name:"Cerro Azul", category:"daytrip", duration:1, notes:"A mountain area about 45 minutes east of the city, reaching elevations of 900+ meters. Popular for hiking with trails through cloud forest and good birdwatching. Several waterfalls in the area. The cooler climate and mountain views offer a refreshing contrast to Panama City. Can be done as a half-day trip. Best with a car or organized transport as public transit is limited.", rec:"worthit", mapsRating:4.1, mapsReviews:"300", hours:"Daylight hours", address:"Cerro Azul, Panama Este", tier:"extended", cost:"$30–50 transport", tags:["nature","adventure"], photo:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop" },
+  { id:"t1", name:"Isla Contadora", category:"daytrip", icon:"🏖️", vibe:"Beach Escape", duration:4, notes:"A 2-day beach escape in the Pearl Islands, about 1 hour by ferry from Amador Causeway. Crystal-clear water, white sand beaches, and excellent snorkeling. The island is small enough to walk everywhere. Great for families — calm, shallow water at Playa Larga. Book the morning ferry (7:30AM departure). Accommodation ranges from budget guesthouses to boutique hotels. Bring reef-safe sunscreen.", rec:"cantmiss", mapsRating:4.3, mapsReviews:"890", bookingUrl:"https://ferrylasperlaspanama.com", hours:"Ferry daily 7:30AM", address:"Amador Ferry Terminal", tier:"curated", cost:"$120 ferry + $80–200/night", tags:["kid-friendly","nature"], photo:"https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop" },
+  { id:"t2", name:"El Valle de Antón", category:"daytrip", icon:"⛰️", vibe:"Mountain Town", duration:2, notes:"A charming mountain town nestled in the crater of an extinct volcano, about 2 hours from Panama City. Noticeably cooler temperatures — a welcome break from the city heat. Visit the Sunday market for crafts and produce, hike to waterfalls, see the golden frog at El Níspero Zoo, or soak in the hot springs. Can be done as a long day trip or an overnight. Great for families and nature lovers.", rec:"recommended", mapsRating:4.4, mapsReviews:"1.5K", hours:"Best to depart 7–8AM", address:"El Valle de Antón, Coclé", tier:"curated", cost:"$50–80 transport + activities", tags:["kid-friendly","nature","adventure"], photo:"https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop" },
+  { id:"t3", name:"Portobelo", category:"daytrip", icon:"🏴‍☠️", vibe:"Colonial Caribbean", duration:2, notes:"A historic Caribbean port town about 1.5 hours from the city. Once the most important Spanish colonial port in the Americas — the ruins of the old fortifications are a UNESCO World Heritage Site. The town has a relaxed Caribbean vibe, with colorful buildings, Afro-colonial culture, and nearby beaches. Visit the customs house museum, snorkel at Playa Blanca, and eat fresh seafood. A different Panama from the city.", rec:"recommended", mapsRating:4.2, mapsReviews:"1.1K", hours:"Day trip — depart 8AM", address:"Portobelo, Colón", tier:"curated", cost:"$60–100 transport + activities", tags:["history","nature","adventure"], photo:"https://images.unsplash.com/photo-1519046904884-53103b34b206?w=600&h=400&fit=crop" },
+  { id:"t4", name:"Cerro Azul", category:"daytrip", icon:"🌄", vibe:"Mountain Hiking", duration:1, notes:"A mountain area about 45 minutes east of the city, reaching elevations of 900+ meters. Popular for hiking with trails through cloud forest and good birdwatching. Several waterfalls in the area. The cooler climate and mountain views offer a refreshing contrast to Panama City. Can be done as a half-day trip. Best with a car or organized transport as public transit is limited.", rec:"worthit", mapsRating:4.1, mapsReviews:"300", hours:"Daylight hours", address:"Cerro Azul, Panama Este", tier:"extended", cost:"$30–50 transport", tags:["nature","adventure"], photo:"https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=600&h=400&fit=crop" },
 
   // ═══ WELLNESS ═══
-  { id:"w1", name:"Cinta Costera Walk", category:"wellness", duration:1, notes:"Panama City's beautiful waterfront promenade stretching several kilometers along the bay. Perfect for an evening stroll as the sun sets behind the modern skyline. Grab a coconut water from a street vendor and walk at your own pace. There are playgrounds along the route for kids and exercise stations for the active. On weekends it fills with families — a lovely slice of everyday Panamanian life.", rec:"worthit", mapsRating:4.0, mapsReviews:"950", hours:"Open 24hrs", address:"Cinta Costera", tier:"extended", cost:"Free", tags:["kid-friendly","walking","sunset"], photo:"https://images.unsplash.com/photo-1505459668311-8dfac7952bf0?w=600&h=400&fit=crop" },
+  { id:"w1", name:"Cinta Costera Walk", category:"wellness", icon:"🌅", vibe:"Waterfront Walk", duration:1, notes:"Panama City's beautiful waterfront promenade stretching several kilometers along the bay. Perfect for an evening stroll as the sun sets behind the modern skyline. Grab a coconut water from a street vendor and walk at your own pace. There are playgrounds along the route for kids and exercise stations for the active. On weekends it fills with families — a lovely slice of everyday Panamanian life.", rec:"worthit", mapsRating:4.0, mapsReviews:"950", hours:"Open 24hrs", address:"Cinta Costera", tier:"extended", cost:"Free", tags:["kid-friendly","walking","sunset"], photo:"https://images.unsplash.com/photo-1505459668311-8dfac7952bf0?w=600&h=400&fit=crop" },
 ];
 
 const TRIP = {
   name: "Panama 2026",
-  subtitle: "Mom & Dad's First Visit",
+  subtitle: "Visit Pa & Ma",
   startDate: "2026-03-29",
   dayCount: 10,
   brief: "10 days of the best Panama has to offer — culture, nature, incredible food, and a beach escape to the Pearl Islands.",
@@ -172,11 +172,26 @@ const DragHandle = ({ onClose }) => {
   const startY = useRef(null);
   return (
     <div
-      style={{ display: "flex", justifyContent: "center", padding: "12px 0 4px", cursor: "grab", touchAction: "none" }}
+      style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 0 6px", cursor: "grab", touchAction: "pan-y", userSelect: "none" }}
       onTouchStart={e => { startY.current = e.touches[0].clientY; }}
-      onTouchEnd={e => { if (startY.current !== null && e.changedTouches[0].clientY - startY.current > 60) onClose(); startY.current = null; }}
+      onTouchMove={e => {
+        if (startY.current !== null && e.touches[0].clientY - startY.current > 50) {
+          onClose();
+          startY.current = null;
+        }
+      }}
+      onTouchEnd={() => { startY.current = null; }}
+      onMouseDown={e => { startY.current = e.clientY; }}
+      onMouseMove={e => {
+        if (startY.current !== null && e.buttons === 1 && e.clientY - startY.current > 50) {
+          onClose();
+          startY.current = null;
+        }
+      }}
+      onMouseUp={() => { startY.current = null; }}
     >
-      <div style={{ width: 40, height: 4, background: "#ddd", borderRadius: 2 }} />
+      <div style={{ width: 40, height: 5, background: "#ccc", borderRadius: 3 }} />
+      <div style={{ width: "100%", height: 16 }} />
     </div>
   );
 };
@@ -349,18 +364,24 @@ const Overview = ({ days, occ, mods, onClose, onJump }) => (
 const CustomModal = ({ onSave, onClose }) => {
   const [n, sN] = useState("");
   const [no, sNo] = useState("");
+  const [ic, sIc] = useState("📌");
+  const [url, sUrl] = useState("");
   const [d, sD] = useState(1);
   return (
     <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", padding: "0 20px 24px", animation: "su 0.25s ease-out" }}>
-        <div style={{ display: "flex", justifyContent: "center", padding: "12px 0 8px" }}><div style={{ width: 40, height: 4, background: "#ddd", borderRadius: 2 }} /></div>
-        <h3 style={{ margin: "0 0 18px", fontSize: 18, fontWeight: 800 }}>📌 Custom Event</h3>
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <input value={n} onChange={e => sN(e.target.value)} placeholder="Event name" style={IS} autoFocus />
-          <textarea value={no} onChange={e => sNo(e.target.value)} placeholder="Details..." rows={2} style={{ ...IS, resize: "vertical" }} />
+        <DragHandle onClose={onClose} />
+        <h3 style={{ margin: "0 0 16px", fontSize: 18, fontWeight: 800 }}>📌 Custom Event</h3>
+        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          <div style={{ display: "flex", gap: 10 }}>
+            <div style={{ width: 56 }}><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Icon</label><input value={ic} onChange={e => sIc(e.target.value)} style={{ ...IS, textAlign: "center", fontSize: 20, padding: "6px" }} /></div>
+            <div style={{ flex: 1 }}><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Name</label><input value={n} onChange={e => sN(e.target.value)} placeholder="Jazz concert at Teatro" style={IS} autoFocus /></div>
+          </div>
+          <textarea value={no} onChange={e => sNo(e.target.value)} placeholder="Details, notes..." rows={2} style={{ ...IS, resize: "vertical" }} />
+          <input value={url} onChange={e => sUrl(e.target.value)} placeholder="Link (optional) — https://..." style={IS} />
           <div style={{ display: "flex", gap: 10 }}>
             <button onClick={onClose} style={{ flex: 1, padding: 13, borderRadius: 12, border: "none", background: "#f2f2f2", color: "#555", fontSize: 14, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
-            <button disabled={!n.trim()} onClick={() => n.trim() && onSave({ id: "c" + Date.now(), name: n.trim(), category: "custom", duration: d, notes: no, mapsRating: 0 })} style={{ flex: 1, padding: 13, borderRadius: 12, border: "none", background: n.trim() ? "#1a1a1a" : "#ccc", color: "#fff", fontSize: 14, fontWeight: 700, cursor: n.trim() ? "pointer" : "default" }}>Add</button>
+            <button disabled={!n.trim()} onClick={() => n.trim() && onSave({ id: "c" + Date.now(), name: n.trim(), category: "custom", icon: ic, vibe: "Custom", duration: d, notes: no, bookingUrl: url || undefined, mapsRating: 0 })} style={{ flex: 1, padding: 13, borderRadius: 12, border: "none", background: n.trim() ? "#1a1a1a" : "#ccc", color: "#fff", fontSize: 14, fontWeight: 700, cursor: n.trim() ? "pointer" : "default" }}>Add</button>
           </div>
         </div>
       </div>
@@ -370,73 +391,57 @@ const CustomModal = ({ onSave, onClose }) => {
 
 // ═══ WELCOME ═══
 const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
-  const [ci, sCi] = useState(0);
-  const [cSw, setCSw] = useState(null);
-  const didSwipe = useRef(false);
-  const items = [];
-  Object.entries(cal).forEach(([sk, mid]) => {
-    const mod = mods.find(m => m.id === mid);
-    if (!mod) return;
-    const [ds, tid] = sk.split("|");
-    const di = days.findIndex(d => d.date === ds);
-    const slot = SLOTS.find(s => s.id === tid);
-    const cat = CATS.find(c => c.id === mod.category);
-    if (di >= 0) items.push({ mod, dayIdx: di, slot, cat });
-  });
-  items.sort((a, b) => a.dayIdx - b.dayIdx);
-  useEffect(() => { if (items.length <= 1) return; const t = setInterval(() => sCi(i => (i + 1) % items.length), 3500); return () => clearInterval(t); }, [items.length]);
-  const cur = items[ci] || null;
+  const [bgIdx, setBgIdx] = useState(0);
+  // Cycle through curated experience photos for background
+  const bgPhotos = mods.filter(m => m.photo && m.tier === "curated").map(m => m.photo);
+  useEffect(() => { if (bgPhotos.length <= 1) return; const t = setInterval(() => setBgIdx(i => (i + 1) % bgPhotos.length), 5000); return () => clearInterval(t); }, [bgPhotos.length]);
 
   return (
     <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", position: "relative", overflow: "hidden", maxWidth: 430, margin: "0 auto", background: "#0f1923" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
-      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg,#0B4D3B 0%,#1A8A6E 40%,#2193B0 60%,#0F4C75 80%,#1B2838 100%)", animation: "hf 0.8s ease-out" }} />
-      <div style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", padding: "0 22px" }}>
-        <div style={{ padding: "18px 0 0", animation: "si 0.5s ease-out" }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.4)", textTransform: "uppercase", letterSpacing: 1.5 }}>🗺️ Trip Builder</span>
+      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes bgFade{from{opacity:0}to{opacity:1}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
+
+      {/* Full-bleed background photo */}
+      {bgPhotos.length > 0 && (
+        <div key={bgIdx} style={{ position: "absolute", inset: 0, animation: "bgFade 1.5s ease-out" }}>
+          <img src={bgPhotos[bgIdx]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         </div>
-        <div style={{ flex: 1, minHeight: 40 }} />
+      )}
+      {/* Dark overlay for readability */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.75) 100%)" }} />
+      {/* Subtle color tint */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(11,77,59,0.4) 0%, rgba(33,147,176,0.2) 50%, rgba(15,76,117,0.3) 100%)" }} />
+
+      <div style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", padding: "0 24px" }}>
+        <div style={{ padding: "20px 0 0", animation: "si 0.5s ease-out" }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1.5 }}>🗺️ Trip Builder</span>
+        </div>
+
+        <div style={{ flex: 1, minHeight: 60 }} />
+
         <div style={{ animation: "si 0.6s ease-out 0.1s both" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.35)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 8 }}>You're invited</div>
-          <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 40, fontWeight: 900, color: "#fff", margin: "0 0 6px", lineHeight: 1.05 }}>{trip.name}</h1>
-          <div style={{ fontSize: 17, fontWeight: 500, color: "rgba(255,255,255,0.6)", marginBottom: 4 }}>{trip.subtitle}</div>
-          <div style={{ fontSize: 13, fontWeight: 600, color: "rgba(255,255,255,0.35)", marginBottom: 20 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
+          <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 10 }}>You're invited</div>
+          <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 8px", lineHeight: 1.0, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>{trip.name}</h1>
+          <div style={{ fontSize: 18, fontWeight: 500, color: "rgba(255,255,255,0.75)", marginBottom: 6, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>{trip.subtitle}</div>
+          <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
         </div>
-        {items.length > 0 && cur && (
-          <div style={{ animation: "si 0.6s ease-out 0.2s both", marginBottom: 20 }}>
-            <div style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.3)", textTransform: "uppercase", letterSpacing: 1, marginBottom: 10 }}>Highlights</div>
-            <div
-              onClick={() => { if (!didSwipe.current) onJump(cur.dayIdx); didSwipe.current = false; }}
-              onTouchStart={e => { setCSw(e.touches[0].clientX); didSwipe.current = false; }}
-              onTouchMove={e => { if (cSw !== null && Math.abs(cSw - e.touches[0].clientX) > 20) didSwipe.current = true; }}
-              onTouchEnd={e => { if (cSw === null) return; const d = cSw - e.changedTouches[0].clientX; if (Math.abs(d) > 50) { didSwipe.current = true; if (d > 0 && ci < items.length - 1) sCi(ci + 1); if (d < 0 && ci > 0) sCi(ci - 1); } setCSw(null); }}
-              style={{ position: "relative", borderRadius: 18, overflow: "hidden", height: 185, cursor: "pointer", boxShadow: "0 8px 32px rgba(0,0,0,0.25)" }}>
-              <div key={ci} style={{ position: "absolute", inset: 0, animation: "fi 0.5s ease-out" }}><Vis mod={cur.mod} cat={cur.cat} h={185} /></div>
-              <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "16px 18px" }}>
-                <div style={{ display: "flex", gap: 6, marginBottom: 5 }}>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "#fff", background: "rgba(0,0,0,0.4)", padding: "3px 8px", borderRadius: 6 }}>Day {cur.dayIdx + 1} · {cur.slot?.label}</span>
-                  {cur.mod.rec && REC[cur.mod.rec] && <span style={{ fontSize: 10, fontWeight: 800, color: "#fff", background: REC[cur.mod.rec].color + "CC", padding: "3px 8px", borderRadius: 6 }}>{REC[cur.mod.rec].icon} {REC[cur.mod.rec].label}</span>}
-                </div>
-                <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", lineHeight: 1.2, textShadow: "0 1px 4px rgba(0,0,0,0.3)" }}>{cur.mod.name}</div>
-              </div>
-              <div style={{ position: "absolute", top: 10, right: 12, display: "flex", gap: 4 }}>
-                {items.map((_, i) => <div key={i} onClick={e => { e.stopPropagation(); sCi(i); }} style={{ width: i === ci ? 18 : 6, height: 6, borderRadius: 3, background: i === ci ? "#fff" : "rgba(255,255,255,0.35)", transition: "all 0.3s", cursor: "pointer" }} />)}
-              </div>
-            </div>
+
+        {trip.brief && (
+          <div style={{ animation: "si 0.6s ease-out 0.2s both", marginBottom: 16 }}>
+            <div style={{ fontSize: 14, fontStyle: "italic", color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>{trip.brief}</div>
           </div>
         )}
-        {trip.brief && (
-          <details style={{ animation: "si 0.6s ease-out 0.25s both", marginBottom: 18 }}>
-            <summary style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.45)", cursor: "pointer", listStyle: "none", display: "flex", alignItems: "center", gap: 6 }}>About this trip ▼</summary>
-            <div style={{ marginTop: 8, background: "rgba(255,255,255,0.08)", borderRadius: 14, padding: "14px 18px" }}>
-              <div style={{ fontSize: 13, color: "rgba(255,255,255,0.8)", lineHeight: 1.6 }}>{trip.brief}</div>
-            </div>
-          </details>
+
+        {/* Photo indicator dots */}
+        {bgPhotos.length > 1 && (
+          <div style={{ display: "flex", justifyContent: "center", gap: 4, marginBottom: 12, animation: "si 0.6s ease-out 0.25s both" }}>
+            {bgPhotos.slice(0, 8).map((_, i) => <div key={i} style={{ width: i === bgIdx % 8 ? 16 : 5, height: 5, borderRadius: 3, background: i === bgIdx % 8 ? "#fff" : "rgba(255,255,255,0.3)", transition: "all 0.4s" }} />)}
+          </div>
         )}
-        <div style={{ padding: "6px 0 32px", animation: "si 0.6s ease-out 0.3s both", display: "flex", flexDirection: "column", gap: 10 }}>
-          <button onClick={() => onStart("explore")} style={{ width: "100%", padding: "16px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.2)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
-          <button onClick={() => onStart("itinerary")} style={{ width: "100%", padding: "14px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.2)", background: "rgba(255,255,255,0.08)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
+
+        <div style={{ padding: "4px 0 36px", animation: "si 0.6s ease-out 0.3s both", display: "flex", flexDirection: "column", gap: 10 }}>
+          <button onClick={() => onStart("explore")} style={{ width: "100%", padding: "17px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
+          <button onClick={() => onStart("itinerary")} style={{ width: "100%", padding: "15px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
         </div>
       </div>
     </div>
@@ -565,16 +570,12 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
   const avail = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat);
 
   return (
-    <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", background: "#F7F6F3", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
+    <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
       <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
-      {/* Header — action buttons + day strip only (trip name is in shared header) */}
-      <div style={{ background: "#fff", padding: "8px 16px 0", borderBottom: "1px solid #eee", position: "sticky", top: 0, zIndex: 100 }}>
-        <div style={{ display: "flex", justifyContent: "flex-end", gap: 5, marginBottom: 8 }}>
-          <button onClick={() => sOv(true)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 11, fontWeight: 700, cursor: "pointer", color: "#555" }}>📋 Trip Overview</button>
-          <button onClick={() => sInfo(true)} style={{ background: "linear-gradient(135deg,#E8F5E9,#C8E6C9)", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 11, fontWeight: 800, cursor: "pointer", color: "#2E7D32" }}>💡 Practical Info</button>
-        </div>
+      {/* Day strip only (action buttons moved to shared header) */}
+      <div style={{ background: "#fff", padding: "6px 16px 0", borderBottom: "1px solid #eee" }}>
         {/* Day strip — scrollable, date only */}
         <div ref={dRef} style={{ display: "flex", gap: 5, overflowX: "auto", paddingBottom: 10, WebkitOverflowScrolling: "touch" }}>
           {days.map((day, i) => {
@@ -618,8 +619,8 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
                     {/* Header */}
                     <div style={{ display: "flex", minHeight: isX ? 42 : 78 }}>
                       <div style={{ flex: 1, padding: isX ? "9px 14px" : "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                        <div style={{ fontSize: isX ? 13 : 14, fontWeight: 700, lineHeight: 1.25 }}>{cat?.icon} {mod.name}</div>
-                        {!isX && mod.rec && REC[mod.rec] && <div style={{ marginTop: 4 }}><span style={{ fontSize: 9, fontWeight: 800, color: REC[mod.rec].color, background: REC[mod.rec].bg, padding: "2px 7px", borderRadius: 5 }}>{REC[mod.rec].icon} {REC[mod.rec].label}</span></div>}
+                        <div style={{ fontSize: isX ? 13 : 14, fontWeight: 700, lineHeight: 1.25 }}>{mod.icon || cat?.icon} {mod.name}</div>
+                        {!isX && mod.vibe && <div style={{ marginTop: 4 }}><span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span></div>}
                       </div>
                       {!isX && <div style={{ width: "28%", minWidth: 82, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /><div style={{ position: "absolute", top: 5, right: 5, background: "rgba(0,0,0,0.3)", borderRadius: 6, width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: 9, color: "#fff" }}>▼</span></div></div>}
                       {isX && <div style={{ display: "flex", alignItems: "center", padding: "0 12px" }}><span style={{ fontSize: 11, color: "#ccc", transform: "rotate(180deg)" }}>▼</span></div>}
@@ -627,12 +628,14 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
 
                     {/* Expanded */}
                     {isX && (() => {
-                      const rec = mod.rec ? REC[mod.rec] : null;
                       const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
                       const piO = pInfo[mod.id];
                       return (
                         <div style={{ padding: "0 14px 14px", animation: "fi 0.15s ease-out" }}>
-                          {rec && <div style={{ marginBottom: 10 }}><span style={{ fontSize: 10, fontWeight: 800, color: rec.color, background: rec.bg, padding: "3px 9px", borderRadius: 7 }}>{rec.icon} {rec.label}</span>{mod.duration > 1 && <span style={{ fontSize: 10, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "10", padding: "3px 9px", borderRadius: 7, marginLeft: 5 }}>📅 {mod.duration} slots</span>}</div>}
+                          <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 10 }}>
+                            {mod.vibe && <span style={{ fontSize: 10, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 9px", borderRadius: 7 }}>{mod.icon || cat?.icon} {mod.vibe}</span>}
+                            {mod.duration > 1 && <span style={{ fontSize: 10, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "10", padding: "3px 9px", borderRadius: 7 }}>📅 {mod.duration} slots</span>}
+                          </div>
 
                           {/* Image */}
                           <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 10 }}><Vis mod={mod} cat={cat} h={140} br={12} /></div>
@@ -673,24 +676,14 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
                       );
                     })()}
                   </div>
-                ) : (() => {
-                  const sug = getSug(slot.id);
-                  return (
-                    <div style={{ display: "flex", gap: 8 }}>
-                      <button onClick={() => { sSlot(sk); sLib(true); sFCat("all"); }} style={{ flex: 1, padding: "18px 14px", background: "#fff", borderRadius: 16, border: "2px dashed #ddd", cursor: "pointer", textAlign: "left" }}>
-                        {sug ? (
-                          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                            <div style={{ width: 38, height: 38, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}><Vis mod={sug} cat={CATS.find(c => c.id === sug.category)} h={38} br={10} /></div>
-                            <div><div style={{ fontSize: 10, color: "#999", fontWeight: 600 }}>{slot.hint}</div><div style={{ fontSize: 12, fontWeight: 700, color: "#555", marginTop: 1 }}>Maybe: {sug.name}?</div></div>
-                          </div>
-                        ) : (
-                          <div style={{ textAlign: "center", width: "100%" }}><div style={{ fontSize: 18, opacity: 0.25, marginBottom: 2 }}>+</div><div style={{ fontSize: 11, fontWeight: 600, color: "#bbb" }}>{slot.hint}</div></div>
-                        )}
-                      </button>
-                      <button onClick={() => { sSlot(sk); sCust(true); }} style={{ width: 60, background: "#fff", borderRadius: 16, border: "2px dashed #B0BEC5", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 2 }}><span style={{ fontSize: 15 }}>📌</span><span style={{ fontSize: 8, fontWeight: 700, color: "#90A4AE" }}>Custom</span></button>
+                ) : (
+                  <button onClick={() => { sSlot(sk); sLib(true); sFCat("all"); }} style={{ width: "100%", padding: "20px 14px", background: "#fff", borderRadius: 16, border: "2px dashed #ddd", cursor: "pointer" }}>
+                    <div style={{ textAlign: "center" }}>
+                      <div style={{ fontSize: 20, opacity: 0.2, marginBottom: 3 }}>+</div>
+                      <div style={{ fontSize: 11, fontWeight: 600, color: "#bbb" }}>Add experience</div>
                     </div>
-                  );
-                })()}
+                  </button>
+                )}
               </div>
             );
           })}
@@ -841,7 +834,7 @@ const ALL_TAGS = ["kid-friendly","nature","history","indoor","budget","sunset","
 
 const EditModal = ({ mod, onSave, onDelete, onClose }) => {
   const [f, sF] = useState({
-    name: mod?.name || "", category: mod?.category || "activity", notes: mod?.notes || "",
+    name: mod?.name || "", category: mod?.category || "activity", icon: mod?.icon || "", vibe: mod?.vibe || "", notes: mod?.notes || "",
     rec: mod?.rec || "", hours: mod?.hours || "", address: mod?.address || "",
     cost: mod?.cost || "", bookingUrl: mod?.bookingUrl || "", tier: mod?.tier || "curated",
     duration: mod?.duration || 1, mapsRating: mod?.mapsRating || 0, mapsReviews: mod?.mapsReviews || "",
@@ -861,6 +854,10 @@ const EditModal = ({ mod, onSave, onDelete, onClose }) => {
         <div style={{ flex: 1, overflowY: "auto", padding: "14px 20px 24px" }}>
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
             <div><label style={LS}>Name</label><input value={f.name} onChange={e => set("name", e.target.value)} style={IS} /></div>
+            <div style={{ display: "flex", gap: 10 }}>
+              <div style={{ width: 70 }}><label style={LS}>Icon</label><input value={f.icon} onChange={e => set("icon", e.target.value)} placeholder="🍸" style={{ ...IS, textAlign: "center", fontSize: 20, padding: "6px" }} /></div>
+              <div style={{ flex: 1 }}><label style={LS}>Vibe / Type</label><input value={f.vibe} onChange={e => set("vibe", e.target.value)} placeholder="Cocktail Bar" style={IS} /></div>
+            </div>
             <div><label style={LS}>Category</label><div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>{CATS.filter(c => c.id !== "custom").map(c => <button key={c.id} onClick={() => set("category", c.id)} style={{ padding: "5px 10px", borderRadius: 8, border: f.category === c.id ? "2px solid " + c.color : "1.5px solid #e0e0e0", background: f.category === c.id ? c.color + "15" : "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", color: f.category === c.id ? c.color : "#888" }}>{c.icon} {c.label}</button>)}</div></div>
             <div><label style={LS}>Description</label><textarea value={f.notes} onChange={e => set("notes", e.target.value)} rows={3} style={{ ...IS, resize: "vertical" }} /></div>
             <div><label style={LS}>Recommendation</label><div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>{[["cantmiss", "🔥 Can't Miss"], ["recommended", "👍 Recommended"], ["worthit", "✓ Worth It"], ["", "None"]].map(([v, l]) => <button key={v} onClick={() => set("rec", v)} style={{ padding: "5px 10px", borderRadius: 8, border: f.rec === v ? "2px solid #1a1a1a" : "1.5px solid #e0e0e0", background: f.rec === v ? "#1a1a1a" : "#fff", fontSize: 10, fontWeight: 700, cursor: "pointer", color: f.rec === v ? "#fff" : "#888" }}>{l}</button>)}</div></div>
@@ -956,7 +953,6 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
     const cat = CATS.find(c => c.id === mod.category);
     const isExp = expandId === mod.id;
     const isPlaced = pIds.has(mod.id);
-    const rec = mod.rec ? REC[mod.rec] : null;
     const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
 
     return (
@@ -971,12 +967,12 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
           <div style={{ display: "flex", minHeight: isExp ? 42 : 78 }}>
             <div style={{ flex: 1, padding: isExp ? "9px 14px" : "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ fontSize: isExp ? 13 : 14, fontWeight: 700, lineHeight: 1.25 }}>{cat?.icon} {mod.name}</span>
+                <span style={{ fontSize: isExp ? 13 : 14, fontWeight: 700, lineHeight: 1.25 }}>{mod.icon || cat?.icon} {mod.name}</span>
                 {isPlaced && <span style={{ fontSize: 12, color: "#4CAF50", flexShrink: 0 }}>✅</span>}
               </div>
-              {!isExp && rec && (
+              {!isExp && mod.vibe && (
                 <div style={{ marginTop: 4 }}>
-                  <span style={{ fontSize: 9, fontWeight: 800, color: rec.color, background: rec.bg, padding: "2px 7px", borderRadius: 5 }}>{rec.icon} {rec.label}</span>
+                  <span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span>
                 </div>
               )}
             </div>
@@ -992,9 +988,9 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
           {/* Expanded */}
           {isExp && (
             <div style={{ padding: "0 14px 14px", animation: "fi 0.15s ease-out" }}>
-              {/* Tags + rec */}
+              {/* Vibe + tags */}
               <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 10 }}>
-                {rec && <span style={{ fontSize: 10, fontWeight: 800, color: rec.color, background: rec.bg, padding: "3px 9px", borderRadius: 7 }}>{rec.icon} {rec.label}</span>}
+                {mod.vibe && <span style={{ fontSize: 10, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 9px", borderRadius: 7 }}>{mod.icon || cat?.icon} {mod.vibe}</span>}
                 {mod.duration > 1 && <span style={{ fontSize: 10, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "10", padding: "3px 9px", borderRadius: 7 }}>📅 {mod.duration} slots</span>}
                 {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 9, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "2px 7px", borderRadius: 5 }}>{t}</span>)}
               </div>
@@ -1072,12 +1068,59 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
     );
   };
 
+  // Highlights for carousel — curated "Can't Miss" experiences with photos
+  const [hlIdx, setHlIdx] = useState(0);
+  const highlights = mods.filter(m => m.rec === "cantmiss" && m.photo && m.tier === "curated");
+  const hlSwRef = useRef(null);
+
   return (
     <div style={{ padding: "16px 16px 100px" }}>
       <div style={{ marginBottom: 14 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>Experiences</h2>
         <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Browse, learn more, and add to your itinerary</div>
       </div>
+
+      {/* Highlights carousel */}
+      {highlights.length > 0 && (
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ display: "flex", gap: 10, overflowX: "auto", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", paddingBottom: 8 }}
+            ref={hlSwRef}
+            onScroll={() => {
+              if (hlSwRef.current) {
+                const idx = Math.round(hlSwRef.current.scrollLeft / (hlSwRef.current.offsetWidth * 0.78));
+                if (idx !== hlIdx && idx >= 0 && idx < highlights.length) setHlIdx(idx);
+              }
+            }}
+          >
+            {highlights.map((mod, i) => {
+              const cat = CATS.find(c => c.id === mod.category);
+              const isPlcd = pIds.has(mod.id);
+              return (
+                <div key={mod.id} onClick={() => sExpand(sExpand === mod.id ? null : mod.id)} style={{
+                  flexShrink: 0, width: "78%", scrollSnapAlign: "start",
+                  borderRadius: 16, overflow: "hidden", position: "relative",
+                  height: 160, cursor: "pointer",
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
+                }}>
+                  <img src={mod.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)" }} />
+                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "14px 16px" }}>
+                    <div style={{ display: "flex", gap: 5, marginBottom: 4 }}>
+                      {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", background: "rgba(255,255,255,0.2)", padding: "2px 7px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span>}
+                      {isPlcd && <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", background: "rgba(76,175,80,0.8)", padding: "2px 7px", borderRadius: 5 }}>✅ Planned</span>}
+                    </div>
+                    <div style={{ fontSize: 16, fontWeight: 800, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}>{mod.icon || cat?.icon} {mod.name}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          {/* Dots */}
+          <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 6 }}>
+            {highlights.slice(0, 10).map((_, i) => <div key={i} style={{ width: i === hlIdx ? 14 : 5, height: 5, borderRadius: 3, background: i === hlIdx ? "#1a1a1a" : "#ccc", transition: "all 0.3s" }} />)}
+          </div>
+        </div>
+      )}
 
       {/* Interest tags */}
       <div style={{ marginBottom: 12 }}>
@@ -1117,7 +1160,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
         <div style={{ marginBottom: 16 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
             <span style={{ fontSize: 13 }}>⭐</span>
-            <span style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", textTransform: "uppercase", letterSpacing: 0.8 }}>Personal Picks</span>
+            <span style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", textTransform: "uppercase", letterSpacing: 0.8 }}>Chris's Picks</span>
             <div style={{ flex: 1, height: 1, background: "#eee" }} />
           </div>
           {curated.map(renderCard)}
@@ -1188,6 +1231,8 @@ export default function App() {
   const [cal, sCal] = useState(INIT_CAL);
   const [trip, sTrip] = useState(TRIP);
   const [editTrip, sEditTrip] = useState(false);
+  const [showOv, setShowOv] = useState(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   // Admin mode via URL param: ?admin=true
   const isAdmin = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("admin") === "true";
@@ -1215,19 +1260,20 @@ export default function App() {
 
   // Main screen with tabs
   return (
-    <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", background: "#F7F6F3", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
+    <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", background: "linear-gradient(180deg, #F7F6F3 0%, #EEF2ED 40%, #E8EDEB 100%)", backgroundAttachment: "fixed", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
       <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
-      {/* Shared header */}
-      <div style={{ background: "#fff", padding: "10px 16px", borderBottom: "1px solid #eee", position: "sticky", top: 0, zIndex: 100 }}>
+      {/* Shared fixed header — always visible on both tabs */}
+      <div style={{ background: "#fff", padding: "10px 16px 10px", borderBottom: "1px solid #eee", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <button onClick={() => sScr("welcome")} style={{ background: "#f5f5f5", border: "none", borderRadius: 10, padding: "6px 10px", fontSize: 16, cursor: "pointer", color: "#888" }}>←</button>
-            <div onClick={() => isAdmin && sEditTrip(true)} style={{ cursor: isAdmin ? "pointer" : "default" }}>
-              <h1 style={{ margin: 0, fontSize: 15, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>{trip.name} {isAdmin && <span style={{ fontSize: 10, color: "#aaa" }}>✏️</span>}</h1>
-              <div style={{ fontSize: 10, color: "#999", marginTop: 1 }}>{trip.subtitle}{isAdmin && <span style={{ color: "#E53935", fontWeight: 800, marginLeft: 6 }}>ADMIN</span>}</div>
-            </div>
+          <div onClick={() => isAdmin ? sEditTrip(true) : sScr("welcome")} style={{ cursor: "pointer" }}>
+            <h1 style={{ margin: 0, fontSize: 15, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>{trip.name} {isAdmin && <span style={{ fontSize: 10, color: "#aaa" }}>✏️</span>}</h1>
+            <div style={{ fontSize: 10, color: "#999", marginTop: 1 }}>{trip.subtitle}{isAdmin && <span style={{ color: "#E53935", fontWeight: 800, marginLeft: 6 }}>ADMIN</span>}</div>
+          </div>
+          <div style={{ display: "flex", gap: 5 }}>
+            <button onClick={() => setShowOv(true)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#555" }}>📋 Trip Overview</button>
+            <button onClick={() => setShowInfo(true)} style={{ background: "linear-gradient(135deg,#E8F5E9,#C8E6C9)", border: "none", borderRadius: 10, padding: "6px 10px", fontSize: 10, fontWeight: 800, cursor: "pointer", color: "#2E7D32" }}>💡 Practical Info</button>
           </div>
         </div>
       </div>
@@ -1243,7 +1289,7 @@ export default function App() {
       {editTrip && (
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 350, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={() => sEditTrip(false)}>
           <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "80vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-            <DragHandle onClose={onClose} />
+            <DragHandle onClose={() => sEditTrip(false)} />
             <div style={{ padding: "4px 20px 12px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>✏️ Edit Trip</h3>
               <button onClick={() => sEditTrip(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Done</button>
@@ -1263,28 +1309,32 @@ export default function App() {
         </div>
       )}
 
+      {/* Overview + Info panels (shared across both tabs) */}
+      {showOv && <Overview days={days} occ={occ} mods={mods} onClose={() => setShowOv(false)} onJump={di => { sJd(di); sTab("itinerary"); setShowOv(false); }} />}
+      {showInfo && <InfoPanel info={trip.info} onClose={() => setShowInfo(false)} />}
+
       {/* Bottom tab bar */}
       <div style={{
         position: "fixed", bottom: 0, left: 0, right: 0, maxWidth: 430, margin: "0 auto",
         background: "#fff", borderTop: "1px solid #eee",
-        display: "flex", padding: "8px 0 20px", zIndex: 200,
+        display: "flex", gap: 8, padding: "8px 12px 20px", zIndex: 200,
         boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
       }}>
         <button onClick={() => sTab("explore")} style={{
-          flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-          background: "none", border: "none", cursor: "pointer", padding: "6px 0",
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          background: tab === "explore" ? "#1a1a1a" : "#f5f5f5",
+          border: "none", cursor: "pointer", padding: "11px 8px", borderRadius: 12,
         }}>
-          <span style={{ fontSize: 20 }}>✨</span>
-          <span style={{ fontSize: 10, fontWeight: 700, color: tab === "explore" ? "#1a1a1a" : "#bbb" }}>Explore</span>
-          {tab === "explore" && <div style={{ width: 20, height: 3, borderRadius: 2, background: "#1a1a1a", marginTop: 2 }} />}
+          <span style={{ fontSize: 16 }}>✨</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: tab === "explore" ? "#fff" : "#999" }}>Explore</span>
         </button>
         <button onClick={() => sTab("itinerary")} style={{
-          flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-          background: "none", border: "none", cursor: "pointer", padding: "6px 0",
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          background: tab === "itinerary" ? "#1a1a1a" : "#f5f5f5",
+          border: "none", cursor: "pointer", padding: "11px 8px", borderRadius: 12,
         }}>
-          <span style={{ fontSize: 20 }}>📅</span>
-          <span style={{ fontSize: 10, fontWeight: 700, color: tab === "itinerary" ? "#1a1a1a" : "#bbb" }}>Itinerary</span>
-          {tab === "itinerary" && <div style={{ width: 20, height: 3, borderRadius: 2, background: "#1a1a1a", marginTop: 2 }} />}
+          <span style={{ fontSize: 16 }}>📅</span>
+          <span style={{ fontSize: 12, fontWeight: 700, color: tab === "itinerary" ? "#fff" : "#999" }}>Itinerary</span>
         </button>
       </div>
     </div>
