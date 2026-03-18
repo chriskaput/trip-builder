@@ -657,28 +657,22 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   };
 
   const availRaw = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat);
-  const avail = [...availRaw].sort((a, b) => {
+  const avail = (() => {
+    let list = [...availRaw];
     if (libSort === "favorites") {
-      const aF = favs.includes(a.id) ? 0 : 1;
-      const bF = favs.includes(b.id) ? 0 : 1;
-      if (aF !== bF) return aF - bF;
+      const favList = list.filter(m => favs.includes(m.id));
+      const rest = list.filter(m => !favs.includes(m.id));
+      // Show favorites first, then the rest
+      list = [...favList, ...rest];
+    } else if (libSort === "picks") {
+      const picks = list.filter(m => m.tier === "curated");
+      const rest = list.filter(m => m.tier !== "curated");
+      list = [...picks, ...rest];
+    } else if (libSort === "rating") {
+      list.sort((a, b) => (b.mapsRating || 0) - (a.mapsRating || 0));
     }
-    if (libSort === "picks") {
-      const aT = a.tier === "curated" ? 0 : 1;
-      const bT = b.tier === "curated" ? 0 : 1;
-      if (aT !== bT) return aT - bT;
-    }
-    if (libSort === "rating") {
-      return (b.mapsRating || 0) - (a.mapsRating || 0);
-    }
-    // Default: favorites first, then curated first
-    const aF = favs.includes(a.id) ? 0 : 1;
-    const bF = favs.includes(b.id) ? 0 : 1;
-    if (aF !== bF) return aF - bF;
-    const aT = a.tier === "curated" ? 0 : 1;
-    const bT = b.tier === "curated" ? 0 : 1;
-    return aT - bT;
-  });
+    return list;
+  })();
 
   return (
     <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
@@ -821,7 +815,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
             <div style={{ position: "relative", height: 260 }}>
               <Vis mod={mod} cat={cat} h={260} />
               <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#fff" }}>{dayObj?.wd} {dayObj?.md} · {slotObj?.label}</div>
-              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, lineHeight: "40px" }}>{favs.includes(mod.id) ? <span style={{ color: "#E91E63", fontSize: 20, lineHeight: 1 }}>❤</span> : <span style={{ color: "transparent", fontSize: 20, lineHeight: 1, WebkitTextStroke: "1.5px #fff" }}>❤</span>}</button>
+              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, lineHeight: "40px" }}>{favs.includes(mod.id) ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>}</button>
             </div>
 
             <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
@@ -895,24 +889,44 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 <div style={{ width: 42, height: 42, borderRadius: 10, background: "#ECEFF1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>📌</div>
                 <div><div style={{ fontSize: 13, fontWeight: 700, color: "#546E7A" }}>Custom Event</div></div>
               </button>
-              {avail.map(mod => {
+              {/* Section header for favorites mode */}
+              {libSort === "favorites" && favs.length > 0 && avail.some(m => favs.includes(m.id)) && (
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#E91E63", textTransform: "uppercase", letterSpacing: 0.8, padding: "6px 0 4px" }}>❤️ Your favorites</div>
+              )}
+              {libSort === "favorites" && favs.length === 0 && (
+                <div style={{ textAlign: "center", padding: "16px 10px 8px", color: "#ccc" }}>
+                  <div style={{ fontSize: 11, color: "#999" }}>No favorites yet — heart experiences to save them here</div>
+                </div>
+              )}
+              {/* Section header for picks mode */}
+              {libSort === "picks" && (
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#0B4D3B", textTransform: "uppercase", letterSpacing: 0.8, padding: "6px 0 4px" }}>⭐ Chris's Picks</div>
+              )}
+              {avail.map((mod, idx) => {
                 const mc = CATS.find(c => c.id === mod.category);
                 const isFav = favs.includes(mod.id);
+                // Add divider between favorites and non-favorites
+                const showDivider = libSort === "favorites" && idx > 0 && favs.includes(avail[idx-1]?.id) && !favs.includes(mod.id);
+                const showPicksDivider = libSort === "picks" && idx > 0 && avail[idx-1]?.tier === "curated" && mod.tier !== "curated";
                 return (
-                  <div key={mod.id} style={{ display: "flex", gap: 6, marginBottom: 6, alignItems: "stretch" }}>
+                  <div key={mod.id}>
+                    {showDivider && <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, padding: "10px 0 4px" }}>All experiences</div>}
+                    {showPicksDivider && <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, padding: "10px 0 4px" }}>More options</div>}
+                    <div style={{ display: "flex", gap: 6, marginBottom: 6, alignItems: "stretch" }}>
                     <button onClick={() => sLibPreview(mod)} style={{ flex: 1, textAlign: "left", display: "flex", gap: 10, padding: "8px 10px", borderRadius: 14, border: isFav ? "1.5px solid #E91E6325" : "1.5px solid #f0f0f0", background: isFav ? "#FFF5F7" : "#FAFAF8", cursor: "pointer", alignItems: "center" }}>
                       <div style={{ width: 50, height: 50, borderRadius: 12, flexShrink: 0, overflow: "hidden" }}><Vis mod={mod} cat={mc} h={50} br={12} /></div>
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ fontSize: 13, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || mc?.icon} {mod.name}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 3, flexWrap: "wrap" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3, flexWrap: "wrap" }}>
                           {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: mc?.color || "#888", background: (mc?.color || "#888") + "12", padding: "1px 6px", borderRadius: 4 }}>{mod.vibe}</span>}
-                          {mod.mapsRating > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#FBBC04" }}>★ {mod.mapsRating}</span>}
-                          {isFav && <span style={{ fontSize: 9 }}>❤️</span>}
-                          {mod.tier === "curated" && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B" }}>⭐</span>}
+                          {mod.tier === "curated" && <span style={{ fontSize: 8, fontWeight: 800, color: "#0B4D3B", background: "#0B4D3B15", padding: "1px 5px", borderRadius: 4 }}>Chris's Pick</span>}
+                          {isFav && <span style={{ fontSize: 8, fontWeight: 800, color: "#E91E63", background: "#E91E6315", padding: "1px 5px", borderRadius: 4 }}>Favorite</span>}
+                          {mod.mapsRating > 0 && <span style={{ fontSize: 8, fontWeight: 700, color: "#888" }}>Google {mod.mapsRating}★</span>}
                         </div>
                       </div>
                     </button>
                     <button onClick={() => place(mod.id)} style={{ width: 44, borderRadius: 14, border: "none", background: (mc?.color || "#888") + "15", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: mc?.color, fontWeight: 700, flexShrink: 0 }}>+</button>
+                  </div>
                   </div>
                 );
               })}
@@ -929,9 +943,10 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
         const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
         return (
           <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
+            <button onClick={() => sLibPreview(null)} style={{ position: "fixed", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 260 }}>←</button>
             <div style={{ position: "relative", height: 220 }}>
               <Vis mod={mod} cat={cat} h={220} />
-              <button onClick={() => sLibPreview(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{favs.includes(mod.id) ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>}</button>
             </div>
             <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
               <h2 style={{ margin: "0 0 6px", fontSize: 22, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</h2>
@@ -1148,8 +1163,9 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         <div key={mod.id} onClick={() => openDetail(mod, listCtx)} style={{ marginBottom: 12, borderRadius: 18, overflow: "hidden", position: "relative", height: 180, cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
           <Vis mod={mod} cat={cat} h={180} br={18} />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "16px 18px" }}>
-            <div style={{ display: "flex", gap: 5, marginBottom: 5 }}>
-              {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)", padding: "2px 8px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span>}
+            <div style={{ display: "flex", gap: 5, marginBottom: 5, flexWrap: "wrap" }}>
+              <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", background: "rgba(255,255,255,0.25)", backdropFilter: "blur(4px)", padding: "2px 8px", borderRadius: 5 }}>⭐ Chris's Pick</span>
+              {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)", padding: "2px 8px", borderRadius: 5 }}>{cat?.icon} {mod.vibe}</span>}
               {isPlaced && <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", background: "rgba(76,175,80,0.8)", padding: "2px 8px", borderRadius: 5 }}>✅ Planned</span>}
             </div>
             <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", fontFamily: "'Playfair Display',Georgia,serif", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}>{mod.name}</div>
@@ -1214,7 +1230,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         <div style={{ position: "relative", height: 260 }}>
           <Vis mod={mod} cat={cat} h={260} />
           {isPlaced && <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
-          <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: canSwipe ? 44 : 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, zIndex: 2, lineHeight: "40px" }}>{favs.includes(mod.id) ? <span style={{ color: "#E91E63", fontSize: 20, lineHeight: 1 }}>❤</span> : <span style={{ color: "transparent", fontSize: 20, lineHeight: 1, WebkitTextStroke: "1.5px #fff" }}>❤</span>}</button>
+          <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: canSwipe ? 44 : 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, zIndex: 2, lineHeight: "40px" }}>{favs.includes(mod.id) ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>}</button>
           {/* Swipe navigation arrows + position */}
           {canSwipe && (
             <div style={{ position: "absolute", bottom: 12, left: 0, right: 0, display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
@@ -1503,7 +1519,19 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
       {curated.length > 0 && (
         <div style={{ marginBottom: 16 }}>
-          {curated.map(m => renderCard(m, m.rec === "cantmiss", curated))}
+          {(() => {
+            // Interleave: group into picks and non-picks, then alternate
+            const picks = curated.filter(m => m.rec === "cantmiss");
+            const others = curated.filter(m => m.rec !== "cantmiss");
+            const mixed = [];
+            let pi = 0, oi = 0;
+            // Pattern: pick, 2 others, pick, 2 others...
+            while (pi < picks.length || oi < others.length) {
+              if (pi < picks.length) mixed.push(picks[pi++]);
+              for (let j = 0; j < 2 && oi < others.length; j++) mixed.push(others[oi++]);
+            }
+            return mixed.map(m => renderCard(m, m.rec === "cantmiss", curated));
+          })()}
         </div>
       )}
 
