@@ -8,6 +8,7 @@ const CATS = [
   { id: "culture", label: "Culture", icon: "🎭", color: "#F2994A", grad: "linear-gradient(135deg,#F2994A,#D47B2E)" },
   { id: "wellness", label: "Wellness", icon: "🧘", color: "#56CCF2", grad: "linear-gradient(135deg,#56CCF2,#26ADD8)" },
   { id: "custom", label: "Custom", icon: "📌", color: "#78909C", grad: "linear-gradient(135deg,#78909C,#546E7A)" },
+  { id: "event", label: "Events", icon: "🎪", color: "#E91E63", grad: "linear-gradient(135deg,#E91E63,#C2185B)" },
 ];
 
 const SLOTS = [
@@ -121,6 +122,18 @@ const MODS = [
   { id:"w1", name:"Cinta Costera Walk", category:"wellness", icon:"🌅", vibe:"Waterfront Walk", duration:1, notes:"Panama City's beautiful waterfront promenade stretching several kilometers along the bay. Perfect for an evening stroll as the sun sets behind the modern skyline. Grab a coconut water from a street vendor and walk at your own pace. There are playgrounds along the route for kids and exercise stations for the active. On weekends it fills with families — a lovely slice of everyday Panamanian life.", rec:"worthit", mapsRating:4.0, mapsReviews:"950", hours:"Open 24hrs", address:"Cinta Costera", tier:"extended", cost:"Free", tags:["kid-friendly","walking","sunset"], photo:"https://images.unsplash.com/photo-1505459668311-8dfac7952bf0?w=600&h=400&fit=crop" },
 ];
 
+// ═══ EVENTS — time-bound cultural happenings during the trip ═══
+const EVENTS = [
+  { id:"ev1", name:"Semana Santa — Palm Sunday", date:"2026-03-29", endDate:"2026-03-29", icon:"⛪", vibe:"Religious Procession", category:"event", notes:"Palm Sunday marks the beginning of Holy Week (Semana Santa), one of the most important cultural events in Panama. In Casco Viejo and across the city, churches hold special masses and palm-weaving ceremonies. The streets take on a festive, reverent atmosphere. A beautiful introduction to Panamanian religious tradition.", address:"Casco Viejo churches", cost:"Free", photo:"https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop" },
+  { id:"ev2", name:"Panama International Film Festival", date:"2026-03-29", endDate:"2026-03-29", icon:"🎬", vibe:"Film Festival", category:"event", notes:"The final day of IFF Panama, one of Central America's most important film festivals. Screenings of Latin American and international independent films at venues across Panama City. Check the schedule for any public screenings or closing events — some are free. A great way to experience Panama's growing creative scene.", address:"Various venues, Panama City", cost:"$5–15/screening", bookingUrl:"https://iffpanama.org", photo:"https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=600&h=400&fit=crop" },
+  { id:"ev3", name:"Holy Week Processions", date:"2026-03-30", endDate:"2026-04-04", icon:"🕯️", vibe:"Cultural Tradition", category:"event", notes:"Throughout Holy Week, Panama comes alive with religious processions, especially in Casco Viejo, La Villa de Los Santos, and smaller towns on the Azuero Peninsula. Elaborate floats, traditional music, purple-robed penitents, and street celebrations blend Catholic tradition with indigenous and Afro-Panamanian cultural elements. The most dramatic processions are on Holy Thursday and Good Friday. Even if you're not religious, it's a powerful cultural experience.", address:"Casco Viejo & citywide", cost:"Free", photo:"https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600&h=400&fit=crop" },
+  { id:"ev4", name:"Good Friday", date:"2026-04-03", endDate:"2026-04-03", icon:"✝️", vibe:"Public Holiday", category:"event", notes:"Good Friday is a national holiday in Panama. Most businesses close, and the day is marked by solemn processions through Casco Viejo and other neighborhoods. The largest procession features the Santo Sepulcro (Holy Sepulchre) carried through the streets. Many Panamanians travel to beach towns for the long weekend, so expect the city to be quieter and beach areas busier. Some restaurants may be closed — plan accordingly.", address:"Citywide", cost:"Free", photo:"" },
+  { id:"ev5", name:"Easter Sunday", date:"2026-04-05", endDate:"2026-04-05", icon:"🐣", vibe:"Public Holiday", category:"event", notes:"Easter Sunday celebrations across Panama City. Churches hold special sunrise services, and families gather for large meals. The mood shifts from the solemnity of Good Friday to celebration. Many restaurants reopen with special Easter menus. The long weekend means beaches and day trip destinations will be busy — plan accordingly or enjoy a quieter city.", address:"Citywide", cost:"Free", photo:"" },
+  { id:"ev6", name:"Live Jazz at Danilo's", date:"2026-03-29", endDate:"2026-04-07", icon:"🎷", vibe:"Live Music", category:"event", notes:"Danilo's Jazz Club in Casco Viejo hosts live jazz performances most evenings. The intimate venue features local and visiting musicians playing Latin jazz, bossa nova, and fusion. Great cocktails and a sophisticated atmosphere. Check their Instagram for the weekly lineup — shows typically start around 8-9 PM. Perfect for a post-dinner nightcap.", address:"Casco Viejo", cost:"$10–20 cover", hours:"Thu–Sat 8PM–12AM", photo:"https://images.unsplash.com/photo-1511192336575-5a79af67a629?w=600&h=400&fit=crop" },
+  { id:"ev7", name:"Casco Viejo Art Walk", date:"2026-04-01", endDate:"2026-04-01", icon:"🎨", vibe:"Art & Gallery Night", category:"event", notes:"The first Wednesday of each month, galleries and studios in Casco Viejo open their doors for a free evening art walk. Local and international artists showcase paintings, photography, sculpture, and mixed media. The walk typically covers 6-8 galleries within easy walking distance. Wine and snacks are often served. It's a great way to explore the neighborhood's creative side and meet local artists.", address:"Casco Viejo galleries", cost:"Free", hours:"6PM–9PM", photo:"https://images.unsplash.com/photo-1582555172866-f73bb12a2ab3?w=600&h=400&fit=crop" },
+  { id:"ev8", name:"Farmers & Artisan Market", date:"2026-03-29", endDate:"2026-04-07", icon:"🧺", vibe:"Weekend Market", category:"event", notes:"Every Saturday and Sunday morning, local farmers and artisans set up at the Mercado de San Felipe Neri in Casco Viejo. Fresh tropical fruits, local honey, artisan chocolate, handmade crafts, and prepared foods. Great for a leisurely morning browse. Arrive early (8-9 AM) for the best selection. A wonderful way to connect with local producers and take home some authentic Panamanian products.", address:"Plaza San Felipe Neri, Casco Viejo", cost:"Free entry", hours:"Sat–Sun 8AM–1PM", photo:"https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&h=400&fit=crop" },
+];
+
 const TRIP = {
   name: "Panama 2026",
   subtitle: "Visit Pa & Ma",
@@ -147,7 +160,7 @@ const INIT_CAL = {
 };
 
 function mkDays(sd, c) {
-  const days = [], d = new Date(sd);
+  const days = [], d = new Date(sd + "T12:00:00");
   for (let i = 0; i < c; i++) {
     const dt = new Date(d);
     dt.setDate(dt.getDate() + i);
@@ -472,13 +485,14 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
 };
 
 // ═══ ITINERARY ═══
-const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
+const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onShowEvent, favs }) => {
   const [aDay, sDay] = useState(initDay || 0);
   const [exp, sExp] = useState(null);
   const [lib, sLib] = useState(false);
   const [cust, sCust] = useState(false);
   const [aSlot, sSlot] = useState(null);
   const [fCat, sFCat] = useState("all");
+  const [libSort, sLibSort] = useState("recommended");
   const [guide, sGuide] = useState(null);
   const [showInfo, sInfo] = useState(false);
   const [showOv, sOv] = useState(false);
@@ -586,7 +600,29 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
     return { cur: all.indexOf(sk) + 1, tot: mod.duration };
   };
 
-  const avail = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat);
+  const availRaw = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat);
+  const avail = [...availRaw].sort((a, b) => {
+    if (libSort === "favorites") {
+      const aF = favs.includes(a.id) ? 0 : 1;
+      const bF = favs.includes(b.id) ? 0 : 1;
+      if (aF !== bF) return aF - bF;
+    }
+    if (libSort === "picks") {
+      const aT = a.tier === "curated" ? 0 : 1;
+      const bT = b.tier === "curated" ? 0 : 1;
+      if (aT !== bT) return aT - bT;
+    }
+    if (libSort === "rating") {
+      return (b.mapsRating || 0) - (a.mapsRating || 0);
+    }
+    // Default: favorites first, then curated first
+    const aF = favs.includes(a.id) ? 0 : 1;
+    const bF = favs.includes(b.id) ? 0 : 1;
+    if (aF !== bF) return aF - bF;
+    const aT = a.tier === "curated" ? 0 : 1;
+    const bT = b.tier === "curated" ? 0 : 1;
+    return aT - bT;
+  });
 
   return (
     <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
@@ -619,6 +655,51 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
       <div onTouchStart={e => sSw(e.touches[0].clientX)} onTouchEnd={e => { if (sw === null) return; const d = sw - e.changedTouches[0].clientX; if (Math.abs(d) > 60) { if (d > 0 && aDay < days.length - 1) sDay(aDay + 1); if (d < 0 && aDay > 0) sDay(aDay - 1); } sSw(null); }} style={{ padding: "14px 16px 100px", minHeight: "55vh" }}>
         <div style={{ marginBottom: 14, animation: "fi 0.2s ease-out" }}>
           <div style={{ fontSize: 15, fontWeight: 800 }}>Day {cDay.num} · {cDay.full}</div>
+          {/* Events happening on this day */}
+          {events && (() => {
+            const dayEvents = events.filter(ev => {
+              if (cDay.date < ev.date || cDay.date > (ev.endDate || ev.date)) return false;
+              if (ev.hours) {
+                const h = ev.hours.toLowerCase();
+                const dayNames = ["sun","mon","tue","wed","thu","fri","sat"];
+                const mentioned = [];
+                dayNames.forEach((d, i) => { if (h.includes(d)) mentioned.push(i); });
+                if (mentioned.length > 0) {
+                  let allowed = [...mentioned];
+                  if (mentioned.length === 2 && /[–\-]/.test(h)) {
+                    // Determine order from string position
+                    const pos = mentioned.map(i => ({ i, p: h.indexOf(dayNames[i]) })).sort((a, b) => a.p - b.p);
+                    const first = pos[0].i, second = pos[1].i;
+                    allowed = [];
+                    if (first <= second) {
+                      for (let i = first; i <= second; i++) allowed.push(i);
+                    } else {
+                      for (let i = first; i <= 6; i++) allowed.push(i);
+                      for (let i = 0; i <= second; i++) allowed.push(i);
+                    }
+                  }
+                  const dow = new Date(cDay.date + "T12:00:00").getDay();
+                  if (!allowed.includes(dow)) return false;
+                }
+              }
+              return true;
+            });
+            if (dayEvents.length === 0) return null;
+            return (
+              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+                {dayEvents.map(ev => (
+                  <button key={ev.id} onClick={() => onShowEvent && onShowEvent(ev)} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 10, background: "#E91E6310", border: "1px solid #E91E6325", cursor: "pointer" }}>
+                    <span style={{ fontSize: 13 }}>{ev.icon}</span>
+                    <div style={{ textAlign: "left" }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#E91E63" }}>{ev.name}</div>
+                      {ev.hours && <div style={{ fontSize: 9, color: "#999" }}>{ev.hours}</div>}
+                    </div>
+                    <span style={{ fontSize: 9, color: "#E91E6380", marginLeft: 4 }}>→</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })()}
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -720,37 +801,51 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
       {lib && (
         <div onClick={() => { sLib(false); sSlot(null); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 200, animation: "fi 0.12s ease-out" }}>
           <div onClick={e => e.stopPropagation()} style={{ position: "absolute", bottom: 0, left: 0, right: 0, maxWidth: 430, margin: "0 auto", background: "#fff", borderRadius: "24px 24px 0 0", height: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-            <div style={{ display: "flex", justifyContent: "center", padding: "12px 0 6px" }}><div style={{ width: 40, height: 4, background: "#ddd", borderRadius: 2 }} /></div>
+            <DragHandle onClose={() => { sLib(false); sSlot(null); }} />
             <div style={{ padding: "6px 20px 12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>Choose Experience</h3>
               <button onClick={() => { sLib(false); sSlot(null); }} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Cancel</button>
             </div>
-            <div style={{ padding: "0 16px 8px", display: "flex", gap: 5, overflowX: "auto" }}>
-              <button onClick={() => sFCat("all")} style={{ flexShrink: 0, padding: "7px 14px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: fCat === "all" ? "#1a1a1a" : "#f0f0f0", color: fCat === "all" ? "#fff" : "#777" }}>All</button>
-              {CATS.filter(c => c.id !== "custom").map(c => <button key={c.id} onClick={() => sFCat(fCat === c.id ? "all" : c.id)} style={{ flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: fCat === c.id ? c.color : "#f0f0f0", color: fCat === c.id ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 4 }}><span style={{ fontSize: 13 }}>{c.icon}</span>{c.label}</button>)}
+            {/* Category filters */}
+            <div style={{ padding: "0 16px 6px", display: "flex", gap: 5, overflowX: "auto" }}>
+              <button onClick={() => sFCat("all")} style={{ flexShrink: 0, padding: "6px 12px", borderRadius: 10, border: "none", fontSize: 11, fontWeight: 700, cursor: "pointer", background: fCat === "all" ? "#0B4D3B" : "#f0f0f0", color: fCat === "all" ? "#fff" : "#777" }}>All</button>
+              {CATS.filter(c => c.id !== "custom" && c.id !== "event").map(c => <button key={c.id} onClick={() => sFCat(fCat === c.id ? "all" : c.id)} style={{ flexShrink: 0, padding: "6px 10px", borderRadius: 10, border: "none", fontSize: 11, fontWeight: 700, cursor: "pointer", background: fCat === c.id ? c.color : "#f0f0f0", color: fCat === c.id ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 3 }}><span style={{ fontSize: 12 }}>{c.icon}</span>{c.label}</button>)}
             </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "6px 16px 24px" }}>
+            {/* Sort pills */}
+            <div style={{ padding: "6px 16px 8px", display: "flex", gap: 4 }}>
+              {[["recommended", "⭐ Recommended"], ["favorites", "❤️ Favorites"], ["picks", "🎯 Chris's Picks"], ["rating", "📊 Top Rated"]].map(([k, label]) => (
+                <button key={k} onClick={() => sLibSort(k)} style={{
+                  padding: "5px 10px", borderRadius: 8, border: libSort === k ? "1.5px solid #0B4D3B" : "1.5px solid #eee",
+                  background: libSort === k ? "#0B4D3B10" : "#fff", fontSize: 10, fontWeight: 700,
+                  color: libSort === k ? "#0B4D3B" : "#999", cursor: "pointer",
+                }}>{label}</button>
+              ))}
+            </div>
+            <div style={{ flex: 1, overflowY: "auto", padding: "4px 16px 24px" }}>
               <button onClick={() => { sLib(false); sCust(true); }} style={{ width: "100%", textAlign: "left", display: "flex", gap: 12, padding: "10px 14px", borderRadius: 14, border: "2px dashed #B0BEC5", background: "#FAFAFA", marginBottom: 10, cursor: "pointer", alignItems: "center" }}>
                 <div style={{ width: 42, height: 42, borderRadius: 10, background: "#ECEFF1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>📌</div>
                 <div><div style={{ fontSize: 13, fontWeight: 700, color: "#546E7A" }}>Custom Event</div></div>
               </button>
               {avail.map(mod => {
                 const mc = CATS.find(c => c.id === mod.category);
+                const isFav = favs.includes(mod.id);
                 return (
-                  <button key={mod.id} onClick={() => place(mod.id)} style={{ width: "100%", textAlign: "left", display: "flex", gap: 12, padding: "10px 12px", borderRadius: 14, border: "none", background: "#FAFAF8", marginBottom: 6, cursor: "pointer", alignItems: "center" }}>
-                    <div style={{ width: 46, height: 46, borderRadius: 10, flexShrink: 0, overflow: "hidden" }}><Vis mod={mod} cat={mc} h={46} br={10} /></div>
+                  <button key={mod.id} onClick={() => place(mod.id)} style={{ width: "100%", textAlign: "left", display: "flex", gap: 10, padding: "8px 10px", borderRadius: 14, border: isFav ? "1.5px solid #E91E6325" : "none", background: isFav ? "#FFF5F7" : "#FAFAF8", marginBottom: 6, cursor: "pointer", alignItems: "center" }}>
+                    <div style={{ width: 50, height: 50, borderRadius: 12, flexShrink: 0, overflow: "hidden" }}><Vis mod={mod} cat={mc} h={50} br={12} /></div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700 }}>{mod.name}</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 2 }}>
-                        {mod.rec && REC[mod.rec] && <span style={{ fontSize: 9, fontWeight: 800, color: REC[mod.rec].color }}>{REC[mod.rec].icon} {REC[mod.rec].label}</span>}
-                        {mod.mapsRating > 0 && <GR r={mod.mapsRating} sm />}
+                      <div style={{ fontSize: 13, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || mc?.icon} {mod.name}</div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 3, flexWrap: "wrap" }}>
+                        {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: mc?.color || "#888", background: (mc?.color || "#888") + "12", padding: "1px 6px", borderRadius: 4 }}>{mod.vibe}</span>}
+                        {mod.mapsRating > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#FBBC04" }}>★ {mod.mapsRating}</span>}
+                        {isFav && <span style={{ fontSize: 9 }}>❤️</span>}
+                        {mod.tier === "curated" && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B" }}>⭐</span>}
                       </div>
                     </div>
                     <div style={{ width: 30, height: 30, borderRadius: 8, background: (mc?.color || "#888") + "15", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: mc?.color, fontWeight: 700 }}>+</div>
                   </button>
                 );
               })}
-              {avail.length === 0 && <div style={{ textAlign: "center", padding: "40px 20px", color: "#ccc" }}><div style={{ fontSize: 36, marginBottom: 10 }}>✅</div><div style={{ fontSize: 15, fontWeight: 700, color: "#999" }}>All placed!</div></div>}
+              {avail.length === 0 && <div style={{ textAlign: "center", padding: "40px 20px", color: "#ccc" }}><div style={{ fontSize: 36, marginBottom: 10 }}>✅</div><div style={{ fontSize: 15, fontWeight: 700, color: "#999" }}>All experiences placed!</div></div>}
             </div>
           </div>
         </div>
@@ -838,8 +933,26 @@ const EditModal = ({ mod, onSave, onDelete, onClose }) => {
 };
 
 // ═══ EXPLORE TAB ═══
-const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs }) => {
+const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs, events, trip }) => {
   const [detailMod, sDetailMod] = useState(null);
+  const [detailList, sDetailList] = useState([]); // list of items for swipe navigation
+  const [detailIdx, sDetailIdx] = useState(0);
+  const detailSwRef = useRef(null);
+  const openDetail = (mod, list) => {
+    const idx = list ? list.findIndex(m => m.id === mod.id) : -1;
+    sDetailMod(mod);
+    sDetailList(list || []);
+    sDetailIdx(idx >= 0 ? idx : 0);
+    sSlotPicker(null);
+  };
+  const swipeDetail = (dir) => {
+    if (detailList.length <= 1) return;
+    const next = detailIdx + dir;
+    if (next < 0 || next >= detailList.length) return;
+    sDetailIdx(next);
+    sDetailMod(detailList[next]);
+    sSlotPicker(null);
+  };
   const [filterCat, sFilter] = useState("all");
   const [filterTags, sFilterTags] = useState([]);
   const [slotPicker, sSlotPicker] = useState(null);
@@ -874,31 +987,32 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
   const curated = filtered.filter(m => m.tier === "curated");
   const extended = filtered.filter(m => m.tier === "extended");
 
-  const getOpenSlots = (mod) => {
+  const getSlots = (mod) => {
     const best = mod.category === "restaurant" ? ["evening", "afternoon", "morning"]
-      : mod.category === "nightlife" ? ["evening"]
+      : mod.category === "nightlife" ? ["evening", "afternoon", "morning"]
       : ["morning", "afternoon", "evening"];
-    const open = [];
+    const results = [];
+    // For events with specific dates, only show those dates
+    const eventDates = mod.date ? (() => {
+      const dates = [];
+      const start = new Date(mod.date + "T12:00:00");
+      const end = mod.endDate ? new Date(mod.endDate + "T12:00:00") : start;
+      for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+        dates.push(d.toISOString().split("T")[0]);
+      }
+      return dates;
+    })() : null;
+
     days.forEach(day => {
+      if (eventDates && !eventDates.includes(day.date)) return;
       best.forEach(sid => {
         const sk = day.date + "|" + sid;
-        if (!occ[sk]) {
-          let fits = true;
-          if (mod.duration > 1) {
-            const di = days.findIndex(d => d.date === day.date);
-            const si = SLOTS.findIndex(s => s.id === sid);
-            let cd = di, cs = si;
-            for (let i = 0; i < mod.duration; i++) {
-              if (cd >= days.length) { fits = false; break; }
-              if (occ[days[cd].date + "|" + SLOTS[cs].id]) { fits = false; break; }
-              cs++; if (cs >= SLOTS.length) { cd++; cs = 0; }
-            }
-          }
-          if (fits) open.push({ sk, day, slot: SLOTS.find(s => s.id === sid) });
-        }
+        const existingId = occ[sk];
+        const existing = existingId ? mods.find(m => m.id === existingId) : null;
+        results.push({ sk, day, slot: SLOTS.find(s => s.id === sid), existing });
       });
     });
-    return open.slice(0, 6);
+    return results.slice(0, 12);
   };
 
   const addToSlot = (modId, sk) => {
@@ -910,14 +1024,14 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
     sDetailMod(null);
   };
 
-  const renderCard = (mod, isHero) => {
+  const renderCard = (mod, isHero, listCtx) => {
     const cat = CATS.find(c => c.id === mod.category);
     const isPlaced = pIds.has(mod.id);
 
     if (isHero) {
       // Hero card — full-width with large photo for top picks
       return (
-        <div key={mod.id} onClick={() => sDetailMod(mod)} style={{ marginBottom: 12, borderRadius: 18, overflow: "hidden", position: "relative", height: 180, cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
+        <div key={mod.id} onClick={() => openDetail(mod, listCtx)} style={{ marginBottom: 12, borderRadius: 18, overflow: "hidden", position: "relative", height: 180, cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
           <Vis mod={mod} cat={cat} h={180} br={18} />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "16px 18px" }}>
             <div style={{ display: "flex", gap: 5, marginBottom: 5 }}>
@@ -932,7 +1046,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
     // Standard compact card
     return (
-      <div key={mod.id} onClick={() => sDetailMod(mod)} style={{
+      <div key={mod.id} onClick={() => openDetail(mod, listCtx)} style={{
         marginBottom: 8, borderRadius: 16, overflow: "hidden",
         background: "#FEFDFB", border: "1.5px solid " + (cat?.color || "#ddd") + "15",
         boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer",
@@ -966,15 +1080,35 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
     const cat = CATS.find(c => c.id === mod.category);
     const isPlaced = pIds.has(mod.id);
     const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
+    const canSwipe = detailList.length > 1;
 
     return (
-      <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
+      <div
+        style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}
+        onTouchStart={e => { detailSwRef.current = e.touches[0].clientX; }}
+        onTouchEnd={e => {
+          if (detailSwRef.current === null) return;
+          const dx = detailSwRef.current - e.changedTouches[0].clientX;
+          if (Math.abs(dx) > 70) { swipeDetail(dx > 0 ? 1 : -1); }
+          detailSwRef.current = null;
+        }}
+      >
         {/* Hero image */}
         <div style={{ position: "relative", height: 260 }}>
           <Vis mod={mod} cat={cat} h={260} />
           <button onClick={() => sDetailMod(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
           {isPlaced && <div style={{ position: "absolute", top: 12, right: 56, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
           <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", top: 12, right: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{favs.includes(mod.id) ? "❤️" : "🤍"}</button>
+          {/* Swipe navigation arrows + position */}
+          {canSwipe && (
+            <div style={{ position: "absolute", bottom: 12, left: 0, right: 0, display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
+              {detailIdx > 0 && <button onClick={e => { e.stopPropagation(); swipeDetail(-1); }} style={{ width: 28, height: 28, borderRadius: 14, background: "rgba(0,0,0,0.4)", border: "none", color: "#fff", fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>‹</button>}
+              <div style={{ display: "flex", gap: 3 }}>
+                {detailList.slice(0, 12).map((_, i) => <div key={i} style={{ width: i === detailIdx ? 12 : 4, height: 4, borderRadius: 2, background: i === detailIdx ? "#fff" : "rgba(255,255,255,0.4)", transition: "all 0.3s" }} />)}
+              </div>
+              {detailIdx < detailList.length - 1 && <button onClick={e => { e.stopPropagation(); swipeDetail(1); }} style={{ width: 28, height: 28, borderRadius: 14, background: "rgba(0,0,0,0.4)", border: "none", color: "#fff", fontSize: 14, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>›</button>}
+            </div>
+          )}
         </div>
 
         <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
@@ -1011,19 +1145,23 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
                 <div style={{ background: "#F7F6F3", borderRadius: 14, padding: 14, marginTop: 10, animation: "fi 0.15s ease-out" }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#555", marginBottom: 8 }}>Choose a slot:</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    {getOpenSlots(mod).map(({ sk, day, slot }) => (
+                    {getSlots(mod).map(({ sk, day, slot, existing }) => (
                       <button key={sk} onClick={() => addToSlot(mod.id, sk)} style={{
                         display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
-                        borderRadius: 10, border: "1.5px solid #e0e0e0", background: "#fff",
-                        cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#333",
+                        borderRadius: 10, border: existing ? "1.5px solid #FFCDD2" : "1.5px solid #e0e0e0",
+                        background: existing ? "#FFF8F8" : "#fff",
+                        cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#333", textAlign: "left",
                       }}>
                         <span>{slot.icon}</span>
-                        <span>{day.wd} {day.md}</span>
-                        <span style={{ color: "#aaa" }}>·</span>
-                        <span style={{ color: "#888" }}>{slot.label}</span>
+                        <div style={{ flex: 1 }}>
+                          <div>{day.wd} {day.md} · {slot.label}</div>
+                          {existing && <div style={{ fontSize: 10, color: "#E53935", marginTop: 2 }}>Replaces: {existing.icon || ""} {existing.name}</div>}
+                        </div>
+                        {!existing && <span style={{ fontSize: 10, color: "#4CAF50", fontWeight: 700 }}>Open</span>}
+                        {existing && <span style={{ fontSize: 10, color: "#E53935", fontWeight: 700 }}>Replace</span>}
                       </button>
                     ))}
-                    {getOpenSlots(mod).length === 0 && <div style={{ fontSize: 12, color: "#999", padding: 8 }}>No open slots available</div>}
+                    {getSlots(mod).length === 0 && <div style={{ fontSize: 12, color: "#999", padding: 8 }}>No available slots for this {mod.date ? "date" : "experience"}</div>}
                   </div>
                   <button onClick={() => sSlotPicker(null)} style={{ marginTop: 8, fontSize: 11, color: "#888", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Cancel</button>
                 </div>
@@ -1093,9 +1231,14 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         }} />
       </div>
 
-      {/* Highlights carousel */}
+      {/* ═══ CHRIS'S PICKS — heading + carousel ═══ */}
       {highlights.length > 0 && (
         <div style={{ marginBottom: 16 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+            <span style={{ fontSize: 13 }}>⭐</span>
+            <span style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", textTransform: "uppercase", letterSpacing: 0.8 }}>Chris's Picks</span>
+            <div style={{ flex: 1, height: 1, background: "#eee" }} />
+          </div>
           <div style={{ display: "flex", gap: 10, overflowX: "auto", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", paddingBottom: 8 }}
             ref={hlSwRef}
             onScroll={() => {
@@ -1109,7 +1252,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
               const cat = CATS.find(c => c.id === mod.category);
               const isPlcd = pIds.has(mod.id);
               return (
-                <div key={mod.id} onClick={() => sDetailMod(mod)} style={{
+                <div key={mod.id} onClick={() => openDetail(mod, highlights)} style={{
                   flexShrink: 0, width: "78%", scrollSnapAlign: "start",
                   borderRadius: 16, overflow: "hidden", position: "relative",
                   height: 160, cursor: "pointer",
@@ -1128,12 +1271,68 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
               );
             })}
           </div>
-          {/* Dots */}
-          <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 6 }}>
-            {highlights.slice(0, 10).map((_, i) => <div key={i} style={{ width: i === hlIdx ? 14 : 5, height: 5, borderRadius: 3, background: i === hlIdx ? "#1a1a1a" : "#ccc", transition: "all 0.3s" }} />)}
-          </div>
+          {highlights.length > 1 && (
+            <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 6 }}>
+              {highlights.slice(0, 10).map((_, i) => <div key={i} style={{ width: i === hlIdx ? 14 : 5, height: 5, borderRadius: 3, background: i === hlIdx ? "#1a1a1a" : "#ccc", transition: "all 0.3s" }} />)}
+            </div>
+          )}
         </div>
       )}
+
+      {/* Events happening during the trip */}
+      {events && events.length > 0 && (() => {
+        // Filter events that overlap with trip dates
+        const tripStart = trip?.startDate || "2026-03-29";
+        const tripDays = days.map(d => d.date);
+        const activeEvents = events.filter(ev => {
+          const start = ev.date;
+          const end = ev.endDate || ev.date;
+          return tripDays.some(d => d >= start && d <= end);
+        });
+        if (activeEvents.length === 0) return null;
+        return (
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+              <span style={{ fontSize: 11, fontWeight: 800, color: "#E91E63", textTransform: "uppercase", letterSpacing: 0.8 }}>🎪 Happening During Your Trip</span>
+            </div>
+            <div style={{ display: "flex", gap: 10, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 6 }}>
+              {activeEvents.map(ev => {
+                const cat = CATS.find(c => c.id === "event");
+                const isMultiDay = ev.endDate && ev.endDate !== ev.date;
+                const fmtD = (d) => { const dt = new Date(d + "T12:00:00"); return dt.toLocaleDateString("en-US", { month: "short", day: "numeric" }); };
+                return (
+                  <div key={ev.id} onClick={() => openDetail({ ...ev, duration: 1, tier: "curated", mapsRating: 0, tags: [] }, activeEvents.map(e => ({ ...e, duration: 1, tier: "curated", mapsRating: 0, tags: [] })))} style={{
+                    flexShrink: 0, width: "72%", borderRadius: 16, overflow: "hidden",
+                    background: "#FEFDFB", border: "1.5px solid #E91E6320",
+                    boxShadow: "0 2px 10px rgba(233,30,99,0.08)", cursor: "pointer",
+                  }}>
+                    {ev.photo ? (
+                      <div style={{ height: 100, position: "relative" }}>
+                        <img src={ev.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.5) 100%)" }} />
+                        <div style={{ position: "absolute", top: 8, left: 8, background: "#E91E63", borderRadius: 6, padding: "2px 8px", fontSize: 9, fontWeight: 800, color: "#fff" }}>
+                          {isMultiDay ? fmtD(ev.date) + " – " + fmtD(ev.endDate) : fmtD(ev.date)}
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ height: 60, background: "linear-gradient(135deg, #E91E63, #C2185B)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
+                        <span style={{ fontSize: 28, opacity: 0.4 }}>{ev.icon}</span>
+                        <div style={{ position: "absolute", top: 8, left: 8, background: "rgba(0,0,0,0.3)", borderRadius: 6, padding: "2px 8px", fontSize: 9, fontWeight: 800, color: "#fff" }}>
+                          {isMultiDay ? fmtD(ev.date) + " – " + fmtD(ev.endDate) : fmtD(ev.date)}
+                        </div>
+                      </div>
+                    )}
+                    <div style={{ padding: "10px 12px" }}>
+                      <div style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.2, marginBottom: 3 }}>{ev.icon} {ev.name}</div>
+                      <span style={{ fontSize: 9, fontWeight: 700, color: "#E91E63", background: "#E91E6312", padding: "2px 7px", borderRadius: 5 }}>{ev.vibe}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Interest tags */}
       <div style={{ marginBottom: 12 }}>
@@ -1171,12 +1370,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
       {curated.length > 0 && (
         <div style={{ marginBottom: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-            <span style={{ fontSize: 13 }}>⭐</span>
-            <span style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", textTransform: "uppercase", letterSpacing: 0.8 }}>Chris's Picks</span>
-            <div style={{ flex: 1, height: 1, background: "#eee" }} />
-          </div>
-          {curated.map(m => renderCard(m, m.rec === "cantmiss"))}
+          {curated.map(m => renderCard(m, m.rec === "cantmiss", curated))}
         </div>
       )}
 
@@ -1187,7 +1381,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
             <span style={{ fontSize: 12, fontWeight: 800, color: "#888", textTransform: "uppercase", letterSpacing: 0.8 }}>More Options</span>
             <div style={{ flex: 1, height: 1, background: "#eee" }} />
           </div>
-          {extended.map(m => renderCard(m, false))}
+          {extended.map(m => renderCard(m, false, extended))}
         </div>
       )}
 
@@ -1319,6 +1513,8 @@ export default function App() {
   const [assistMsgs, sAssistMsgs] = useState([]);
   const [assistInput, sAssistInput] = useState("");
   const [assistLoading, sAssistLoading] = useState(false);
+  const [eventDetail, sEventDetail] = useState(null);
+  const [evSlotPicker, sEvSlotPicker] = useState(false);
 
   // Admin mode via URL param: ?admin=true
   const isAdmin = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("admin") === "true";
@@ -1366,9 +1562,9 @@ export default function App() {
 
       {/* Tab content */}
       {tab === "explore" ? (
-        <Explore mods={mods} setMods={sMods} cal={cal} setCal={sCal} days={days} occ={occ} isAdmin={isAdmin} favs={favs} setFavs={setFavs} onSwitchToDay={di => { sJd(di); sTab("itinerary"); }} />
+        <Explore mods={mods} setMods={sMods} cal={cal} setCal={sCal} days={days} occ={occ} isAdmin={isAdmin} favs={favs} setFavs={setFavs} events={EVENTS} trip={trip} onSwitchToDay={di => { sJd(di); sTab("itinerary"); }} />
       ) : (
-        <Itin trip={trip} mods={mods} setMods={sMods} cal={cal} setCal={sCal} onBack={() => sScr("welcome")} initDay={jd} />
+        <Itin trip={trip} mods={mods} setMods={sMods} cal={cal} setCal={sCal} onBack={() => sScr("welcome")} initDay={jd} events={EVENTS} onShowEvent={ev => { sEventDetail(ev); sEvSlotPicker(false); }} favs={favs} />
       )}
 
       {/* Trip edit modal (admin) */}
@@ -1398,6 +1594,117 @@ export default function App() {
       {/* Overview + Info panels (shared across both tabs) */}
       {showOv && <Overview days={days} occ={occ} mods={mods} onClose={() => setShowOv(false)} onJump={di => { sJd(di); sTab("itinerary"); setShowOv(false); }} />}
       {showInfo && <InfoPanel info={trip.info} onClose={() => setShowInfo(false)} />}
+
+      {/* Event detail — full screen from itinerary */}
+      {eventDetail && (() => {
+        const ev = eventDetail;
+        const cat = CATS.find(c => c.id === "event");
+        const isMultiDay = ev.endDate && ev.endDate !== ev.date;
+        const fmtD = (d) => new Date(d + "T12:00:00").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+        return (
+          <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
+            <div style={{ position: "relative", height: 220 }}>
+              {ev.photo ? (
+                <img src={ev.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, #E91E63, #C2185B)" }} />
+              )}
+              <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, rgba(0,0,0,0.6) 100%)" }} />
+              <button onClick={() => sEventDetail(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+              <div style={{ position: "absolute", top: 12, right: 12, background: "#E91E63", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>
+                🎪 {isMultiDay ? fmtD(ev.date) + " – " + fmtD(ev.endDate) : fmtD(ev.date)}
+              </div>
+            </div>
+            <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
+              <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>{ev.icon} {ev.name}</h2>
+              <div style={{ display: "flex", gap: 5, marginBottom: 14 }}>
+                <span style={{ fontSize: 11, fontWeight: 700, color: "#E91E63", background: "#E91E6312", padding: "3px 10px", borderRadius: 7 }}>{ev.vibe}</span>
+              </div>
+              <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 18 }}>{ev.notes}</div>
+              {(ev.hours || ev.cost || ev.address) && (
+                <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 16px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 10 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8 }}>Details</div>
+                  {ev.hours && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{ev.hours}</span></div>}
+                  {ev.cost && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{ev.cost}</span></div>}
+                  {ev.address && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>📍</span><span style={{ color: "#555", fontWeight: 600 }}>{ev.address}</span></div>}
+                  {ev.bookingUrl && <a href={ev.bookingUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 14px", borderRadius: 10, background: "#E91E63", color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none" }}>🔗 More Info</a>}
+                </div>
+              )}
+              {/* Add to itinerary */}
+              {(() => {
+                // Build date-filtered slots for this event
+                const eventDates = (() => {
+                  const dates = [];
+                  const start = new Date(ev.date + "T12:00:00");
+                  const end = ev.endDate ? new Date(ev.endDate + "T12:00:00") : start;
+                  for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+                    dates.push(d.toISOString().split("T")[0]);
+                  }
+                  return dates;
+                })();
+                const evSlots = [];
+                days.forEach(day => {
+                  if (!eventDates.includes(day.date)) return;
+                  ["morning", "afternoon", "evening"].forEach(sid => {
+                    const sk = day.date + "|" + sid;
+                    const existingId = occ[sk];
+                    const existing = existingId ? mods.find(m => m.id === existingId) : null;
+                    evSlots.push({ sk, day, slot: SLOTS.find(s => s.id === sid), existing });
+                  });
+                });
+                return (
+                  <div style={{ marginBottom: 10 }}>
+                    <button onClick={() => sEvSlotPicker(!evSlotPicker)} style={{
+                      width: "100%", padding: 14, borderRadius: 14, border: "none",
+                      background: "#E91E63", color: "#fff",
+                      fontSize: 15, fontWeight: 700, cursor: "pointer",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                      boxShadow: "0 4px 16px rgba(233,30,99,0.3)",
+                    }}>➕ Add to Itinerary</button>
+                    {evSlotPicker && (
+                      <div style={{ background: "#F7F6F3", borderRadius: 14, padding: 14, marginTop: 10, animation: "fi 0.15s ease-out" }}>
+                        <div style={{ fontSize: 12, fontWeight: 700, color: "#555", marginBottom: 8 }}>Choose a slot:</div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                          {evSlots.map(({ sk, day, slot, existing }) => (
+                            <button key={sk} onClick={() => {
+                              // Add event as an experience to mods if not already there
+                              const evMod = { ...ev, duration: 1, tier: "curated", rec: "", mapsRating: 0, tags: [], mapsReviews: "" };
+                              sMods(prev => prev.find(m => m.id === ev.id) ? prev : [...prev, evMod]);
+                              const nc = { ...cal }; nc[sk] = ev.id; sCal(nc);
+                              sEvSlotPicker(false); sEventDetail(null);
+                            }} style={{
+                              display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
+                              borderRadius: 10, border: existing ? "1.5px solid #FFCDD2" : "1.5px solid #e0e0e0",
+                              background: existing ? "#FFF8F8" : "#fff",
+                              cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#333", textAlign: "left",
+                            }}>
+                              <span>{slot.icon}</span>
+                              <div style={{ flex: 1 }}>
+                                <div>{day.wd} {day.md} · {slot.label}</div>
+                                {existing && <div style={{ fontSize: 10, color: "#E53935", marginTop: 2 }}>Replaces: {existing.icon || ""} {existing.name}</div>}
+                              </div>
+                              {!existing && <span style={{ fontSize: 10, color: "#4CAF50", fontWeight: 700 }}>Open</span>}
+                              {existing && <span style={{ fontSize: 10, color: "#E53935", fontWeight: 700 }}>Replace</span>}
+                            </button>
+                          ))}
+                          {evSlots.length === 0 && <div style={{ fontSize: 12, color: "#999", padding: 8 }}>This event falls outside your trip dates</div>}
+                        </div>
+                        <button onClick={() => sEvSlotPicker(false)} style={{ marginTop: 8, fontSize: 11, color: "#888", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Cancel</button>
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+              <button onClick={() => { setFavs(p => p.includes(ev.id) ? p : [...p, ev.id]); }} style={{
+                width: "100%", padding: 12, borderRadius: 14, border: favs.includes(ev.id) ? "none" : "1.5px solid #e0e0e0",
+                background: favs.includes(ev.id) ? "#E8F5E9" : "#fff", color: favs.includes(ev.id) ? "#4CAF50" : "#888",
+                fontSize: 13, fontWeight: 700, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}>{favs.includes(ev.id) ? "❤️ Saved" : "🤍 Save to favorites"}</button>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Bottom tab bar — floating pill */}
       <div style={{
