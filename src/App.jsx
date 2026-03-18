@@ -484,7 +484,7 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
       {splashPhase !== "done" && (
         <div style={{
           position: "absolute", inset: 0, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center",
-          background: "#0B4D3B",
+          background: "#1B3B32",
           opacity: splashPhase === "dissolve" ? 0 : 1,
           transition: "opacity 1.2s ease-in-out",
           pointerEvents: splashPhase === "dissolve" ? "none" : "auto",
@@ -511,27 +511,27 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(11,77,59,0.4) 0%, rgba(33,147,176,0.2) 50%, rgba(15,76,117,0.3) 100%)" }} />
 
       <div style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", padding: "0 24px" }}>
-        <div style={{ padding: "20px 0 0", animation: "fi 0.8s ease-out 3.8s both" }}>
+        <div style={{ padding: "20px 0 0", animation: "subtitleFade 0.6s ease-out 3.6s both" }}>
           <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1.2 }}>🗺️ Trip Builder: Your Curated Travel Experience</span>
         </div>
 
         <div style={{ flex: 1, minHeight: 60 }} />
 
         <div>
-          <h1 style={{ animation: "titleRise 0.9s cubic-bezier(0.16,1,0.3,1) 4s both", fontFamily: "'Playfair Display',Georgia,serif", fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 8px", lineHeight: 1.0, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>{trip.name}</h1>
-          <div style={{ animation: "subtitleFade 0.8s ease-out 4.4s both", fontSize: 18, fontWeight: 500, color: "rgba(255,255,255,0.75)", marginBottom: 6, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>{trip.subtitle}</div>
-          <div style={{ animation: "subtitleFade 0.7s ease-out 4.7s both", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
+          <h1 style={{ animation: "titleRise 0.8s cubic-bezier(0.16,1,0.3,1) 3.8s both", fontFamily: "'Playfair Display',Georgia,serif", fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 8px", lineHeight: 1.0, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>{trip.name}</h1>
+          <div style={{ animation: "subtitleFade 0.6s ease-out 4.0s both", fontSize: 18, fontWeight: 500, color: "rgba(255,255,255,0.75)", marginBottom: 6, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>{trip.subtitle}</div>
+          <div style={{ animation: "subtitleFade 0.6s ease-out 4.15s both", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
         </div>
 
         {trip.brief && (
-          <div style={{ animation: "fi 0.8s ease-out 4.9s both", marginBottom: 16 }}>
+          <div style={{ animation: "subtitleFade 0.6s ease-out 4.3s both", marginBottom: 16 }}>
             <div style={{ fontSize: 14, fontStyle: "italic", color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>{trip.brief}</div>
           </div>
         )}
 
         <div style={{ padding: "4px 0 36px", display: "flex", flexDirection: "column", gap: 10 }}>
-          <button onClick={() => onStart("explore")} style={{ animation: "btnPop 0.6s cubic-bezier(0.16,1,0.3,1) 5.1s both", width: "100%", padding: "17px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
-          <button onClick={() => onStart("itinerary")} style={{ animation: "btnPop 0.6s cubic-bezier(0.16,1,0.3,1) 5.3s both", width: "100%", padding: "15px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
+          <button onClick={() => onStart("explore")} style={{ animation: "subtitleFade 0.5s cubic-bezier(0.16,1,0.3,1) 4.5s both", width: "100%", padding: "17px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
+          <button onClick={() => onStart("itinerary")} style={{ animation: "subtitleFade 0.5s cubic-bezier(0.16,1,0.3,1) 4.65s both", width: "100%", padding: "15px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
         </div>
       </div>
     </div>
