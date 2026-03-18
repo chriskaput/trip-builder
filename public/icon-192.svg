@@ -1,0 +1,7 @@
+<svg width='192' height='192' xmlns='http://www.w3.org/2000/svg'>
+  <defs><linearGradient id='bg' x1='0' y1='0' x2='192' y2='192' gradientUnits='userSpaceOnUse'>
+    <stop offset='0%' stop-color='#0B4D3B'/><stop offset='100%' stop-color='#2193B0'/>
+  </linearGradient></defs>
+  <rect width='192' height='192' rx='40' fill='url(#bg)'/>
+  <text x='96' y='115' text-anchor='middle' font-size='80'>🗺️</text>
+</svg>
