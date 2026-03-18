@@ -466,50 +466,62 @@ const CustomModal = ({ onSave, onClose }) => {
 // ═══ WELCOME ═══
 const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
   const [bgIdx, setBgIdx] = useState(0);
-  // Cycle through curated experience photos for background
+  const [splashDone, setSplashDone] = useState(false);
   const bgPhotos = mods.filter(m => m.photo && m.tier === "curated").map(m => m.photo);
   useEffect(() => { if (bgPhotos.length <= 1) return; const t = setInterval(() => setBgIdx(i => (i + 1) % bgPhotos.length), 5000); return () => clearInterval(t); }, [bgPhotos.length]);
+  useEffect(() => { const t = setTimeout(() => setSplashDone(true), 2200); return () => clearTimeout(t); }, []);
 
   return (
     <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", position: "relative", overflow: "hidden", maxWidth: 430, margin: "0 auto", background: "#0f1923" }}>
-      <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
       <style>{`@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap");`}</style>
-      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}} @keyframes popIn{0%{transform:scale(0.9);opacity:0}50%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}} @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}} @keyframes slotFill{0%{background:#E8F5E9;transform:scale(0.98)}100%{background:#FEFDFB;transform:scale(1)}} @keyframes bgFade{from{opacity:0}to{opacity:1}} @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
+      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}} @keyframes popIn{0%{transform:scale(0.9);opacity:0}50%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}} @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}} @keyframes slotFill{0%{background:#E8F5E9;transform:scale(0.98)}100%{background:#FEFDFB;transform:scale(1)}} @keyframes bgFade{from{opacity:0}to{opacity:1}} @keyframes heroZoom{from{transform:scale(1.15);opacity:0}to{transform:scale(1);opacity:1}} @keyframes splashIn{0%{opacity:0;transform:scale(0.7)}30%{opacity:1;transform:scale(1.02)}100%{opacity:1;transform:scale(1)}} @keyframes splashOut{0%{opacity:1;font-size:42px;transform:translateY(0)}100%{opacity:0;font-size:12px;transform:translateY(0)}} @keyframes labelAppear{from{opacity:0;letter-spacing:6px}to{opacity:1;letter-spacing:2px}} @keyframes titleRise{from{opacity:0;transform:translateY(40px) scale(0.92)}to{opacity:1;transform:none}} @keyframes subtitleFade{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}} @keyframes btnPop{from{opacity:0;transform:translateY(30px) scale(0.9)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
-      {/* Full-bleed background photo */}
+      {/* Cinematic splash overlay — "It's almost time" */}
+      {!splashDone && (
+        <div style={{ position: "absolute", inset: 0, zIndex: 10, display: "flex", alignItems: "center", justifyContent: "center", background: "#0B4D3B" }}>
+          <div style={{ textAlign: "center", padding: "0 30px" }}>
+            <div style={{ animation: "splashIn 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s both" }}>
+              <div style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 48, fontWeight: 900, color: "#fff", lineHeight: 1.0, textShadow: "0 2px 30px rgba(0,0,0,0.3)" }}>It's almost</div>
+              <div style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 52, fontWeight: 900, color: "#fff", lineHeight: 1.0, textShadow: "0 2px 30px rgba(0,0,0,0.3)" }}>time. ✈️</div>
+            </div>
+            <div style={{ animation: "fi 0.6s ease-out 1s both", fontSize: 14, color: "rgba(255,255,255,0.5)", marginTop: 16, fontWeight: 500 }}>Your curated travel experience awaits</div>
+          </div>
+        </div>
+      )}
+
+      {/* Full-bleed background photo — zooms in on load */}
       {bgPhotos.length > 0 && (
-        <div key={bgIdx} style={{ position: "absolute", inset: 0, animation: "bgFade 1.5s ease-out" }}>
+        <div key={bgIdx} style={{ position: "absolute", inset: 0, animation: bgIdx === 0 ? "heroZoom 1.8s ease-out 1.8s both" : "bgFade 1.5s ease-out" }}>
           <img src={bgPhotos[bgIdx]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         </div>
       )}
-      {/* Dark overlay for readability — heavier in bottom half */}
+      {/* Dark overlay for readability */}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.25) 25%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.85) 100%)" }} />
-      {/* Subtle color tint */}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(11,77,59,0.4) 0%, rgba(33,147,176,0.2) 50%, rgba(15,76,117,0.3) 100%)" }} />
 
       <div style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", padding: "0 24px" }}>
-        <div style={{ padding: "20px 0 0", animation: "si 0.5s ease-out" }}>
+        <div style={{ padding: "20px 0 0", animation: "fi 0.8s ease-out 2.4s both" }}>
           <span style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1.5 }}>🗺️ Trip Builder</span>
         </div>
 
         <div style={{ flex: 1, minHeight: 60 }} />
 
-        <div style={{ animation: "si 0.6s ease-out 0.1s both" }}>
-          <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 10 }}>You're invited</div>
-          <h1 style={{ fontFamily: "'Playfair Display',Georgia,serif", fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 8px", lineHeight: 1.0, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>{trip.name}</h1>
-          <div style={{ fontSize: 18, fontWeight: 500, color: "rgba(255,255,255,0.75)", marginBottom: 6, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>{trip.subtitle}</div>
-          <div style={{ fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
+        <div>
+          <div style={{ animation: "labelAppear 0.8s ease-out 2.5s both", fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: 2, marginBottom: 10 }}>Your curated travel experience</div>
+          <h1 style={{ animation: "titleRise 0.9s cubic-bezier(0.16,1,0.3,1) 2.7s both", fontFamily: "'Playfair Display',Georgia,serif", fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 8px", lineHeight: 1.0, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>{trip.name}</h1>
+          <div style={{ animation: "subtitleFade 0.8s ease-out 3.1s both", fontSize: 18, fontWeight: 500, color: "rgba(255,255,255,0.75)", marginBottom: 6, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>{trip.subtitle}</div>
+          <div style={{ animation: "subtitleFade 0.7s ease-out 3.4s both", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
         </div>
 
         {trip.brief && (
-          <div style={{ animation: "si 0.6s ease-out 0.2s both", marginBottom: 16 }}>
+          <div style={{ animation: "fi 0.8s ease-out 3.6s both", marginBottom: 16 }}>
             <div style={{ fontSize: 14, fontStyle: "italic", color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>{trip.brief}</div>
           </div>
         )}
 
-        <div style={{ padding: "4px 0 36px", animation: "si 0.6s ease-out 0.3s both", display: "flex", flexDirection: "column", gap: 10 }}>
-          <button onClick={() => onStart("explore")} style={{ width: "100%", padding: "17px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
-          <button onClick={() => onStart("itinerary")} style={{ width: "100%", padding: "15px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
+        <div style={{ padding: "4px 0 36px", display: "flex", flexDirection: "column", gap: 10 }}>
+          <button onClick={() => onStart("explore")} style={{ animation: "btnPop 0.6s cubic-bezier(0.16,1,0.3,1) 3.8s both", width: "100%", padding: "17px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
+          <button onClick={() => onStart("itinerary")} style={{ animation: "btnPop 0.6s cubic-bezier(0.16,1,0.3,1) 4s both", width: "100%", padding: "15px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
         </div>
       </div>
     </div>
