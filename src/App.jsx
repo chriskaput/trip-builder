@@ -492,7 +492,8 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const [cust, sCust] = useState(false);
   const [aSlot, sSlot] = useState(null);
   const [fCat, sFCat] = useState("all");
-  const [libSort, sLibSort] = useState("recommended");
+  const [libSort, sLibSort] = useState("favorites");
+  const [libPreview, sLibPreview] = useState(null);
   const [guide, sGuide] = useState(null);
   const [showInfo, sInfo] = useState(false);
   const [showOv, sOv] = useState(false);
@@ -813,7 +814,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
             </div>
             {/* Sort pills */}
             <div style={{ padding: "6px 16px 8px", display: "flex", gap: 4 }}>
-              {[["recommended", "⭐ Recommended"], ["favorites", "❤️ Favorites"], ["picks", "🎯 Chris's Picks"], ["rating", "📊 Top Rated"]].map(([k, label]) => (
+              {[["favorites", "❤️ Favorites"], ["picks", "⭐ Chris's Picks"], ["rating", "📊 Top Rated (Google)"]].map(([k, label]) => (
                 <button key={k} onClick={() => sLibSort(k)} style={{
                   padding: "5px 10px", borderRadius: 8, border: libSort === k ? "1.5px solid #0B4D3B" : "1.5px solid #eee",
                   background: libSort === k ? "#0B4D3B10" : "#fff", fontSize: 10, fontWeight: 700,
@@ -830,19 +831,21 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 const mc = CATS.find(c => c.id === mod.category);
                 const isFav = favs.includes(mod.id);
                 return (
-                  <button key={mod.id} onClick={() => place(mod.id)} style={{ width: "100%", textAlign: "left", display: "flex", gap: 10, padding: "8px 10px", borderRadius: 14, border: isFav ? "1.5px solid #E91E6325" : "none", background: isFav ? "#FFF5F7" : "#FAFAF8", marginBottom: 6, cursor: "pointer", alignItems: "center" }}>
-                    <div style={{ width: 50, height: 50, borderRadius: 12, flexShrink: 0, overflow: "hidden" }}><Vis mod={mod} cat={mc} h={50} br={12} /></div>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: 13, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || mc?.icon} {mod.name}</div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 3, flexWrap: "wrap" }}>
-                        {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: mc?.color || "#888", background: (mc?.color || "#888") + "12", padding: "1px 6px", borderRadius: 4 }}>{mod.vibe}</span>}
-                        {mod.mapsRating > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#FBBC04" }}>★ {mod.mapsRating}</span>}
-                        {isFav && <span style={{ fontSize: 9 }}>❤️</span>}
-                        {mod.tier === "curated" && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B" }}>⭐</span>}
+                  <div key={mod.id} style={{ display: "flex", gap: 6, marginBottom: 6, alignItems: "stretch" }}>
+                    <button onClick={() => sLibPreview(mod)} style={{ flex: 1, textAlign: "left", display: "flex", gap: 10, padding: "8px 10px", borderRadius: 14, border: isFav ? "1.5px solid #E91E6325" : "1.5px solid #f0f0f0", background: isFav ? "#FFF5F7" : "#FAFAF8", cursor: "pointer", alignItems: "center" }}>
+                      <div style={{ width: 50, height: 50, borderRadius: 12, flexShrink: 0, overflow: "hidden" }}><Vis mod={mod} cat={mc} h={50} br={12} /></div>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontSize: 13, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || mc?.icon} {mod.name}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 3, flexWrap: "wrap" }}>
+                          {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: mc?.color || "#888", background: (mc?.color || "#888") + "12", padding: "1px 6px", borderRadius: 4 }}>{mod.vibe}</span>}
+                          {mod.mapsRating > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#FBBC04" }}>★ {mod.mapsRating}</span>}
+                          {isFav && <span style={{ fontSize: 9 }}>❤️</span>}
+                          {mod.tier === "curated" && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B" }}>⭐</span>}
+                        </div>
                       </div>
-                    </div>
-                    <div style={{ width: 30, height: 30, borderRadius: 8, background: (mc?.color || "#888") + "15", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, color: mc?.color, fontWeight: 700 }}>+</div>
-                  </button>
+                    </button>
+                    <button onClick={() => place(mod.id)} style={{ width: 44, borderRadius: 14, border: "none", background: (mc?.color || "#888") + "15", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: mc?.color, fontWeight: 700, flexShrink: 0 }}>+</button>
+                  </div>
                 );
               })}
               {avail.length === 0 && <div style={{ textAlign: "center", padding: "40px 20px", color: "#ccc" }}><div style={{ fontSize: 36, marginBottom: 10 }}>✅</div><div style={{ fontSize: 15, fontWeight: 700, color: "#999" }}>All experiences placed!</div></div>}
@@ -850,6 +853,44 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
           </div>
         </div>
       )}
+
+      {/* Library preview — full detail view from itinerary library */}
+      {libPreview && (() => {
+        const mod = libPreview;
+        const cat = CATS.find(c => c.id === mod.category);
+        const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
+        return (
+          <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
+            <div style={{ position: "relative", height: 220 }}>
+              <Vis mod={mod} cat={cat} h={220} />
+              <button onClick={() => sLibPreview(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+            </div>
+            <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
+              <h2 style={{ margin: "0 0 6px", fontSize: 22, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</h2>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
+                {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
+                {mod.mapsRating > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: "#FBBC04", background: "#FFF8E1", padding: "3px 10px", borderRadius: 7 }}>★ {mod.mapsRating} Google</span>}
+              </div>
+              <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 16 }}>{mod.notes}</div>
+              {(mod.hours || mod.cost || mod.address) && (
+                <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "12px 16px", marginBottom: 16, display: "flex", flexDirection: "column", gap: 8 }}>
+                  {mod.hours && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.hours}</span></div>}
+                  {mod.cost && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.cost}</span></div>}
+                  {mod.address && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span></div>}
+                  {mod.mapsRating > 0 && <a href={mUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, textDecoration: "none" }}><span>⭐</span><GR r={mod.mapsRating} rv={mod.mapsReviews} /><span style={{ fontSize: 9, fontWeight: 700, color: "#4285F4" }}>Google</span></a>}
+                </div>
+              )}
+              <button onClick={() => { place(mod.id); sLibPreview(null); }} style={{
+                width: "100%", padding: 14, borderRadius: 14, border: "none",
+                background: cat?.color || "#0B4D3B", color: "#fff",
+                fontSize: 15, fontWeight: 700, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                boxShadow: "0 4px 16px " + (cat?.color || "#888") + "40",
+              }}>➕ Add to {aSlot ? (days[aDay]?.wd + " " + days[aDay]?.md + " · " + SLOTS.find(s => s.id === aSlot?.split("|")[1])?.label) : "Itinerary"}</button>
+            </div>
+          </div>
+        );
+      })()}
 
       {cust && <CustomModal onSave={addCust} onClose={() => { sCust(false); sSlot(null); }} />}
       {guide && <AiGuide mod={guide} onClose={() => sGuide(null)} />}
