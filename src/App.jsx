@@ -1566,13 +1566,23 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
       {/* Admin: Add new experience */}
       {isAdmin && (
-        <div style={{ padding: "10px 0 20px" }}>
+        <div style={{ padding: "10px 0 20px", display: "flex", flexDirection: "column", gap: 8 }}>
           <button onClick={() => sEditMod(null)} style={{
             width: "100%", padding: 14, borderRadius: 14,
             border: "2px dashed #E53935", background: "#FFF5F5",
             color: "#E53935", fontSize: 14, fontWeight: 800, cursor: "pointer",
             display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
           }}>➕ Add New Experience</button>
+          <button onClick={() => {
+            if (window.confirm("Reset all data to defaults? This clears your edits to experiences, itinerary, favorites, and notes.")) {
+              localStorage.removeItem("tb_mods"); localStorage.removeItem("tb_cal"); localStorage.removeItem("tb_favs"); localStorage.removeItem("tb_notes"); localStorage.removeItem("tb_trip");
+              window.location.reload();
+            }
+          }} style={{
+            width: "100%", padding: 10, borderRadius: 12,
+            border: "1px solid #ddd", background: "#f8f8f8",
+            color: "#999", fontSize: 11, fontWeight: 600, cursor: "pointer",
+          }}>🔄 Reset All Data to Defaults</button>
         </div>
       )}
 
@@ -1681,14 +1691,33 @@ export default function App() {
   const [scr, sScr] = useState("welcome");
   const [tab, sTab] = useState("explore");
   const [jd, sJd] = useState(0);
-  const [mods, sMods] = useState(MODS);
+  // Mods: merge saved overrides onto defaults so new code-added experiences appear
+  const [mods, sMods] = useState(() => {
+    try {
+      const s = localStorage.getItem("tb_mods");
+      if (!s) return MODS;
+      const saved = JSON.parse(s);
+      // Merge: use saved version of each mod if it exists, otherwise use default
+      const savedMap = {};
+      saved.forEach(m => { savedMap[m.id] = m; });
+      const merged = MODS.map(m => savedMap[m.id] ? { ...m, ...savedMap[m.id] } : m);
+      // Also include any custom mods that aren't in MODS (user-created)
+      const defaultIds = new Set(MODS.map(m => m.id));
+      saved.filter(m => !defaultIds.has(m.id)).forEach(m => merged.push(m));
+      return merged;
+    } catch { return MODS; }
+  });
   const [favs, setFavs] = useState(() => { try { const s = localStorage.getItem("tb_favs"); return s ? JSON.parse(s) : []; } catch { return []; } });
   const [cal, sCal] = useState(() => { try { const s = localStorage.getItem("tb_cal"); return s ? JSON.parse(s) : INIT_CAL; } catch { return INIT_CAL; } });
 
   // Persist to localStorage on change
+  useEffect(() => { try { localStorage.setItem("tb_mods", JSON.stringify(mods)); } catch {} }, [mods]);
   useEffect(() => { try { localStorage.setItem("tb_favs", JSON.stringify(favs)); } catch {} }, [favs]);
   useEffect(() => { try { localStorage.setItem("tb_cal", JSON.stringify(cal)); } catch {} }, [cal]);
-  const [trip, sTrip] = useState(TRIP);
+
+  // Trip: persist admin edits to trip details
+  const [trip, sTrip] = useState(() => { try { const s = localStorage.getItem("tb_trip"); if (!s) return TRIP; return { ...TRIP, ...JSON.parse(s) }; } catch { return TRIP; } });
+  useEffect(() => { try { localStorage.setItem("tb_trip", JSON.stringify(trip)); } catch {} }, [trip]);
   const [editTrip, sEditTrip] = useState(false);
   const [showOv, setShowOv] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
