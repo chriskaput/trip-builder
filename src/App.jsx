@@ -169,29 +169,22 @@ const IS = { padding: "10px 14px", borderRadius: 10, border: "1.5px solid #e0e0e
 
 // Swipe-down-to-close drag handle for bottom sheets
 const DragHandle = ({ onClose }) => {
-  const startY = useRef(null);
+  const sy = useRef(null);
+  const handleTS = e => { sy.current = e.touches[0].clientY; e.preventDefault(); };
+  const handleTM = e => {
+    if (sy.current !== null) {
+      const dy = e.touches[0].clientY - sy.current;
+      if (dy > 40) { onClose(); sy.current = null; }
+    }
+  };
+  const handleTE = () => { sy.current = null; };
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "10px 0 6px", cursor: "grab", touchAction: "pan-y", userSelect: "none" }}
-      onTouchStart={e => { startY.current = e.touches[0].clientY; }}
-      onTouchMove={e => {
-        if (startY.current !== null && e.touches[0].clientY - startY.current > 50) {
-          onClose();
-          startY.current = null;
-        }
-      }}
-      onTouchEnd={() => { startY.current = null; }}
-      onMouseDown={e => { startY.current = e.clientY; }}
-      onMouseMove={e => {
-        if (startY.current !== null && e.buttons === 1 && e.clientY - startY.current > 50) {
-          onClose();
-          startY.current = null;
-        }
-      }}
-      onMouseUp={() => { startY.current = null; }}
+      onTouchStart={handleTS} onTouchMove={handleTM} onTouchEnd={handleTE}
+      style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 0 10px", cursor: "grab", userSelect: "none", touchAction: "none" }}
     >
-      <div style={{ width: 40, height: 5, background: "#ccc", borderRadius: 3 }} />
-      <div style={{ width: "100%", height: 16 }} />
+      <div style={{ width: 44, height: 5, background: "#bbb", borderRadius: 3 }} />
+      <div style={{ fontSize: 9, color: "#ccc", marginTop: 6, fontWeight: 600 }}>swipe down to close</div>
     </div>
   );
 };
@@ -407,8 +400,8 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
           <img src={bgPhotos[bgIdx]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         </div>
       )}
-      {/* Dark overlay for readability */}
-      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.15) 30%, rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.75) 100%)" }} />
+      {/* Dark overlay for readability — heavier in bottom half */}
+      <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.25) 25%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0.85) 100%)" }} />
       {/* Subtle color tint */}
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(11,77,59,0.4) 0%, rgba(33,147,176,0.2) 50%, rgba(15,76,117,0.3) 100%)" }} />
 
@@ -429,13 +422,6 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
         {trip.brief && (
           <div style={{ animation: "si 0.6s ease-out 0.2s both", marginBottom: 16 }}>
             <div style={{ fontSize: 14, fontStyle: "italic", color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>{trip.brief}</div>
-          </div>
-        )}
-
-        {/* Photo indicator dots */}
-        {bgPhotos.length > 1 && (
-          <div style={{ display: "flex", justifyContent: "center", gap: 4, marginBottom: 12, animation: "si 0.6s ease-out 0.25s both" }}>
-            {bgPhotos.slice(0, 8).map((_, i) => <div key={i} style={{ width: i === bgIdx % 8 ? 16 : 5, height: 5, borderRadius: 3, background: i === bgIdx % 8 ? "#fff" : "rgba(255,255,255,0.3)", transition: "all 0.4s" }} />)}
           </div>
         )}
 
@@ -574,20 +560,21 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
       <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
-      {/* Day strip only (action buttons moved to shared header) */}
-      <div style={{ background: "#fff", padding: "6px 16px 0", borderBottom: "1px solid #eee" }}>
-        {/* Day strip — scrollable, date only */}
-        <div ref={dRef} style={{ display: "flex", gap: 5, overflowX: "auto", paddingBottom: 10, WebkitOverflowScrolling: "touch" }}>
+      {/* Day strip with teal background */}
+      <div style={{ background: "linear-gradient(180deg, #1B3B32 0%, #244A3F 100%)", padding: "12px 16px 0" }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 8 }}>📅 Itinerary</div>
+        {/* Day strip — scrollable */}
+        <div ref={dRef} style={{ display: "flex", gap: 5, overflowX: "auto", paddingBottom: 12, WebkitOverflowScrolling: "touch" }}>
           {days.map((day, i) => {
             const isA = i === aDay;
             const ds = SLOTS.map(s => occ[day.date + "|" + s.id]).filter(Boolean);
             return (
-              <button key={day.date} onClick={() => sDay(i)} style={{ flexShrink: 0, padding: "7px 4px", width: 54, borderRadius: 12, border: "none", cursor: "pointer", background: isA ? "#1a1a1a" : ds.length === 3 ? "#E8F5E9" : "#fff", color: isA ? "#fff" : "#1a1a1a", transition: "all 0.2s", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, boxShadow: isA ? "0 2px 10px rgba(0,0,0,0.15)" : "0 1px 2px rgba(0,0,0,0.04)" }}>
-                <span style={{ fontSize: 9, fontWeight: 700, opacity: 0.5 }}>{day.wd}</span>
+              <button key={day.date} onClick={() => sDay(i)} style={{ flexShrink: 0, padding: "7px 4px", width: 54, borderRadius: 12, border: "none", cursor: "pointer", background: isA ? "#fff" : ds.length === 3 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)", color: isA ? "#1B3B32" : "#fff", transition: "all 0.2s", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, boxShadow: isA ? "0 2px 10px rgba(0,0,0,0.2)" : "none" }}>
+                <span style={{ fontSize: 9, fontWeight: 700, opacity: isA ? 0.6 : 0.4 }}>{day.wd}</span>
                 <span style={{ fontSize: 13, fontWeight: 800, lineHeight: 1 }}>{day.md.split(" ")[1]}</span>
-                <span style={{ fontSize: 8, fontWeight: 600, opacity: 0.4 }}>{day.md.split(" ")[0]}</span>
+                <span style={{ fontSize: 8, fontWeight: 600, opacity: isA ? 0.5 : 0.3 }}>{day.md.split(" ")[0]}</span>
                 <div style={{ display: "flex", gap: 2, marginTop: 1 }}>
-                  {[0, 1, 2].map(si => <div key={si} style={{ width: 4, height: 4, borderRadius: "50%", background: ds[si] ? (isA ? "rgba(255,255,255,0.7)" : CATS.find(c => c.id === mods.find(m => m.id === ds[si])?.category)?.color || "#ccc") : (isA ? "rgba(255,255,255,0.2)" : "#e0e0e0") }} />)}
+                  {[0, 1, 2].map(si => <div key={si} style={{ width: 4, height: 4, borderRadius: "50%", background: ds[si] ? (isA ? "#0B4D3B" : "rgba(255,255,255,0.6)") : (isA ? "rgba(27,59,50,0.2)" : "rgba(255,255,255,0.15)") }} />)}
                 </div>
               </button>
             );
@@ -692,7 +679,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
         {/* Nav */}
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
           <button disabled={aDay === 0} onClick={() => { sDay(aDay - 1); sExp(null); }} style={{ padding: "10px 16px", borderRadius: 12, border: "none", background: aDay > 0 ? "#fff" : "#f0f0f0", color: aDay > 0 ? "#1a1a1a" : "#ccc", fontSize: 13, fontWeight: 700, cursor: aDay > 0 ? "pointer" : "default" }}>← {aDay > 0 ? days[aDay - 1].md : ""}</button>
-          <button disabled={aDay >= days.length - 1} onClick={() => { sDay(aDay + 1); sExp(null); }} style={{ padding: "10px 16px", borderRadius: 12, border: "none", background: aDay < days.length - 1 ? "#1a1a1a" : "#f0f0f0", color: aDay < days.length - 1 ? "#fff" : "#ccc", fontSize: 13, fontWeight: 700, cursor: aDay < days.length - 1 ? "pointer" : "default" }}>{aDay < days.length - 1 ? days[aDay + 1].md : ""} →</button>
+          <button disabled={aDay >= days.length - 1} onClick={() => { sDay(aDay + 1); sExp(null); }} style={{ padding: "10px 16px", borderRadius: 12, border: "none", background: aDay < days.length - 1 ? "#0B4D3B" : "#f0f0f0", color: aDay < days.length - 1 ? "#fff" : "#ccc", fontSize: 13, fontWeight: 700, cursor: aDay < days.length - 1 ? "pointer" : "default" }}>{aDay < days.length - 1 ? days[aDay + 1].md : ""} →</button>
         </div>
       </div>
 
@@ -760,13 +747,13 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
         );
       })()}
 
-      {/* AI Trip Assistant — floating button */}
+      {/* AI Trip Assistant — floating button (above tab bar) */}
       {!showAssist && !lib && !cust && !guide && !showInfo && !showOv && !mapMod && (
         <button onClick={() => sAssist(true)} style={{
-          position: "fixed", bottom: 24, right: 20, width: 56, height: 56, borderRadius: 28,
+          position: "fixed", bottom: 80, right: 16, width: 52, height: 52, borderRadius: 26,
           background: "linear-gradient(135deg, #1a1a1a, #333)", border: "none",
           boxShadow: "0 4px 20px rgba(0,0,0,0.3)", cursor: "pointer", zIndex: 150,
-          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 24,
+          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22,
         }}>🤖</button>
       )}
 
@@ -1260,7 +1247,7 @@ export default function App() {
 
   // Main screen with tabs
   return (
-    <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", background: "linear-gradient(180deg, #F7F6F3 0%, #EEF2ED 40%, #E8EDEB 100%)", backgroundAttachment: "fixed", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
+    <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", background: "linear-gradient(180deg, #F2F1EE 0%, #E5EAE6 30%, #D8DED9 60%, #CDD5CE 100%)", backgroundAttachment: "fixed", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
       <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
@@ -1322,7 +1309,7 @@ export default function App() {
       }}>
         <button onClick={() => sTab("explore")} style={{
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-          background: tab === "explore" ? "#1a1a1a" : "#f5f5f5",
+          background: tab === "explore" ? "#0B4D3B" : "#f5f5f5",
           border: "none", cursor: "pointer", padding: "11px 8px", borderRadius: 12,
         }}>
           <span style={{ fontSize: 16 }}>✨</span>
@@ -1330,7 +1317,7 @@ export default function App() {
         </button>
         <button onClick={() => sTab("itinerary")} style={{
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-          background: tab === "itinerary" ? "#1a1a1a" : "#f5f5f5",
+          background: tab === "itinerary" ? "#0B4D3B" : "#f5f5f5",
           border: "none", cursor: "pointer", padding: "11px 8px", borderRadius: 12,
         }}>
           <span style={{ fontSize: 16 }}>📅</span>
