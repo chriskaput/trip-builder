@@ -536,6 +536,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const [confRm, sConfRm] = useState(null);
   const [skipConf, sSkipConf] = useState(false);
   const [sw, sSw] = useState(null);
+  const [itinDetail, sItinDetail] = useState(null); // { mod, sk, cat }
   const dRef = useRef(null);
 
   const days = mkDays(trip.startDate, trip.dayCount);
@@ -749,60 +750,17 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 </div>
 
                 {mod ? (
-                  <div style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)" }}>
-                    {/* Compact card — tap to expand */}
-                    <div onClick={() => sExp(isX ? null : sk)} style={{ display: "flex", minHeight: 74, cursor: "pointer" }}>
+                  <div onClick={() => sItinDetail({ mod, sk, cat })} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                    <div style={{ display: "flex", minHeight: 74 }}>
                       <div style={{ flex: 1, padding: "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
                         <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</div>
-                        {!isX && mod.vibe && <div style={{ marginTop: 4 }}><span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.vibe}</span></div>}
+                        {mod.vibe && <div style={{ marginTop: 4 }}><span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.vibe}</span></div>}
+                        {notes[mod.id] && <div style={{ marginTop: 3, fontSize: 10, color: "#999", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📝 {notes[mod.id]}</div>}
                       </div>
-                      {!isX && <div style={{ width: "26%", minWidth: 78, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /></div>}
-                      {isX && <div style={{ display: "flex", alignItems: "center", padding: "0 12px" }}><span style={{ fontSize: 11, color: "#ccc", transform: "rotate(180deg)" }}>▼</span></div>}
+                      <div style={{ width: "26%", minWidth: 78, flexShrink: 0, position: "relative" }}>
+                        <Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} />
+                      </div>
                     </div>
-
-                    {/* Expanded — clean layout */}
-                    {isX && (() => {
-                      const isFav = favs.includes(mod.id);
-                      return (
-                        <div style={{ padding: "0 14px 14px", animation: "fi 0.15s ease-out" }}>
-                          {/* Image */}
-                          <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 10 }}><Vis mod={mod} cat={cat} h={140} br={12} /></div>
-
-                          {/* Description */}
-                          <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, marginBottom: 10 }}>{mod.notes}</div>
-
-                          {/* Practical info */}
-                          {(mod.hours || mod.cost || mod.address) && (
-                            <div style={{ background: "#F7F6F3", borderRadius: 12, padding: "10px 14px", marginBottom: 10, display: "flex", flexDirection: "column", gap: 6 }}>
-                              {mod.hours && <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.hours}</span></div>}
-                              {mod.cost && <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12 }}><span>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.cost}</span></div>}
-                              {mod.address && <button onClick={e => { e.stopPropagation(); sMap(mod); }} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}><span>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span><span style={{ fontSize: 9, color: "#aaa" }}>→ Map</span></button>}
-                              {mod.bookingUrl && <a href={mod.bookingUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display: "inline-flex", alignItems: "center", gap: 5, fontSize: 12, color: cat?.color, fontWeight: 700, textDecoration: "none" }}>🔗 Book / Reserve</a>}
-                            </div>
-                          )}
-
-                          {/* Note */}
-                          <button onClick={e => { e.stopPropagation(); sNoteFor(noteFor === mod.id ? null : mod.id); }} style={{ width: "100%", display: "flex", alignItems: "center", gap: 8, padding: "9px 12px", borderRadius: 10, background: notes[mod.id] ? "#FFFDE7" : "#F7F6F3", border: notes[mod.id] ? "1.5px solid #FFE082" : "1.5px solid #eee", cursor: "pointer", fontSize: 12, fontWeight: 600, color: "#888", marginBottom: 10 }}>
-                            <span>📝</span><span>{notes[mod.id] ? "Edit note" : "Add a note"}</span>
-                            {notes[mod.id] && <span style={{ flex: 1, textAlign: "right", fontSize: 10, color: "#aaa", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{notes[mod.id]}</span>}
-                          </button>
-                          {noteFor === mod.id && <div style={{ marginBottom: 10 }} onClick={e => e.stopPropagation()}><textarea value={notes[mod.id] || ""} onChange={e => sNotes(p => ({ ...p, [mod.id]: e.target.value }))} placeholder="Your note..." rows={2} autoFocus style={{ ...IS, fontSize: 12, padding: "10px 14px", resize: "vertical", borderRadius: 10, border: "1.5px solid " + (cat?.color || "#888") + "40" }} /></div>}
-
-                          {/* Actions — clean two buttons */}
-                          <div style={{ display: "flex", gap: 6 }}>
-                            <button onClick={e => { e.stopPropagation(); rmSlot(sk); }} style={{ flex: 1, padding: 10, borderRadius: 10, background: "#FFF5F5", border: "1.5px solid #FFCDD2", fontSize: 12, fontWeight: 700, color: "#E53935", cursor: "pointer" }}>🗑️ Remove</button>
-                            <button onClick={e => {
-                              e.stopPropagation();
-                              if (mid && setFavs) { setFavs(p => p.includes(mid) ? p : [...p, mid]); }
-                              const nc = { ...cal };
-                              if (mid) Object.keys(nc).forEach(k => { if (nc[k] === mid) delete nc[k]; });
-                              setCal(nc);
-                              sExp(null);
-                            }} style={{ flex: 1, padding: 10, borderRadius: 10, background: isFav ? "#E8F5E9" : "#FFF5F7", border: isFav ? "1.5px solid #C8E6C9" : "1.5px solid #F48FB1", fontSize: 12, fontWeight: 700, color: isFav ? "#4CAF50" : "#E91E63", cursor: "pointer" }}>{isFav ? "❤️ Saved" : "❤️ Remove & Save"}</button>
-                          </div>
-                        </div>
-                      );
-                    })()}
                   </div>
                 ) : (
                   <button onClick={() => { sSlot(sk); sLib(true); sFCat("all"); }} style={{ width: "100%", padding: "20px 14px", background: "#FEFDFB", borderRadius: 16, border: "2px dashed #d5d0c8", cursor: "pointer" }}>
@@ -823,6 +781,67 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
           <button disabled={aDay >= days.length - 1} onClick={() => { sDay(aDay + 1); sExp(null); }} style={{ padding: "10px 16px", borderRadius: 12, border: "none", background: aDay < days.length - 1 ? "#0B4D3B" : "#f0f0f0", color: aDay < days.length - 1 ? "#fff" : "#ccc", fontSize: 13, fontWeight: 700, cursor: aDay < days.length - 1 ? "pointer" : "default" }}>{aDay < days.length - 1 ? days[aDay + 1].md : ""} →</button>
         </div>
       </div>
+
+      {/* Itinerary detail — full screen, matching Explore design language */}
+      {itinDetail && (() => {
+        const { mod, sk, cat } = itinDetail;
+        const isFav = favs.includes(mod.id);
+        const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
+        const slotParts = sk.split("|");
+        const dayObj = days.find(d => d.date === slotParts[0]);
+        const slotObj = SLOTS.find(s => s.id === slotParts[1]);
+        return (
+          <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
+            {/* Clean hero image — no text overlay */}
+            <div style={{ position: "relative", height: 260 }}>
+              <Vis mod={mod} cat={cat} h={260} />
+              <button onClick={() => sItinDetail(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+              <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#fff" }}>{dayObj?.wd} {dayObj?.md} · {slotObj?.label}</div>
+              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", top: 12, right: slotParts ? 120 : 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{isFav ? "❤️" : "🤍"}</button>
+            </div>
+
+            <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
+              {/* Title + vibe — below image, matching Explore detail */}
+              <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15 }}>{mod.icon || cat?.icon} {mod.name}</h2>
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 14 }}>
+                {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
+                {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 10, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "3px 8px", borderRadius: 5 }}>{t}</span>)}
+              </div>
+
+              {/* Description */}
+              <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 18 }}>{mod.notes}</div>
+
+              {/* Practical info — includes rating */}
+              <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 16px", marginBottom: 16, display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8 }}>Practical info</div>
+                {mod.hours && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.hours}</span></div>}
+                {mod.cost && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.cost}</span></div>}
+                {mod.address && <button onClick={() => sMap(mod)} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}><span>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span><span style={{ fontSize: 9, color: "#aaa" }}>→ Map</span></button>}
+                {mod.mapsRating > 0 && <a href={mUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, textDecoration: "none" }}><span>⭐</span><GR r={mod.mapsRating} rv={mod.mapsReviews} /><span style={{ fontSize: 9, fontWeight: 700, color: "#4285F4" }}>Google</span></a>}
+                {mod.bookingUrl && <a href={mod.bookingUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 14px", borderRadius: 10, background: cat?.color, color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none", marginTop: 4 }}>🔗 Book / Reserve</a>}
+              </div>
+
+              {/* Personal note */}
+              <div style={{ marginBottom: 16 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 6 }}>📝 Your note</div>
+                <textarea value={notes[mod.id] || ""} onChange={e => sNotes(p => ({ ...p, [mod.id]: e.target.value }))} placeholder="Add a personal note..." rows={2} style={{ ...IS, fontSize: 13, padding: "12px 14px", resize: "vertical", borderRadius: 12, border: notes[mod.id] ? "1.5px solid #FFE082" : "1.5px solid #e0e0e0", background: notes[mod.id] ? "#FFFDE7" : "#fff" }} />
+              </div>
+
+              {/* Actions — Remove & Save first (primary), then Remove (secondary/destructive) */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                <button onClick={() => {
+                  if (mod.id && setFavs) { setFavs(p => p.includes(mod.id) ? p : [...p, mod.id]); }
+                  const nc = { ...cal };
+                  Object.keys(nc).forEach(k => { if (nc[k] === mod.id) delete nc[k]; });
+                  setCal(nc);
+                  sItinDetail(null);
+                }} style={{ width: "100%", padding: 14, borderRadius: 14, background: isFav ? "#E8F5E9" : "#E91E63", border: "none", fontSize: 14, fontWeight: 700, color: isFav ? "#4CAF50" : "#fff", cursor: "pointer", boxShadow: isFav ? "none" : "0 3px 12px rgba(233,30,99,0.2)" }}>{isFav ? "❤️ Already in favorites — Remove from itinerary" : "❤️ Remove & save to favorites"}</button>
+                <button onClick={() => { rmSlot(sk); sItinDetail(null); }} style={{ width: "100%", padding: 13, borderRadius: 14, background: "#1a1a1a", border: "none", fontSize: 13, fontWeight: 700, color: "#fff", cursor: "pointer" }}>🗑️ Remove from itinerary</button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Library */}
       {lib && (
@@ -1577,9 +1596,11 @@ export default function App() {
   const [showOv, setShowOv] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
   const [showAssist, sAssist] = useState(false);
+  const [assistCtx, sAssistCtx] = useState("general");
   const [assistMsgs, sAssistMsgs] = useState([]);
   const [assistInput, sAssistInput] = useState("");
   const [assistLoading, sAssistLoading] = useState(false);
+  const openAssist = (ctx) => { sAssistCtx(ctx || "general"); sAssist(true); };
   const [eventDetail, sEventDetail] = useState(null);
   const [evSlotPicker, sEvSlotPicker] = useState(false);
 
@@ -1799,7 +1820,7 @@ export default function App() {
           <span style={{ fontSize: 14 }}>📅</span>
           <span style={{ fontSize: 11, fontWeight: 700, color: tab === "itinerary" && !showAssist ? "#1B3B32" : "rgba(255,255,255,0.6)" }}>Itinerary</span>
         </button>
-        <button onClick={() => sAssist(true)} style={{
+        <button onClick={() => openAssist('general')} style={{
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
           background: showAssist ? "#fff" : "transparent",
           border: "none", cursor: "pointer", padding: "10px 8px", borderRadius: 16,
@@ -1811,26 +1832,52 @@ export default function App() {
       </div>
 
       {/* AI Trip Assistant — chat (root level, accessible from both tabs) */}
-      {showAssist && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={() => sAssist(false)}>
+      {/* Floating AI assistant button — always visible on every screen */}
+      {!showAssist && (
+        <button onClick={() => openAssist("general")} style={{
+          position: "fixed", bottom: 56, right: 16, width: 48, height: 48, borderRadius: 24,
+          background: "linear-gradient(135deg, #0B4D3B, #1A6B52)", border: "none",
+          boxShadow: "0 4px 16px rgba(11,77,59,0.35)", cursor: "pointer", zIndex: 400,
+          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
+        }}>🤖</button>
+      )}
+
+      {/* AI Trip Assistant — context-aware chat panel */}
+      {showAssist && (() => {
+        const ctxPrompts = {
+          general: { title: "Trip Assistant", sub: "I know your full itinerary, all experiences, and Panama inside out.", prompts: ["What should we do on a free day?", "Best restaurants for a special dinner?", "What's kid-friendly in our itinerary?", "What's the weather like in late March?"] },
+          practical: { title: "Travel Questions", sub: "Ask me about getting around, safety, currency, or anything practical.", prompts: ["How do we get from the airport to our hotel?", "Is Uber reliable in Panama?", "Any safety tips for Casco Viejo?", "What SIM card should we get?"] },
+          overview: { title: "Planning Help", sub: "I can see your full trip — let me help you optimize it.", prompts: ["Which days are too packed?", "Any must-sees we're missing?", "Suggest a good order for Day 3", "What should we do on empty days?"] },
+          explore: { title: "Discover More", sub: "Ask me about any experience or get personalized recommendations.", prompts: ["What's the best ceviche spot?", "Where should we watch the sunset?", "Compare Mangle vs Boticario", "Best experiences for my parents?"] },
+          itinerary: { title: "Itinerary Help", sub: "I can help you fine-tune your day-by-day plan.", prompts: ["Is this day too busy?", "What should we do in the evening?", "Best order for today's activities?", "Suggest something nearby for lunch"] },
+          experience: { title: "About This Place", sub: "Ask me anything about the experience you're viewing.", prompts: ["Do we need a reservation?", "Is it good for toddlers?", "What should we order?", "How long should we spend here?"] },
+        };
+        const ctx = ctxPrompts[assistCtx] || ctxPrompts.general;
+        return (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 500, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={() => sAssist(false)}>
           <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", height: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
             <DragHandle onClose={() => sAssist(false)} />
             <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#9B51E0", textTransform: "uppercase", letterSpacing: 1 }}>🤖 Trip Assistant</div>
-                <div style={{ fontSize: 15, fontWeight: 800, marginTop: 2 }}>Ask me anything</div>
+                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ width: 28, height: 28, borderRadius: 14, background: "linear-gradient(135deg, #0B4D3B, #1A6B52)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🤖</div>
+                  <div style={{ fontSize: 16, fontWeight: 800 }}>{ctx.title}</div>
+                </div>
               </div>
               <button onClick={() => sAssist(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
             </div>
             <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
               {assistMsgs.length === 0 && (
-                <div style={{ textAlign: "center", padding: "20px 10px" }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>🤖</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Panama trip assistant</div>
-                  <div style={{ fontSize: 12, color: "#888", lineHeight: 1.5, marginBottom: 18 }}>I know your itinerary, the experience library, and Panama. Ask me anything.</div>
+                <div style={{ padding: "12px 0" }}>
+                  <div style={{ background: "linear-gradient(135deg, #F7F6F3, #EEF2ED)", borderRadius: 16, padding: "18px 20px", marginBottom: 16 }}>
+                    <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{ctx.sub}</div>
+                  </div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Suggested questions</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {["What should we do with a toddler?", "Best restaurants for a special dinner?", "Help me plan a free day", "What's the weather like in late March?"].map(q => (
-                      <button key={q} onClick={() => sAssistInput(q)} style={{ padding: "9px 14px", borderRadius: 10, border: "1.5px solid #eee", background: "#FAFAF8", fontSize: 12, fontWeight: 600, color: "#555", cursor: "pointer", textAlign: "left" }}>{q}</button>
+                    {ctx.prompts.map(q => (
+                      <button key={q} onClick={() => sAssistInput(q)} style={{ padding: "11px 14px", borderRadius: 12, border: "1.5px solid #eee", background: "#fff", fontSize: 13, fontWeight: 600, color: "#333", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
+                        <span style={{ fontSize: 11, color: "#0B4D3B" }}>→</span>{q}
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -1855,8 +1902,8 @@ export default function App() {
                 const q = assistInput.trim(); sAssistInput("");
                 const nm = [...assistMsgs, { role: "user", text: q }]; sAssistMsgs(nm); sAssistLoading(true);
                 const pIds2 = new Set(Object.values(cal));
-                const ctx = "Trip assistant for Panama trip Mar 29-Apr 7 2026. Travelers: parents 60s + sometimes 2.5yr toddler. Planned: " + Object.entries(cal).map(([sk, mid]) => { const m = mods.find(x => x.id === mid); return m ? m.name : ""; }).filter(Boolean).join(", ") + ". Available: " + mods.filter(m => !pIds2.has(m.id)).map(m => m.name).join(", ") + ". Concise, under 150 words.";
-                fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: ctx + "\n\n" + q }] }) })
+                const sysCtx = "Trip assistant for Panama trip Mar 29-Apr 7 2026. Travelers: parents 60s + sometimes 2.5yr toddler. Context: " + assistCtx + ". Planned: " + Object.entries(cal).map(([sk, mid]) => { const m = mods.find(x => x.id === mid); return m ? m.name : ""; }).filter(Boolean).join(", ") + ". Available: " + mods.filter(m => !pIds2.has(m.id)).map(m => m.name).join(", ") + ". Concise, under 150 words.";
+                fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: sysCtx + "\n\n" + q }] }) })
                   .then(r => r.json()).then(d => { sAssistMsgs([...nm, { role: "assistant", text: d.content?.map(b => b.type === "text" ? b.text : "").join("") || "Couldn't respond." }]); })
                   .catch(() => { sAssistMsgs([...nm, { role: "assistant", text: "Couldn't connect." }]); })
                   .finally(() => sAssistLoading(false));
@@ -1865,7 +1912,8 @@ export default function App() {
             </div>
           </div>
         </div>
-      )}
+        );
+      })()}
     </div>
   );
 }
