@@ -56,11 +56,12 @@ const SCENES = {
 
 const Vis = ({ mod, cat, h = 100, br = 0, st = {} }) => {
   const [imgErr, setImgErr] = useState(false);
-  // Try photo first, fall back to SVG
+  const [imgOk, setImgOk] = useState(false);
   if (mod.photo && !imgErr) {
     return (
       <div style={{ height: h, position: "relative", overflow: "hidden", borderRadius: br, background: cat?.grad || "#78909C", ...st }}>
-        <img src={mod.photo} alt="" loading="lazy" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} onError={() => setImgErr(true)} />
+        {!imgOk && <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s infinite" }} />}
+        <img src={mod.photo} alt="" loading="lazy" onLoad={() => setImgOk(true)} onError={() => setImgErr(true)} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: imgOk ? 1 : 0, transition: "opacity 0.4s ease-out" }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "50%", background: "linear-gradient(0deg,rgba(0,0,0,0.4) 0%,transparent 100%)" }} />
       </div>
     );
@@ -392,7 +393,8 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
   return (
     <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", position: "relative", overflow: "hidden", maxWidth: 430, margin: "0 auto", background: "#0f1923" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet" />
-      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes bgFade{from{opacity:0}to{opacity:1}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
+      <style>{`@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap");`}</style>
+      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}} @keyframes popIn{0%{transform:scale(0.9);opacity:0}50%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}} @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}} @keyframes slotFill{0%{background:#E8F5E9;transform:scale(0.98)}100%{background:#FEFDFB;transform:scale(1)}} @keyframes bgFade{from{opacity:0}to{opacity:1}} @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
       {/* Full-bleed background photo */}
       {bgPhotos.length > 0 && (
@@ -452,10 +454,6 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
   const [confRm, sConfRm] = useState(null);
   const [skipConf, sSkipConf] = useState(false);
   const [sw, sSw] = useState(null);
-  const [showAssist, sAssist] = useState(false);
-  const [assistMsgs, sAssistMsgs] = useState([]);
-  const [assistInput, sAssistInput] = useState("");
-  const [assistLoading, sAssistLoading] = useState(false);
   const dRef = useRef(null);
 
   const days = mkDays(trip.startDate, trip.dayCount);
@@ -596,17 +594,17 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
             return (
               <div key={sk} style={{ animation: `ci 0.2s ease-out ${idx * 0.05}s both` }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  <span style={{ fontSize: 15 }}>{slot.icon}</span>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8 }}>{slot.label}</span>
+                  <div style={{ width: 12, height: 12, borderRadius: 6, background: mod ? (cat?.color || "#888") : "#ddd", border: "2px solid #fff", boxShadow: "0 0 0 2px " + (mod ? (cat?.color || "#888") + "30" : "#eee"), flexShrink: 0 }} />
+                  <span style={{ fontSize: 11, fontWeight: 700, color: mod ? "#555" : "#bbb", textTransform: "uppercase", letterSpacing: 0.8 }}>{slot.icon} {slot.label}</span>
                   {pos && <span style={{ fontSize: 10, color: cat?.color, fontWeight: 700 }}>Slot {pos.cur}/{pos.tot}</span>}
                 </div>
 
                 {mod ? (
-                  <div onClick={() => sExp(isX ? null : sk)} style={{ background: "#fff", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: isX ? "0 6px 24px " + (cat?.color || "#000") + "10" : "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                  <div onClick={() => sExp(isX ? null : sk)} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: isX ? "0 6px 24px " + (cat?.color || "#000") + "10" : "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer" }}>
                     {/* Header */}
                     <div style={{ display: "flex", minHeight: isX ? 42 : 78 }}>
                       <div style={{ flex: 1, padding: isX ? "9px 14px" : "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                        <div style={{ fontSize: isX ? 13 : 14, fontWeight: 700, lineHeight: 1.25 }}>{mod.icon || cat?.icon} {mod.name}</div>
+                        <div style={{ fontSize: isX ? 14 : 15, fontWeight: 700, lineHeight: 1.2, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</div>
                         {!isX && mod.vibe && <div style={{ marginTop: 4 }}><span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span></div>}
                       </div>
                       {!isX && <div style={{ width: "28%", minWidth: 82, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /><div style={{ position: "absolute", top: 5, right: 5, background: "rgba(0,0,0,0.3)", borderRadius: 6, width: 20, height: 20, display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: 9, color: "#fff" }}>▼</span></div></div>}
@@ -664,7 +662,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
                     })()}
                   </div>
                 ) : (
-                  <button onClick={() => { sSlot(sk); sLib(true); sFCat("all"); }} style={{ width: "100%", padding: "20px 14px", background: "#fff", borderRadius: 16, border: "2px dashed #ddd", cursor: "pointer" }}>
+                  <button onClick={() => { sSlot(sk); sLib(true); sFCat("all"); }} style={{ width: "100%", padding: "20px 14px", background: "#FEFDFB", borderRadius: 16, border: "2px dashed #d5d0c8", cursor: "pointer" }}>
                     <div style={{ textAlign: "center" }}>
                       <div style={{ fontSize: 20, opacity: 0.2, marginBottom: 3 }}>+</div>
                       <div style={{ fontSize: 11, fontWeight: 600, color: "#bbb" }}>Add experience</div>
@@ -747,71 +745,6 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay }) => {
         );
       })()}
 
-      {/* AI Trip Assistant — floating button (above tab bar) */}
-      {!showAssist && !lib && !cust && !guide && !showInfo && !showOv && !mapMod && (
-        <button onClick={() => sAssist(true)} style={{
-          position: "fixed", bottom: 80, right: 16, width: 52, height: 52, borderRadius: 26,
-          background: "linear-gradient(135deg, #1a1a1a, #333)", border: "none",
-          boxShadow: "0 4px 20px rgba(0,0,0,0.3)", cursor: "pointer", zIndex: 150,
-          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22,
-        }}>🤖</button>
-      )}
-
-      {/* AI Trip Assistant — chat */}
-      {showAssist && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={() => sAssist(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", height: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-            <DragHandle onClose={() => sAssist(false)} />
-            <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#9B51E0", textTransform: "uppercase", letterSpacing: 1 }}>🤖 Trip Assistant</div>
-                <div style={{ fontSize: 15, fontWeight: 800, marginTop: 2 }}>Ask me anything</div>
-              </div>
-              <button onClick={() => sAssist(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
-            </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
-              {assistMsgs.length === 0 && (
-                <div style={{ textAlign: "center", padding: "20px 10px" }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>🤖</div>
-                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Panama trip assistant</div>
-                  <div style={{ fontSize: 12, color: "#888", lineHeight: 1.5, marginBottom: 18 }}>I know your itinerary, the experience library, and Panama. Ask me anything.</div>
-                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
-                    {["What should we do with a toddler?", "Best restaurants for a special dinner?", "Help me plan a free day", "What's the weather like in late March?"].map(q => (
-                      <button key={q} onClick={() => sAssistInput(q)} style={{ padding: "9px 14px", borderRadius: 10, border: "1.5px solid #eee", background: "#FAFAF8", fontSize: 12, fontWeight: 600, color: "#555", cursor: "pointer", textAlign: "left" }}>{q}</button>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {assistMsgs.map((msg, i) => (
-                <div key={i} style={{ marginBottom: 10, display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
-                  <div style={{
-                    maxWidth: "85%", padding: "10px 14px", borderRadius: 14,
-                    background: msg.role === "user" ? "#1a1a1a" : "#F5F5F5",
-                    color: msg.role === "user" ? "#fff" : "#333",
-                    fontSize: 13, lineHeight: 1.6,
-                    borderBottomRightRadius: msg.role === "user" ? 4 : 14,
-                    borderBottomLeftRadius: msg.role === "user" ? 14 : 4,
-                  }}>{msg.text}</div>
-                </div>
-              ))}
-              {assistLoading && <div style={{ marginBottom: 10 }}><div style={{ display: "inline-block", padding: "10px 14px", borderRadius: 14, background: "#F5F5F5", fontSize: 13, color: "#999" }}>Thinking...</div></div>}
-            </div>
-            <div style={{ padding: "10px 20px 20px", borderTop: "1px solid #f0f0f0", display: "flex", gap: 8 }}>
-              <input value={assistInput} onChange={e => sAssistInput(e.target.value)} placeholder="Ask about Panama..." onKeyDown={e => {
-                if (e.key !== "Enter" || !assistInput.trim() || assistLoading) return;
-                const q = assistInput.trim(); sAssistInput("");
-                const nm = [...assistMsgs, { role: "user", text: q }]; sAssistMsgs(nm); sAssistLoading(true);
-                const ctx = "Trip assistant for Panama trip Mar 29–Apr 7 2026. Travelers: parents (60s) + sometimes a 2.5yr toddler. Planned: " + Object.entries(cal).map(([sk, mid]) => { const m = mods.find(x => x.id === mid); return m ? m.name : ""; }).filter(Boolean).join(", ") + ". Available: " + mods.filter(m => !pIds.has(m.id)).map(m => m.name).join(", ") + ". Be concise, under 150 words.";
-                fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: ctx + "\n\n" + q }] }) })
-                  .then(r => r.json()).then(d => { sAssistMsgs([...nm, { role: "assistant", text: d.content?.map(b => b.type === "text" ? b.text : "").join("") || "Couldn't respond." }]); })
-                  .catch(() => { sAssistMsgs([...nm, { role: "assistant", text: "Couldn't connect." }]); })
-                  .finally(() => sAssistLoading(false));
-              }} style={{ ...IS, fontSize: 14, padding: "12px 16px" }} />
-              <button onClick={() => { document.querySelector("input[placeholder='Ask about Panama...']")?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })); }} style={{ padding: "12px 18px", borderRadius: 12, border: "none", background: "#1a1a1a", color: "#fff", fontWeight: 700, fontSize: 16, cursor: "pointer", flexShrink: 0 }}>→</button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -871,7 +804,7 @@ const EditModal = ({ mod, onSave, onDelete, onClose }) => {
 
 // ═══ EXPLORE TAB ═══
 const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
-  const [expandId, sExpand] = useState(null);
+  const [detailMod, sDetailMod] = useState(null);
   const [filterCat, sFilter] = useState("all");
   const [filterTags, sFilterTags] = useState([]);
   const [slotPicker, sSlotPicker] = useState(null);
@@ -933,124 +866,131 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
     nc[sk] = modId;
     setCal(nc);
     sSlotPicker(null);
-    sExpand(null);
+    sDetailMod(null);
   };
 
-  const renderCard = (mod) => {
+  const renderCard = (mod, isHero) => {
     const cat = CATS.find(c => c.id === mod.category);
-    const isExp = expandId === mod.id;
+    const isPlaced = pIds.has(mod.id);
+
+    if (isHero) {
+      // Hero card — full-width with large photo for top picks
+      return (
+        <div key={mod.id} onClick={() => sDetailMod(mod)} style={{ marginBottom: 12, borderRadius: 18, overflow: "hidden", position: "relative", height: 180, cursor: "pointer", boxShadow: "0 4px 20px rgba(0,0,0,0.12)" }}>
+          <Vis mod={mod} cat={cat} h={180} br={18} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "16px 18px" }}>
+            <div style={{ display: "flex", gap: 5, marginBottom: 5 }}>
+              {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)", padding: "2px 8px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span>}
+              {isPlaced && <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", background: "rgba(76,175,80,0.8)", padding: "2px 8px", borderRadius: 5 }}>✅ Planned</span>}
+            </div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#fff", fontFamily: "'Playfair Display',Georgia,serif", textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}>{mod.name}</div>
+          </div>
+        </div>
+      );
+    }
+
+    // Standard compact card
+    return (
+      <div key={mod.id} onClick={() => sDetailMod(mod)} style={{
+        marginBottom: 8, borderRadius: 16, overflow: "hidden",
+        background: "#FEFDFB", border: "1.5px solid " + (cat?.color || "#ddd") + "15",
+        boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer",
+      }}>
+        <div style={{ display: "flex", minHeight: 74 }}>
+          <div style={{ flex: 1, padding: "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <span style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</span>
+              {isPlaced && <span style={{ fontSize: 12, color: "#4CAF50", flexShrink: 0 }}>✅</span>}
+            </div>
+            {mod.vibe && (
+              <div style={{ marginTop: 4 }}>
+                <span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.vibe}</span>
+              </div>
+            )}
+          </div>
+          <div style={{ width: "26%", minWidth: 78, flexShrink: 0, position: "relative" }}>
+            <Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Full-screen detail view
+  const renderDetail = () => {
+    if (!detailMod) return null;
+    const mod = detailMod;
+    const cat = CATS.find(c => c.id === mod.category);
     const isPlaced = pIds.has(mod.id);
     const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
 
     return (
-      <div key={mod.id} style={{ marginBottom: 10 }}>
-        <div onClick={() => sExpand(isExp ? null : mod.id)} style={{
-          background: "#fff", borderRadius: 16, overflow: "hidden",
-          border: "1.5px solid " + (cat?.color || "#ddd") + "20",
-          boxShadow: isExp ? "0 6px 24px " + (cat?.color || "#000") + "10" : "0 1px 6px rgba(0,0,0,0.04)",
-          cursor: "pointer",
-        }}>
-          {/* Collapsed header */}
-          <div style={{ display: "flex", minHeight: isExp ? 42 : 78 }}>
-            <div style={{ flex: 1, padding: isExp ? "9px 14px" : "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                <span style={{ fontSize: isExp ? 13 : 14, fontWeight: 700, lineHeight: 1.25 }}>{mod.icon || cat?.icon} {mod.name}</span>
-                {isPlaced && <span style={{ fontSize: 12, color: "#4CAF50", flexShrink: 0 }}>✅</span>}
-              </div>
-              {!isExp && mod.vibe && (
-                <div style={{ marginTop: 4 }}>
-                  <span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span>
+      <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
+        {/* Hero image */}
+        <div style={{ position: "relative", height: 260 }}>
+          <Vis mod={mod} cat={cat} h={260} />
+          <button onClick={() => sDetailMod(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+          {isPlaced && <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
+        </div>
+
+        <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
+          {/* Title + vibe */}
+          <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15 }}>{mod.icon || cat?.icon} {mod.name}</h2>
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 14 }}>
+            {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
+            {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 10, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "3px 8px", borderRadius: 5 }}>{t}</span>)}
+          </div>
+
+          {/* Description */}
+          <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 18 }}>{mod.notes}</div>
+
+          {/* Practical info — always visible */}
+          <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 16px", marginBottom: 18, display: "flex", flexDirection: "column", gap: 10 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8 }}>Practical info</div>
+            {mod.hours && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.hours}</span></div>}
+            {mod.cost && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.cost}</span></div>}
+            {mod.address && <button onClick={() => sMapMod(mod)} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}><span>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span><span style={{ fontSize: 9, color: "#aaa" }}>→ Map</span></button>}
+            {mod.mapsRating > 0 && <a href={mUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, textDecoration: "none" }}><span>⭐</span><GR r={mod.mapsRating} rv={mod.mapsReviews} /><span style={{ fontSize: 9, fontWeight: 700, color: "#4285F4" }}>Google</span></a>}
+            {mod.bookingUrl && <a href={mod.bookingUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 14px", borderRadius: 10, background: cat?.color, color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none", marginTop: 4 }}>🔗 Book / Reserve</a>}
+          </div>
+
+          {/* Add to itinerary */}
+          {!isPlaced ? (
+            <div>
+              <button onClick={() => sSlotPicker(mod.id)} style={{
+                width: "100%", padding: 14, borderRadius: 14, border: "none",
+                background: cat?.color, color: "#fff", fontSize: 15, fontWeight: 700,
+                cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+                boxShadow: "0 4px 16px " + (cat?.color || "#888") + "40",
+              }}>➕ Add to Itinerary</button>
+              {slotPicker === mod.id && (
+                <div style={{ background: "#F7F6F3", borderRadius: 14, padding: 14, marginTop: 10, animation: "fi 0.15s ease-out" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#555", marginBottom: 8 }}>Choose a slot:</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                    {getOpenSlots(mod).map(({ sk, day, slot }) => (
+                      <button key={sk} onClick={() => addToSlot(mod.id, sk)} style={{
+                        display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
+                        borderRadius: 10, border: "1.5px solid #e0e0e0", background: "#fff",
+                        cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#333",
+                      }}>
+                        <span>{slot.icon}</span>
+                        <span>{day.wd} {day.md}</span>
+                        <span style={{ color: "#aaa" }}>·</span>
+                        <span style={{ color: "#888" }}>{slot.label}</span>
+                      </button>
+                    ))}
+                    {getOpenSlots(mod).length === 0 && <div style={{ fontSize: 12, color: "#999", padding: 8 }}>No open slots available</div>}
+                  </div>
+                  <button onClick={() => sSlotPicker(null)} style={{ marginTop: 8, fontSize: 11, color: "#888", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Cancel</button>
                 </div>
               )}
             </div>
-            {!isExp && (
-              <div style={{ width: "28%", minWidth: 82, flexShrink: 0, position: "relative" }}>
-                <Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} />
-                {isPlaced && <div style={{ position: "absolute", top: 5, left: 5, background: "rgba(76,175,80,0.9)", borderRadius: 6, padding: "2px 6px", fontSize: 9, fontWeight: 800, color: "#fff" }}>IN ITINERARY</div>}
-              </div>
-            )}
-            {isExp && <div style={{ display: "flex", alignItems: "center", padding: "0 12px" }}><span style={{ fontSize: 11, color: "#ccc", transform: "rotate(180deg)" }}>▼</span></div>}
-          </div>
-
-          {/* Expanded */}
-          {isExp && (
-            <div style={{ padding: "0 14px 14px", animation: "fi 0.15s ease-out" }}>
-              {/* Vibe + tags */}
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginBottom: 10 }}>
-                {mod.vibe && <span style={{ fontSize: 10, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 9px", borderRadius: 7 }}>{mod.icon || cat?.icon} {mod.vibe}</span>}
-                {mod.duration > 1 && <span style={{ fontSize: 10, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "10", padding: "3px 9px", borderRadius: 7 }}>📅 {mod.duration} slots</span>}
-                {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 9, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "2px 7px", borderRadius: 5 }}>{t}</span>)}
-              </div>
-
-              {/* Visual */}
-              <div style={{ borderRadius: 12, overflow: "hidden", marginBottom: 10 }}><Vis mod={mod} cat={cat} h={140} br={12} /></div>
-
-              {/* Description */}
-              <div style={{ background: "#FAFAF8", borderRadius: 12, padding: "12px 14px", marginBottom: 10 }}>
-                <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{mod.notes}</div>
-              </div>
-
-              {/* Practical info — collapsible */}
-              <div style={{ marginBottom: 10 }}>
-                <button onClick={e => { e.stopPropagation(); sPiOpen(p => ({ ...p, [mod.id]: !p[mod.id] })); }} style={{
-                  width: "100%", display: "flex", alignItems: "center", justifyContent: "space-between",
-                  padding: "9px 12px", borderRadius: piOpen[mod.id] ? "10px 10px 0 0" : 10,
-                  background: "#F0F0F0", border: "none", cursor: "pointer", fontSize: 12, fontWeight: 700, color: "#666",
-                }}>
-                  <span>📋 Practical Info</span>
-                  <span style={{ fontSize: 9, color: "#aaa", transform: piOpen[mod.id] ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}>▼</span>
-                </button>
-                {piOpen[mod.id] && (
-                  <div style={{ background: "#F0F0F0", borderRadius: "0 0 10px 10px", padding: "6px 12px 12px", display: "flex", flexDirection: "column", gap: 7, animation: "fi 0.12s ease-out" }}>
-                    {mod.hours && <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12 }}><span style={{ fontSize: 13 }}>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.hours}</span></div>}
-                    {mod.cost && <div style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12 }}><span style={{ fontSize: 13 }}>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.cost}</span></div>}
-                    {mod.address && <button onClick={e => { e.stopPropagation(); sMapMod(mod); }} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}><span style={{ fontSize: 13 }}>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span><span style={{ fontSize: 9, color: "#aaa" }}>→ Map</span></button>}
-                    {mod.mapsRating > 0 && <a href={mUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: 12, textDecoration: "none" }}><span style={{ fontSize: 13 }}>⭐</span><GR r={mod.mapsRating} rv={mod.mapsReviews} /><span style={{ fontSize: 9, fontWeight: 700, color: "#4285F4" }}>Google</span></a>}
-                    {mod.bookingUrl && <a href={mod.bookingUrl} target="_blank" rel="noopener noreferrer" onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "9px 12px", borderRadius: 8, background: cat?.color, color: "#fff", fontSize: 12, fontWeight: 700, textDecoration: "none", marginTop: 2 }}>🔗 Book / Reserve</a>}
-                  </div>
-                )}
-              </div>
-
-              {/* Add to itinerary / Already planned */}
-              {!isPlaced ? (
-                <button onClick={e => { e.stopPropagation(); sSlotPicker(mod.id); }} style={{
-                  width: "100%", padding: 12, borderRadius: 12, border: "none",
-                  background: cat?.color, color: "#fff", fontSize: 14, fontWeight: 700,
-                  cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                  boxShadow: "0 3px 10px " + (cat?.color || "#888") + "30",
-                }}>➕ Add to Itinerary</button>
-              ) : (
-                <div style={{ fontSize: 12, color: "#4CAF50", fontWeight: 700, textAlign: "center", padding: "10px 0", background: "#E8F5E9", borderRadius: 12 }}>✅ Already in your itinerary</div>
-              )}
-              {isAdmin && <button onClick={e => { e.stopPropagation(); sEditMod(mod); }} style={{ width: "100%", padding: 10, borderRadius: 10, border: "1.5px solid #E53935", background: "#FFF5F5", color: "#E53935", fontSize: 12, fontWeight: 700, cursor: "pointer", marginTop: 6 }}>✏️ Edit Experience</button>}
-            </div>
+          ) : (
+            <div style={{ fontSize: 13, color: "#4CAF50", fontWeight: 700, textAlign: "center", padding: "12px 0", background: "#E8F5E9", borderRadius: 14 }}>✅ Already in your itinerary</div>
           )}
-        </div>
 
-        {/* Slot picker dropdown */}
-        {slotPicker === mod.id && (
-          <div style={{ background: "#fff", borderRadius: 12, padding: 12, marginTop: 6, border: "1.5px solid #eee", animation: "fi 0.15s ease-out" }}>
-            <div style={{ fontSize: 12, fontWeight: 700, color: "#555", marginBottom: 8 }}>
-              {mod.category === "restaurant" ? "🍽️ Best for evenings — choose a slot:" : "Choose a slot:"}
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              {getOpenSlots(mod).map(({ sk, day, slot }) => (
-                <button key={sk} onClick={e => { e.stopPropagation(); addToSlot(mod.id, sk); }} style={{
-                  display: "flex", alignItems: "center", gap: 8, padding: "8px 12px",
-                  borderRadius: 10, border: "1.5px solid #eee", background: "#FAFAF8",
-                  cursor: "pointer", fontSize: 12, fontWeight: 600, color: "#333",
-                }}>
-                  <span>{slot.icon}</span>
-                  <span>{day.wd} {day.md}</span>
-                  <span style={{ color: "#aaa" }}>·</span>
-                  <span style={{ color: "#888" }}>{slot.label}</span>
-                </button>
-              ))}
-              {getOpenSlots(mod).length === 0 && <div style={{ fontSize: 12, color: "#999", padding: 8 }}>No open slots — try removing something first</div>}
-            </div>
-            <button onClick={e => { e.stopPropagation(); sSlotPicker(null); }} style={{ marginTop: 8, fontSize: 11, color: "#888", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Cancel</button>
-          </div>
-        )}
+          {isAdmin && <button onClick={() => { sEditMod(mod); sDetailMod(null); }} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #E53935", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer", marginTop: 10 }}>✏️ Edit Experience</button>}
+        </div>
       </div>
     );
   };
@@ -1083,7 +1023,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
               const cat = CATS.find(c => c.id === mod.category);
               const isPlcd = pIds.has(mod.id);
               return (
-                <div key={mod.id} onClick={() => sExpand(sExpand === mod.id ? null : mod.id)} style={{
+                <div key={mod.id} onClick={() => sDetailMod(mod)} style={{
                   flexShrink: 0, width: "78%", scrollSnapAlign: "start",
                   borderRadius: 16, overflow: "hidden", position: "relative",
                   height: 160, cursor: "pointer",
@@ -1150,7 +1090,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
             <span style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", textTransform: "uppercase", letterSpacing: 0.8 }}>Chris's Picks</span>
             <div style={{ flex: 1, height: 1, background: "#eee" }} />
           </div>
-          {curated.map(renderCard)}
+          {curated.map(m => renderCard(m, m.rec === "cantmiss"))}
         </div>
       )}
 
@@ -1161,7 +1101,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
             <span style={{ fontSize: 12, fontWeight: 800, color: "#888", textTransform: "uppercase", letterSpacing: 0.8 }}>More Options</span>
             <div style={{ flex: 1, height: 1, background: "#eee" }} />
           </div>
-          {extended.map(renderCard)}
+          {extended.map(m => renderCard(m, false))}
         </div>
       )}
 
@@ -1178,6 +1118,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
       )}
 
       {mapMod && <MapPopup mod={mapMod} onClose={() => sMapMod(null)} />}
+      {renderDetail()}
 
       {/* Admin edit modal */}
       {isAdmin && editMod !== undefined && (
@@ -1192,7 +1133,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
               });
             }
             sEditMod(undefined);
-            sExpand(null);
+            sDetailMod(null);
           }}
           onDelete={editMod ? (id) => {
             if (setMods) setMods(prev => prev.filter(m => m.id !== id));
@@ -1200,7 +1141,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
             Object.keys(nc).forEach(k => { if (nc[k] === id) delete nc[k]; });
             setCal(nc);
             sEditMod(undefined);
-            sExpand(null);
+            sDetailMod(null);
           } : null}
           onClose={() => sEditMod(undefined)}
         />
@@ -1220,6 +1161,10 @@ export default function App() {
   const [editTrip, sEditTrip] = useState(false);
   const [showOv, setShowOv] = useState(false);
   const [showInfo, setShowInfo] = useState(false);
+  const [showAssist, sAssist] = useState(false);
+  const [assistMsgs, sAssistMsgs] = useState([]);
+  const [assistInput, sAssistInput] = useState("");
+  const [assistLoading, sAssistLoading] = useState(false);
 
   // Admin mode via URL param: ?admin=true
   const isAdmin = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("admin") === "true";
@@ -1300,30 +1245,99 @@ export default function App() {
       {showOv && <Overview days={days} occ={occ} mods={mods} onClose={() => setShowOv(false)} onJump={di => { sJd(di); sTab("itinerary"); setShowOv(false); }} />}
       {showInfo && <InfoPanel info={trip.info} onClose={() => setShowInfo(false)} />}
 
-      {/* Bottom tab bar */}
+      {/* Bottom tab bar — floating pill */}
       <div style={{
-        position: "fixed", bottom: 0, left: 0, right: 0, maxWidth: 430, margin: "0 auto",
-        background: "#fff", borderTop: "1px solid #eee",
-        display: "flex", gap: 8, padding: "8px 12px 20px", zIndex: 200,
-        boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
+        position: "fixed", bottom: 12, left: "50%", transform: "translateX(-50%)",
+        maxWidth: 340, width: "calc(100% - 60px)",
+        background: "rgba(27,59,50,0.92)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)",
+        display: "flex", gap: 4, padding: "5px", borderRadius: 20, zIndex: 200,
+        boxShadow: "0 4px 24px rgba(0,0,0,0.2)",
       }}>
-        <button onClick={() => sTab("explore")} style={{
-          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-          background: tab === "explore" ? "#0B4D3B" : "#f5f5f5",
-          border: "none", cursor: "pointer", padding: "11px 8px", borderRadius: 12,
+        <button onClick={() => { sTab("explore"); sAssist(false); }} style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
+          background: tab === "explore" && !showAssist ? "#fff" : "transparent",
+          border: "none", cursor: "pointer", padding: "10px 8px", borderRadius: 16,
+          transition: "all 0.2s",
         }}>
-          <span style={{ fontSize: 16 }}>✨</span>
-          <span style={{ fontSize: 12, fontWeight: 700, color: tab === "explore" ? "#fff" : "#999" }}>Explore</span>
+          <span style={{ fontSize: 14 }}>✨</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: tab === "explore" && !showAssist ? "#1B3B32" : "rgba(255,255,255,0.6)" }}>Explore</span>
         </button>
-        <button onClick={() => sTab("itinerary")} style={{
-          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-          background: tab === "itinerary" ? "#0B4D3B" : "#f5f5f5",
-          border: "none", cursor: "pointer", padding: "11px 8px", borderRadius: 12,
+        <button onClick={() => { sTab("itinerary"); sAssist(false); }} style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
+          background: tab === "itinerary" && !showAssist ? "#fff" : "transparent",
+          border: "none", cursor: "pointer", padding: "10px 8px", borderRadius: 16,
+          transition: "all 0.2s",
         }}>
-          <span style={{ fontSize: 16 }}>📅</span>
-          <span style={{ fontSize: 12, fontWeight: 700, color: tab === "itinerary" ? "#fff" : "#999" }}>Itinerary</span>
+          <span style={{ fontSize: 14 }}>📅</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: tab === "itinerary" && !showAssist ? "#1B3B32" : "rgba(255,255,255,0.6)" }}>Itinerary</span>
+        </button>
+        <button onClick={() => sAssist(true)} style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
+          background: showAssist ? "#fff" : "transparent",
+          border: "none", cursor: "pointer", padding: "10px 8px", borderRadius: 16,
+          transition: "all 0.2s",
+        }}>
+          <span style={{ fontSize: 14 }}>🤖</span>
+          <span style={{ fontSize: 11, fontWeight: 700, color: showAssist ? "#1B3B32" : "rgba(255,255,255,0.6)" }}>Assistant</span>
         </button>
       </div>
+
+      {/* AI Trip Assistant — chat (root level, accessible from both tabs) */}
+      {showAssist && (
+        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={() => sAssist(false)}>
+          <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", height: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
+            <DragHandle onClose={() => sAssist(false)} />
+            <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#9B51E0", textTransform: "uppercase", letterSpacing: 1 }}>🤖 Trip Assistant</div>
+                <div style={{ fontSize: 15, fontWeight: 800, marginTop: 2 }}>Ask me anything</div>
+              </div>
+              <button onClick={() => sAssist(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
+            </div>
+            <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
+              {assistMsgs.length === 0 && (
+                <div style={{ textAlign: "center", padding: "20px 10px" }}>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}>🤖</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 6 }}>Panama trip assistant</div>
+                  <div style={{ fontSize: 12, color: "#888", lineHeight: 1.5, marginBottom: 18 }}>I know your itinerary, the experience library, and Panama. Ask me anything.</div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {["What should we do with a toddler?", "Best restaurants for a special dinner?", "Help me plan a free day", "What's the weather like in late March?"].map(q => (
+                      <button key={q} onClick={() => sAssistInput(q)} style={{ padding: "9px 14px", borderRadius: 10, border: "1.5px solid #eee", background: "#FAFAF8", fontSize: 12, fontWeight: 600, color: "#555", cursor: "pointer", textAlign: "left" }}>{q}</button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {assistMsgs.map((msg, i) => (
+                <div key={i} style={{ marginBottom: 10, display: "flex", justifyContent: msg.role === "user" ? "flex-end" : "flex-start" }}>
+                  <div style={{
+                    maxWidth: "85%", padding: "10px 14px", borderRadius: 14,
+                    background: msg.role === "user" ? "#1B3B32" : "#F5F5F5",
+                    color: msg.role === "user" ? "#fff" : "#333",
+                    fontSize: 13, lineHeight: 1.6,
+                    borderBottomRightRadius: msg.role === "user" ? 4 : 14,
+                    borderBottomLeftRadius: msg.role === "user" ? 14 : 4,
+                  }}>{msg.text}</div>
+                </div>
+              ))}
+              {assistLoading && <div style={{ marginBottom: 10 }}><div style={{ display: "inline-block", padding: "10px 14px", borderRadius: 14, background: "#F5F5F5", fontSize: 13, color: "#999" }}>Thinking...</div></div>}
+            </div>
+            <div style={{ padding: "10px 20px 20px", borderTop: "1px solid #f0f0f0", display: "flex", gap: 8 }}>
+              <input value={assistInput} onChange={e => sAssistInput(e.target.value)} placeholder="Ask about Panama..." onKeyDown={e => {
+                if (e.key !== "Enter" || !assistInput.trim() || assistLoading) return;
+                const q = assistInput.trim(); sAssistInput("");
+                const nm = [...assistMsgs, { role: "user", text: q }]; sAssistMsgs(nm); sAssistLoading(true);
+                const pIds2 = new Set(Object.values(cal));
+                const ctx = "Trip assistant for Panama trip Mar 29-Apr 7 2026. Travelers: parents 60s + sometimes 2.5yr toddler. Planned: " + Object.entries(cal).map(([sk, mid]) => { const m = mods.find(x => x.id === mid); return m ? m.name : ""; }).filter(Boolean).join(", ") + ". Available: " + mods.filter(m => !pIds2.has(m.id)).map(m => m.name).join(", ") + ". Concise, under 150 words.";
+                fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: ctx + "\n\n" + q }] }) })
+                  .then(r => r.json()).then(d => { sAssistMsgs([...nm, { role: "assistant", text: d.content?.map(b => b.type === "text" ? b.text : "").join("") || "Couldn't respond." }]); })
+                  .catch(() => { sAssistMsgs([...nm, { role: "assistant", text: "Couldn't connect." }]); })
+                  .finally(() => sAssistLoading(false));
+              }} style={{ ...IS, fontSize: 14, padding: "12px 16px" }} />
+              <button onClick={() => { document.querySelector("input[placeholder='Ask about Panama...']")?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })); }} style={{ padding: "12px 18px", borderRadius: 12, border: "none", background: "#1B3B32", color: "#fff", fontWeight: 700, fontSize: 16, cursor: "pointer", flexShrink: 0 }}>→</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
