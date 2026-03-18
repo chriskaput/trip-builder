@@ -551,7 +551,8 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const [guide, sGuide] = useState(null);
   const [showInfo, sInfo] = useState(false);
   const [showOv, sOv] = useState(false);
-  const [notes, sNotes] = useState({});
+  const [notes, sNotes] = useState(() => { try { const s = localStorage.getItem("tb_notes"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
+  useEffect(() => { try { localStorage.setItem("tb_notes", JSON.stringify(notes)); } catch {} }, [notes]);
   const [noteFor, sNoteFor] = useState(null);
   const [mapMod, sMap] = useState(null);
   const [pInfo, sPInfo] = useState({});
@@ -1664,8 +1665,12 @@ export default function App() {
   const [tab, sTab] = useState("explore");
   const [jd, sJd] = useState(0);
   const [mods, sMods] = useState(MODS);
-  const [favs, setFavs] = useState([]);
-  const [cal, sCal] = useState(INIT_CAL);
+  const [favs, setFavs] = useState(() => { try { const s = localStorage.getItem("tb_favs"); return s ? JSON.parse(s) : []; } catch { return []; } });
+  const [cal, sCal] = useState(() => { try { const s = localStorage.getItem("tb_cal"); return s ? JSON.parse(s) : INIT_CAL; } catch { return INIT_CAL; } });
+
+  // Persist to localStorage on change
+  useEffect(() => { try { localStorage.setItem("tb_favs", JSON.stringify(favs)); } catch {} }, [favs]);
+  useEffect(() => { try { localStorage.setItem("tb_cal", JSON.stringify(cal)); } catch {} }, [cal]);
   const [trip, sTrip] = useState(TRIP);
   const [editTrip, sEditTrip] = useState(false);
   const [showOv, setShowOv] = useState(false);
