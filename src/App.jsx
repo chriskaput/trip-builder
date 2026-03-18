@@ -517,7 +517,7 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
 };
 
 // ═══ ITINERARY ═══
-const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onShowEvent, favs, setFavs }) => {
+const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onShowEvent, favs, setFavs, onOverlayChange }) => {
   const [aDay, sDay] = useState(initDay || 0);
   const [exp, sExp] = useState(null);
   const [lib, sLib] = useState(false);
@@ -750,7 +750,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 </div>
 
                 {mod ? (
-                  <div onClick={() => sItinDetail({ mod, sk, cat })} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer" }}>
+                  <div onClick={() => { sItinDetail({ mod, sk, cat }); if (onOverlayChange) onOverlayChange("itinerary"); }} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer" }}>
                     <div style={{ display: "flex", minHeight: 74 }}>
                       <div style={{ flex: 1, padding: "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
                         <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</div>
@@ -795,7 +795,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
             {/* Clean hero image — no text overlay */}
             <div style={{ position: "relative", height: 260 }}>
               <Vis mod={mod} cat={cat} h={260} />
-              <button onClick={() => sItinDetail(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+              <button onClick={() => { sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
               <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#fff" }}>{dayObj?.wd} {dayObj?.md} · {slotObj?.label}</div>
               <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", top: 12, right: slotParts ? 120 : 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{isFav ? "❤️" : "🤍"}</button>
             </div>
@@ -834,9 +834,9 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                   const nc = { ...cal };
                   Object.keys(nc).forEach(k => { if (nc[k] === mod.id) delete nc[k]; });
                   setCal(nc);
-                  sItinDetail(null);
+                  sItinDetail(null); if (onOverlayChange) onOverlayChange(false);
                 }} style={{ width: "100%", padding: 14, borderRadius: 14, background: isFav ? "#E8F5E9" : "#E91E63", border: "none", fontSize: 14, fontWeight: 700, color: isFav ? "#4CAF50" : "#fff", cursor: "pointer", boxShadow: isFav ? "none" : "0 3px 12px rgba(233,30,99,0.2)" }}>{isFav ? "❤️ Already in favorites — Remove from itinerary" : "❤️ Remove & save to favorites"}</button>
-                <button onClick={() => { rmSlot(sk); sItinDetail(null); }} style={{ width: "100%", padding: 13, borderRadius: 14, background: "#1a1a1a", border: "none", fontSize: 13, fontWeight: 700, color: "#fff", cursor: "pointer" }}>🗑️ Remove from itinerary</button>
+                <button onClick={() => { rmSlot(sk); sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ width: "100%", padding: 13, borderRadius: 14, background: "#1a1a1a", border: "none", fontSize: 13, fontWeight: 700, color: "#fff", cursor: "pointer" }}>🗑️ Remove from itinerary</button>
               </div>
             </div>
           </div>
@@ -1019,7 +1019,7 @@ const EditModal = ({ mod, onSave, onDelete, onClose }) => {
 };
 
 // ═══ EXPLORE TAB ═══
-const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs, events, trip, onShowOverview }) => {
+const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs, events, trip, onShowOverview, onOverlayChange }) => {
   const [detailMod, sDetailMod] = useState(null);
   const [detailList, sDetailList] = useState([]); // list of items for swipe navigation
   const [detailIdx, sDetailIdx] = useState(0);
@@ -1030,6 +1030,11 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
     sDetailList(list || []);
     sDetailIdx(idx >= 0 ? idx : 0);
     sSlotPicker(null);
+    if (onOverlayChange) onOverlayChange("experience");
+  };
+  const closeDetail = () => {
+    closeDetail();
+    if (onOverlayChange) onOverlayChange(false);
   };
   const swipeDetail = (dir) => {
     if (detailList.length <= 1) return;
@@ -1107,7 +1112,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
     nc[sk] = modId;
     setCal(nc);
     sSlotPicker(null);
-    sDetailMod(null);
+    closeDetail();
   };
 
   const renderCard = (mod, isHero, listCtx) => {
@@ -1182,7 +1187,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         {/* Hero image */}
         <div style={{ position: "relative", height: 260 }}>
           <Vis mod={mod} cat={cat} h={260} />
-          <button onClick={() => sDetailMod(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+          <button onClick={() => closeDetail()} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
           {isPlaced && <div style={{ position: "absolute", top: 12, right: 56, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
           <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", top: 12, right: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{favs.includes(mod.id) ? "❤️" : "🤍"}</button>
           {/* Swipe navigation arrows + position */}
@@ -1257,7 +1262,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
             <div style={{ fontSize: 13, color: "#4CAF50", fontWeight: 700, textAlign: "center", padding: "12px 0", background: "#E8F5E9", borderRadius: 14 }}>✅ Already in your itinerary</div>
           )}
 
-          {isAdmin && <button onClick={() => { sEditMod(mod); sDetailMod(null); }} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #E53935", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer", marginTop: 10 }}>✏️ Edit Experience</button>}
+          {isAdmin && <button onClick={() => { sEditMod(mod); closeDetail(); }} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #E53935", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer", marginTop: 10 }}>✏️ Edit Experience</button>}
         </div>
       </div>
     );
@@ -1275,7 +1280,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
   return (
     <div style={{ padding: "16px 16px 100px" }}>
       {/* About Panama — large hero card with image */}
-      <button onClick={() => sShowAbout(true)} style={{
+      <button onClick={() => { sShowAbout(true); if (onOverlayChange) onOverlayChange("explore"); }} style={{
         width: "100%", position: "relative", overflow: "hidden", borderRadius: 18, border: "none",
         cursor: "pointer", marginBottom: 14, height: 160, display: "block",
         boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
@@ -1502,7 +1507,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
             <PanamaSlider photos={pPhotos} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, rgba(0,0,0,0.6) 100%)" }} />
             <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.3), rgba(33,147,176,0.2))" }} />
-            <button onClick={() => sShowAbout(false)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+            <button onClick={() => { sShowAbout(false); if (onOverlayChange) onOverlayChange(false); }} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
             <div style={{ position: "absolute", bottom: 20, left: 20 }}>
               <div style={{ fontSize: 48, marginBottom: 4 }}>🇵🇦</div>
               <h2 style={{ margin: 0, fontSize: 30, fontWeight: 900, color: "#fff", fontFamily: "'Playfair Display',Georgia,serif", textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>Panama</h2>
@@ -1566,7 +1571,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
               });
             }
             sEditMod(undefined);
-            sDetailMod(null);
+            closeDetail();
           }}
           onDelete={editMod ? (id) => {
             if (setMods) setMods(prev => prev.filter(m => m.id !== id));
@@ -1574,7 +1579,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
             Object.keys(nc).forEach(k => { if (nc[k] === id) delete nc[k]; });
             setCal(nc);
             sEditMod(undefined);
-            sDetailMod(null);
+            closeDetail();
           } : null}
           onClose={() => sEditMod(undefined)}
         />
@@ -1603,6 +1608,7 @@ export default function App() {
   const openAssist = (ctx) => { sAssistCtx(ctx || "general"); sAssist(true); };
   const [eventDetail, sEventDetail] = useState(null);
   const [evSlotPicker, sEvSlotPicker] = useState(false);
+  const [overlayOpen, sOverlayOpen] = useState(false);
 
   // Admin mode via URL param: ?admin=true
   const isAdmin = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("admin") === "true";
@@ -1650,9 +1656,9 @@ export default function App() {
 
       {/* Tab content */}
       {tab === "explore" ? (
-        <Explore mods={mods} setMods={sMods} cal={cal} setCal={sCal} days={days} occ={occ} isAdmin={isAdmin} favs={favs} setFavs={setFavs} events={EVENTS} trip={trip} onSwitchToDay={di => { sJd(di); sTab("itinerary"); }} onShowOverview={() => setShowOv(true)} />
+        <Explore mods={mods} setMods={sMods} cal={cal} setCal={sCal} days={days} occ={occ} isAdmin={isAdmin} favs={favs} setFavs={setFavs} events={EVENTS} trip={trip} onSwitchToDay={di => { sJd(di); sTab("itinerary"); }} onShowOverview={() => setShowOv(true)} onOverlayChange={sOverlayOpen} />
       ) : (
-        <Itin trip={trip} mods={mods} setMods={sMods} cal={cal} setCal={sCal} onBack={() => sScr("welcome")} initDay={jd} events={EVENTS} onShowEvent={ev => { sEventDetail(ev); sEvSlotPicker(false); }} favs={favs} setFavs={setFavs} />
+        <Itin trip={trip} mods={mods} setMods={sMods} cal={cal} setCal={sCal} onBack={() => sScr("welcome")} initDay={jd} events={EVENTS} onShowEvent={ev => { sEventDetail(ev); sEvSlotPicker(false); }} favs={favs} setFavs={setFavs} onOverlayChange={sOverlayOpen} />
       )}
 
       {/* Trip edit modal (admin) */}
@@ -1820,7 +1826,7 @@ export default function App() {
           <span style={{ fontSize: 14 }}>📅</span>
           <span style={{ fontSize: 11, fontWeight: 700, color: tab === "itinerary" && !showAssist ? "#1B3B32" : "rgba(255,255,255,0.6)" }}>Itinerary</span>
         </button>
-        <button onClick={() => openAssist('general')} style={{
+        <button onClick={() => openAssist(tab === 'explore' ? 'explore' : 'itinerary')} style={{
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
           background: showAssist ? "#fff" : "transparent",
           border: "none", cursor: "pointer", padding: "10px 8px", borderRadius: 16,
@@ -1832,11 +1838,11 @@ export default function App() {
       </div>
 
       {/* AI Trip Assistant — chat (root level, accessible from both tabs) */}
-      {/* Floating AI assistant button — always visible on every screen */}
-      {!showAssist && (
-        <button onClick={() => openAssist("general")} style={{
-          position: "fixed", bottom: 56, right: 16, width: 48, height: 48, borderRadius: 24,
-          background: "linear-gradient(135deg, #0B4D3B, #1A6B52)", border: "none",
+      {/* Floating AI assistant button — only on overlay/detail screens where tab bar is hidden */}
+      {!showAssist && (showOv || showInfo || eventDetail || overlayOpen) && (
+        <button onClick={() => openAssist(showInfo ? "practical" : showOv ? "overview" : eventDetail ? "experience" : overlayOpen || "general")} style={{
+          position: "fixed", bottom: 20, right: 16, width: 48, height: 48, borderRadius: 24,
+          background: "rgba(27,59,50,0.92)", backdropFilter: "blur(12px)", border: "none",
           boxShadow: "0 4px 16px rgba(11,77,59,0.35)", cursor: "pointer", zIndex: 400,
           display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
         }}>🤖</button>
