@@ -792,17 +792,21 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
         const slotObj = SLOTS.find(s => s.id === slotParts[1]);
         return (
           <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
-            {/* Clean hero image — no text overlay */}
+            {/* Floating back button — stays visible on scroll */}
+            <button onClick={() => { sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ position: "fixed", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 260 }}>←</button>
+
+            {/* Hero image — only date badge overlay */}
             <div style={{ position: "relative", height: 260 }}>
               <Vis mod={mod} cat={cat} h={260} />
-              <button onClick={() => { sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
               <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#fff" }}>{dayObj?.wd} {dayObj?.md} · {slotObj?.label}</div>
-              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", top: 12, right: slotParts ? 120 : 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{isFav ? "❤️" : "🤍"}</button>
             </div>
 
             <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
-              {/* Title + vibe — below image, matching Explore detail */}
-              <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15 }}>{mod.icon || cat?.icon} {mod.name}</h2>
+              {/* Title row with heart on the right */}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+                <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15, flex: 1 }}>{mod.icon || cat?.icon} {mod.name}</h2>
+                <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, padding: "2px 0 0 8px", flexShrink: 0 }}>{favs.includes(mod.id) ? "❤️" : "🖤"}</button>
+              </div>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 14 }}>
                 {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
                 {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 10, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "3px 8px", borderRadius: 5 }}>{t}</span>)}
@@ -1184,12 +1188,13 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
           detailSwRef.current = null;
         }}
       >
-        {/* Hero image */}
+        {/* Floating back button — stays visible on scroll */}
+        <button onClick={() => closeDetail()} style={{ position: "fixed", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 260 }}>←</button>
+
+        {/* Hero image — itinerary badge + swipe nav only */}
         <div style={{ position: "relative", height: 260 }}>
           <Vis mod={mod} cat={cat} h={260} />
-          <button onClick={() => closeDetail()} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
-          {isPlaced && <div style={{ position: "absolute", top: 12, right: 56, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
-          <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", top: 12, right: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{favs.includes(mod.id) ? "❤️" : "🤍"}</button>
+          {isPlaced && <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
           {/* Swipe navigation arrows + position */}
           {canSwipe && (
             <div style={{ position: "absolute", bottom: 12, left: 0, right: 0, display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
@@ -1203,8 +1208,11 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         </div>
 
         <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
-          {/* Title + vibe */}
-          <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15 }}>{mod.icon || cat?.icon} {mod.name}</h2>
+          {/* Title row with heart on the right */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
+            <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15, flex: 1 }}>{mod.icon || cat?.icon} {mod.name}</h2>
+            <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, padding: "2px 0 0 8px", flexShrink: 0 }}>{favs.includes(mod.id) ? "❤️" : "🖤"}</button>
+          </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 14 }}>
             {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
             {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 10, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "3px 8px", borderRadius: 5 }}>{t}</span>)}
