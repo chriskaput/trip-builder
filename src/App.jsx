@@ -128,10 +128,13 @@ const TRIP = {
   dayCount: 10,
   brief: "10 days of the best Panama has to offer — culture, nature, incredible food, and a beach escape to the Pearl Islands.",
   info: {
-    climate: "Hot and humid, 28–33°C. Late March is the tail end of dry season — mostly sunny.",
-    packing: ["Light breathable clothing", "Reef-safe sunscreen", "Rain jacket", "Walking shoes", "Insect repellent", "Hat and sunglasses"],
-    tips: ["Tap water is safe in Panama City", "USD is the currency", "Uber works well", "Tip 10% at restaurants", "Spanish helps but English is common"],
-    emergency: "Panama emergency: 911"
+    climate: "Hot and humid, 28–33°C. Late March is the tail end of dry season — mostly sunny with occasional brief showers. UV is very strong. Evenings are warm and pleasant (24–26°C).",
+    packing: ["Light breathable clothing", "Reef-safe sunscreen SPF 50+", "Light rain jacket", "Comfortable walking shoes", "Insect repellent (DEET)", "Hat and sunglasses", "Light layer for AC (restaurants/malls are cold)", "Swimsuit", "Reusable water bottle"],
+    tips: ["Tap water is safe in Panama City", "USD is the currency — no need to exchange", "Uber works well and is very affordable", "Tip 10-15% at restaurants", "Spanish helps but English is common in tourist areas", "AC is very cold indoors — carry a light layer", "Street food is generally safe and excellent", "Negotiate taxi fares before getting in (or use Uber)"],
+    getting_there: "Tocumen International Airport (PTY) is 30 min from downtown. Uber from airport costs $12-18. There's also an official airport taxi desk ($30 flat rate to city center). SIM cards available at the airport — Claro or Tigo recommended, ~$10 for 5GB.",
+    getting_around: "Uber is the easiest option — cheap and reliable. The Metro ($0.35/ride) covers key corridors. Casco Viejo, Amador, and the banking district are walkable. For day trips, rent a car or book a tour — roads outside the city are good but signage is limited.",
+    safety: "Panama City is generally safe for tourists, especially in Casco Viejo, the banking district, and tourist areas. Use normal precautions — don't flash valuables, use Uber at night instead of walking alone. Avoid Curundú and El Chorrillo neighborhoods. The tourist police are present in Casco Viejo.",
+    emergency: "Emergency: 911 · Tourist police: 211-3654 · Nearest hospital: Hospital Nacional (10 min from most hotels)"
   },
 };
 
@@ -290,10 +293,10 @@ const AiGuide = ({ mod, onClose }) => {
 // ═══ INFO PANEL ═══
 const InfoPanel = ({ info, onClose }) => (
   <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
-    <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "80vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
+    <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
       <DragHandle onClose={onClose} />
       <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>🧳 Travel Info</h3>
+        <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>💡 Practical Info</h3>
         <button onClick={onClose} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
       </div>
       <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px 24px" }}>
@@ -301,18 +304,30 @@ const InfoPanel = ({ info, onClose }) => (
           <div style={{ fontSize: 11, fontWeight: 700, color: "#E8843C", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>🌡️ Climate</div>
           <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, background: "#FFF8F0", borderRadius: 12, padding: "12px 16px" }}>{info.climate}</div>
         </div>
+        {info.getting_there && <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#9B51E0", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>✈️ Getting There</div>
+          <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, background: "#F5F0FF", borderRadius: 12, padding: "12px 16px" }}>{info.getting_there}</div>
+        </div>}
+        {info.getting_around && <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#2D9CDB", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>🚗 Getting Around</div>
+          <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, background: "#F0F7FF", borderRadius: 12, padding: "12px 16px" }}>{info.getting_around}</div>
+        </div>}
         <div style={{ marginBottom: 16 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#2D9CDB", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>🎒 Packing</div>
-          <div style={{ background: "#F0F7FF", borderRadius: 12, padding: "12px 16px" }}>
-            {info.packing.map((p, i) => <div key={i} style={{ fontSize: 13, color: "#555", padding: "3px 0", display: "flex", gap: 8 }}><span style={{ color: "#2D9CDB" }}>✓</span>{p}</div>)}
-          </div>
-        </div>
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: "#6FCF97", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>💡 Tips</div>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#6FCF97", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>🎒 Packing</div>
           <div style={{ background: "#F0FFF4", borderRadius: 12, padding: "12px 16px" }}>
-            {info.tips.map((t, i) => <div key={i} style={{ fontSize: 13, color: "#555", padding: "3px 0", lineHeight: 1.5, display: "flex", gap: 8 }}><span style={{ color: "#6FCF97", flexShrink: 0 }}>•</span>{t}</div>)}
+            {info.packing.map((p, i) => <div key={i} style={{ fontSize: 13, color: "#555", padding: "3px 0", display: "flex", gap: 8 }}><span style={{ color: "#6FCF97" }}>✓</span>{p}</div>)}
           </div>
         </div>
+        <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#F2994A", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>💡 Tips</div>
+          <div style={{ background: "#FFF8F0", borderRadius: 12, padding: "12px 16px" }}>
+            {info.tips.map((t, i) => <div key={i} style={{ fontSize: 13, color: "#555", padding: "3px 0", lineHeight: 1.5, display: "flex", gap: 8 }}><span style={{ color: "#F2994A", flexShrink: 0 }}>•</span>{t}</div>)}
+          </div>
+        </div>
+        {info.safety && <div style={{ marginBottom: 16 }}>
+          <div style={{ fontSize: 11, fontWeight: 700, color: "#546E7A", textTransform: "uppercase", letterSpacing: 1, marginBottom: 6 }}>🛡️ Safety</div>
+          <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6, background: "#F5F5F5", borderRadius: 12, padding: "12px 16px" }}>{info.safety}</div>
+        </div>}
         <div style={{ background: "#FFF0F0", borderRadius: 12, padding: "12px 16px", fontSize: 12, color: "#D44", fontWeight: 600 }}>🚨 {info.emergency}</div>
       </div>
     </div>
@@ -320,6 +335,26 @@ const InfoPanel = ({ info, onClose }) => (
 );
 
 // ═══ OVERVIEW ═══
+// Cycling image slider for About Panama hero
+const PanamaSlider = ({ photos }) => {
+  const [idx, sIdx] = useState(0);
+  useEffect(() => {
+    if (photos.length <= 1) return;
+    const t = setInterval(() => sIdx(i => (i + 1) % photos.length), 4000);
+    return () => clearInterval(t);
+  }, [photos.length]);
+  return (
+    <div style={{ position: "absolute", inset: 0 }}>
+      {photos.map((p, i) => (
+        <img key={i} src={p} alt="" style={{
+          position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover",
+          opacity: i === idx ? 1 : 0, transition: "opacity 1.2s ease-in-out",
+        }} />
+      ))}
+    </div>
+  );
+};
+
 const Overview = ({ days, occ, mods, onClose, onJump }) => (
   <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
     <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
@@ -803,7 +838,7 @@ const EditModal = ({ mod, onSave, onDelete, onClose }) => {
 };
 
 // ═══ EXPLORE TAB ═══
-const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
+const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs }) => {
   const [detailMod, sDetailMod] = useState(null);
   const [filterCat, sFilter] = useState("all");
   const [filterTags, sFilterTags] = useState([]);
@@ -811,6 +846,8 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
   const [piOpen, sPiOpen] = useState({});
   const [mapMod, sMapMod] = useState(null);
   const [editMod, sEditMod] = useState(undefined);
+  const [showAbout, sShowAbout] = useState(false);
+  const [search, sSearch] = useState("");
   const pIds = new Set(Object.values(cal));
 
   const TAG_OPTIONS = [
@@ -828,6 +865,10 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
   const filtered = mods.filter(m => {
     if (filterCat !== "all" && m.category !== filterCat) return false;
     if (filterTags.length > 0 && (!m.tags || !filterTags.some(t => m.tags.includes(t)))) return false;
+    if (search.trim()) {
+      const q = search.toLowerCase();
+      if (!m.name.toLowerCase().includes(q) && !(m.vibe || "").toLowerCase().includes(q) && !(m.notes || "").toLowerCase().includes(q) && !(m.category || "").toLowerCase().includes(q)) return false;
+    }
     return true;
   });
   const curated = filtered.filter(m => m.tier === "curated");
@@ -901,6 +942,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
             <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
               <span style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</span>
               {isPlaced && <span style={{ fontSize: 12, color: "#4CAF50", flexShrink: 0 }}>✅</span>}
+                {!isPlaced && favs.includes(mod.id) && <span style={{ fontSize: 11, flexShrink: 0 }}>❤️</span>}
             </div>
             {mod.vibe && (
               <div style={{ marginTop: 4 }}>
@@ -910,6 +952,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
           </div>
           <div style={{ width: "26%", minWidth: 78, flexShrink: 0, position: "relative" }}>
             <Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} />
+            {favs.includes(mod.id) && <div style={{ position: "absolute", bottom: 4, right: 4, fontSize: 12, filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))" }}>❤️</div>}
           </div>
         </div>
       </div>
@@ -930,7 +973,8 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
         <div style={{ position: "relative", height: 260 }}>
           <Vis mod={mod} cat={cat} h={260} />
           <button onClick={() => sDetailMod(null)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
-          {isPlaced && <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
+          {isPlaced && <div style={{ position: "absolute", top: 12, right: 56, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
+          <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", top: 12, right: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>{favs.includes(mod.id) ? "❤️" : "🤍"}</button>
         </div>
 
         <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
@@ -1000,11 +1044,53 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
   const highlights = mods.filter(m => m.rec === "cantmiss" && m.photo && m.tier === "curated");
   const hlSwRef = useRef(null);
 
+  // Planning progress
+  const plannedDays = days.filter(d => SLOTS.some(s => occ[d.date + "|" + s.id])).length;
+  const openSlots = days.reduce((n, d) => n + SLOTS.filter(s => !occ[d.date + "|" + s.id]).length, 0);
+
   return (
     <div style={{ padding: "16px 16px 100px" }}>
+      {/* About Panama — large hero card with image */}
+      <button onClick={() => sShowAbout(true)} style={{
+        width: "100%", position: "relative", overflow: "hidden", borderRadius: 18, border: "none",
+        cursor: "pointer", marginBottom: 14, height: 160, display: "block",
+        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
+      }}>
+        <img src="https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=600&h=300&fit=crop" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.7), rgba(33,147,176,0.5))" }} />
+        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.6) 100%)" }} />
+        <div style={{ position: "absolute", bottom: 16, left: 18, right: 18 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+            <span style={{ fontSize: 24 }}>🇵🇦</span>
+            <span style={{ fontSize: 20, fontWeight: 900, color: "#fff", fontFamily: "'Playfair Display',Georgia,serif", textShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>Discover Panama</span>
+          </div>
+          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.8)" }}>Culture, nature, history & what makes it special →</div>
+        </div>
+      </button>
+
+      {/* Progress indicator */}
+      <div style={{ background: "#FEFDFB", borderRadius: 12, padding: "10px 14px", marginBottom: 14, border: "1px solid #eee" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: "#888" }}>Trip planning progress</span>
+          <span style={{ fontSize: 11, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}/{days.length} days</span>
+        </div>
+        <div style={{ height: 6, borderRadius: 3, background: "#eee", overflow: "hidden" }}>
+          <div style={{ height: "100%", borderRadius: 3, background: "linear-gradient(90deg, #0B4D3B, #2E8B57)", width: Math.round(plannedDays / days.length * 100) + "%", transition: "width 0.4s" }} />
+        </div>
+        <div style={{ fontSize: 10, color: "#aaa", marginTop: 4 }}>{openSlots} open slots remaining{favs.length > 0 && ` · ${favs.length} saved`}</div>
+      </div>
+
       <div style={{ marginBottom: 14 }}>
         <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>Experiences</h2>
         <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Browse, learn more, and add to your itinerary</div>
+      </div>
+
+      {/* Search */}
+      <div style={{ marginBottom: 12 }}>
+        <input value={search} onChange={e => sSearch(e.target.value)} placeholder="🔍 Search experiences..." style={{
+          width: "100%", padding: "10px 14px", borderRadius: 12, border: "1.5px solid #e0e0e0",
+          fontSize: 13, fontFamily: "inherit", outline: "none", background: "#FEFDFB", boxSizing: "border-box",
+        }} />
       </div>
 
       {/* Highlights carousel */}
@@ -1120,6 +1206,73 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin }) => {
       {mapMod && <MapPopup mod={mapMod} onClose={() => sMapMod(null)} />}
       {renderDetail()}
 
+      {/* About Panama — full screen */}
+      {showAbout && (() => {
+        const pPhotos = [
+          "https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=600&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1578894381163-e72c17f2d45f?w=600&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1448375240586-882707db888b?w=600&h=400&fit=crop",
+          "https://images.unsplash.com/photo-1540573133985-87b6da6d54a9?w=600&h=400&fit=crop",
+        ];
+        return (
+        <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
+          <div style={{ position: "relative", height: 280 }}>
+            {/* Cycling background photos */}
+            <PanamaSlider photos={pPhotos} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, rgba(0,0,0,0.2) 0%, transparent 30%, rgba(0,0,0,0.6) 100%)" }} />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.3), rgba(33,147,176,0.2))" }} />
+            <button onClick={() => sShowAbout(false)} style={{ position: "absolute", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>←</button>
+            <div style={{ position: "absolute", bottom: 20, left: 20 }}>
+              <div style={{ fontSize: 48, marginBottom: 4 }}>🇵🇦</div>
+              <h2 style={{ margin: 0, fontSize: 30, fontWeight: 900, color: "#fff", fontFamily: "'Playfair Display',Georgia,serif", textShadow: "0 2px 12px rgba(0,0,0,0.4)" }}>Panama</h2>
+              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.8)", marginTop: 4, fontStyle: "italic" }}>Where two oceans meet</div>
+            </div>
+          </div>
+          <div style={{ padding: "20px 20px 100px", maxWidth: 430, margin: "0 auto" }}>
+            <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 18 }}>
+              Panama is a narrow tropical isthmus connecting Central and South America, bordered by Costa Rica to the west and Colombia to the east. It's one of the most biodiverse places on Earth — home to more bird species than the US and Canada combined, and more tree species than all of Europe.
+            </div>
+
+            <div style={{ display: "flex", gap: 8, marginBottom: 18 }}>
+              {[["☀️", "28–33°C", "Hot & humid"], ["🌧️", "Dry season", "Jan–Apr"], ["💵", "USD", "Official currency"], ["🗣️", "Spanish", "English common"]].map(([icon, val, label]) => (
+                <div key={label} style={{ flex: 1, background: "#F7F6F3", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
+                  <div style={{ fontSize: 20 }}>{icon}</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#333", marginTop: 4 }}>{val}</div>
+                  <div style={{ fontSize: 9, color: "#999", marginTop: 2 }}>{label}</div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginBottom: 8 }}>🏗️ The Panama Canal</h3>
+              <div style={{ fontSize: 13, color: "#555", lineHeight: 1.7 }}>One of the greatest engineering achievements in history. The Canal connects the Atlantic and Pacific oceans, saving ships a 15,000 km journey around South America. Over a million ships have transited since 1914. The Miraflores Locks visitor center is a must-see — you can watch massive cargo ships pass through from just meters away.</div>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginBottom: 8 }}>🏛️ Casco Viejo</h3>
+              <div style={{ fontSize: 13, color: "#555", lineHeight: 1.7 }}>The historic quarter of Panama City, founded in 1673 and now a UNESCO World Heritage Site. A mix of restored colonial architecture, bohemian plazas, rooftop bars, and local street life. It's the cultural heart of the city — walkable, photogenic, and home to some of the best restaurants in Panama.</div>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginBottom: 8 }}>🌳 Nature & Biodiversity</h3>
+              <div style={{ fontSize: 13, color: "#555", lineHeight: 1.7 }}>Panama has 940+ bird species, over 10,000 plant varieties, and the world's only jaguar corridor connecting two continents. Even within the city, you can hike through rainforest at Metropolitan Natural Park or spot capuchin monkeys on the Amador Causeway. Day trips to cloud forests, beaches, and indigenous communities are all within a few hours.</div>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginBottom: 8 }}>🍽️ Food & Culture</h3>
+              <div style={{ fontSize: 13, color: "#555", lineHeight: 1.7 }}>Panama sits at a cultural crossroads — indigenous, Afro-Caribbean, Spanish colonial, and modern cosmopolitan influences blend together. The food scene reflects this: ceviche, patacones, sancocho, fresh seafood, and a growing fine-dining scene led by Latin American-trained chefs. The cocktail culture is excellent, especially in Casco Viejo and El Cangrejo.</div>
+            </div>
+
+            <div style={{ background: "linear-gradient(135deg, #E8F5E9, #C8E6C9)", borderRadius: 14, padding: "16px 18px" }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: "#2E7D32", marginBottom: 6 }}>🌡️ What to expect in late March</div>
+              <div style={{ fontSize: 12, color: "#555", lineHeight: 1.6 }}>You're visiting at the end of the dry season — perfect timing. Expect warm days (30–33°C), comfortable evenings, and very little rain. The sun is strong, so bring sunscreen, a hat, and light breathable clothing. A light rain jacket is smart just in case. Air-conditioned spaces can be cold — bring a layer for restaurants and malls.</div>
+            </div>
+          </div>
+        </div>
+        );
+      })()}
+
       {/* Admin edit modal */}
       {isAdmin && editMod !== undefined && (
         <EditModal
@@ -1156,6 +1309,7 @@ export default function App() {
   const [tab, sTab] = useState("explore");
   const [jd, sJd] = useState(0);
   const [mods, sMods] = useState(MODS);
+  const [favs, setFavs] = useState([]);
   const [cal, sCal] = useState(INIT_CAL);
   const [trip, sTrip] = useState(TRIP);
   const [editTrip, sEditTrip] = useState(false);
@@ -1212,7 +1366,7 @@ export default function App() {
 
       {/* Tab content */}
       {tab === "explore" ? (
-        <Explore mods={mods} setMods={sMods} cal={cal} setCal={sCal} days={days} occ={occ} isAdmin={isAdmin} onSwitchToDay={di => { sJd(di); sTab("itinerary"); }} />
+        <Explore mods={mods} setMods={sMods} cal={cal} setCal={sCal} days={days} occ={occ} isAdmin={isAdmin} favs={favs} setFavs={setFavs} onSwitchToDay={di => { sJd(di); sTab("itinerary"); }} />
       ) : (
         <Itin trip={trip} mods={mods} setMods={sMods} cal={cal} setCal={sCal} onBack={() => sScr("welcome")} initDay={jd} />
       )}
