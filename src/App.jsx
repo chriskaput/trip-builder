@@ -799,14 +799,11 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
             <div style={{ position: "relative", height: 260 }}>
               <Vis mod={mod} cat={cat} h={260} />
               <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#fff" }}>{dayObj?.wd} {dayObj?.md} · {slotObj?.label}</div>
+              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, lineHeight: "40px" }}>{favs.includes(mod.id) ? <span style={{ color: "#E91E63", fontSize: 20, lineHeight: 1 }}>❤</span> : <span style={{ color: "transparent", fontSize: 20, lineHeight: 1, WebkitTextStroke: "1.5px #fff" }}>❤</span>}</button>
             </div>
 
             <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
-              {/* Title row with heart on the right */}
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
-                <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15, flex: 1 }}>{mod.icon || cat?.icon} {mod.name}</h2>
-                <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, padding: "2px 0 0 8px", flexShrink: 0 }}>{favs.includes(mod.id) ? "❤️" : "🖤"}</button>
-              </div>
+              <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15 }}>{mod.icon || cat?.icon} {mod.name}</h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 14 }}>
                 {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
                 {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 10, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "3px 8px", borderRadius: 5 }}>{t}</span>)}
@@ -1037,7 +1034,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
     if (onOverlayChange) onOverlayChange("experience");
   };
   const closeDetail = () => {
-    closeDetail();
+    sDetailMod(null);
     if (onOverlayChange) onOverlayChange(false);
   };
   const swipeDetail = (dir) => {
@@ -1195,6 +1192,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         <div style={{ position: "relative", height: 260 }}>
           <Vis mod={mod} cat={cat} h={260} />
           {isPlaced && <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(76,175,80,0.9)", borderRadius: 8, padding: "4px 10px", fontSize: 11, fontWeight: 800, color: "#fff" }}>✅ In Itinerary</div>}
+          <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: canSwipe ? 44 : 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, zIndex: 2, lineHeight: "40px" }}>{favs.includes(mod.id) ? <span style={{ color: "#E91E63", fontSize: 20, lineHeight: 1 }}>❤</span> : <span style={{ color: "transparent", fontSize: 20, lineHeight: 1, WebkitTextStroke: "1.5px #fff" }}>❤</span>}</button>
           {/* Swipe navigation arrows + position */}
           {canSwipe && (
             <div style={{ position: "absolute", bottom: 12, left: 0, right: 0, display: "flex", justifyContent: "center", alignItems: "center", gap: 8 }}>
@@ -1208,11 +1206,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         </div>
 
         <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
-          {/* Title row with heart on the right */}
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 6 }}>
-            <h2 style={{ margin: 0, fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15, flex: 1 }}>{mod.icon || cat?.icon} {mod.name}</h2>
-            <button onClick={e => { e.stopPropagation(); setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ background: "none", border: "none", cursor: "pointer", fontSize: 22, padding: "2px 0 0 8px", flexShrink: 0 }}>{favs.includes(mod.id) ? "❤️" : "🖤"}</button>
-          </div>
+          <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15 }}>{mod.icon || cat?.icon} {mod.name}</h2>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 14 }}>
             {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
             {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 10, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "3px 8px", borderRadius: 5 }}>{t}</span>)}
@@ -1231,14 +1225,14 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
             {mod.bookingUrl && <a href={mod.bookingUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 14px", borderRadius: 10, background: cat?.color, color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none", marginTop: 4 }}>🔗 Book / Reserve</a>}
           </div>
 
-          {/* Add to itinerary */}
+          {/* Add to itinerary + favorites */}
           {!isPlaced ? (
             <div>
               <button onClick={() => sSlotPicker(mod.id)} style={{
                 width: "100%", padding: 14, borderRadius: 14, border: "none",
-                background: cat?.color, color: "#fff", fontSize: 15, fontWeight: 700,
+                background: "#0B4D3B", color: "#fff", fontSize: 15, fontWeight: 700,
                 cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                boxShadow: "0 4px 16px " + (cat?.color || "#888") + "40",
+                boxShadow: "0 4px 16px rgba(11,77,59,0.3)",
               }}>➕ Add to Itinerary</button>
               {slotPicker === mod.id && (
                 <div style={{ background: "#F7F6F3", borderRadius: 14, padding: 14, marginTop: 10, animation: "fi 0.15s ease-out" }}>
@@ -1265,9 +1259,27 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
                   <button onClick={() => sSlotPicker(null)} style={{ marginTop: 8, fontSize: 11, color: "#888", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Cancel</button>
                 </div>
               )}
+              <button onClick={() => setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id])} style={{
+                width: "100%", padding: 12, borderRadius: 14, marginTop: 8,
+                border: favs.includes(mod.id) ? "none" : "1.5px solid #e0e0e0",
+                background: favs.includes(mod.id) ? "#FFF0F3" : "#fff",
+                color: favs.includes(mod.id) ? "#E91E63" : "#888",
+                fontSize: 13, fontWeight: 700, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}>{favs.includes(mod.id) ? "❤️ Saved to favorites" : "♡ Save to favorites"}</button>
             </div>
           ) : (
-            <div style={{ fontSize: 13, color: "#4CAF50", fontWeight: 700, textAlign: "center", padding: "12px 0", background: "#E8F5E9", borderRadius: 14 }}>✅ Already in your itinerary</div>
+            <div>
+              <div style={{ fontSize: 13, color: "#4CAF50", fontWeight: 700, textAlign: "center", padding: "12px 0", background: "#E8F5E9", borderRadius: 14 }}>✅ Already in your itinerary</div>
+              <button onClick={() => setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id])} style={{
+                width: "100%", padding: 12, borderRadius: 14, marginTop: 8,
+                border: favs.includes(mod.id) ? "none" : "1.5px solid #e0e0e0",
+                background: favs.includes(mod.id) ? "#FFF0F3" : "#fff",
+                color: favs.includes(mod.id) ? "#E91E63" : "#888",
+                fontSize: 13, fontWeight: 700, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}>{favs.includes(mod.id) ? "❤️ Saved to favorites" : "♡ Save to favorites"}</button>
+            </div>
           )}
 
           {isAdmin && <button onClick={() => { sEditMod(mod); closeDetail(); }} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #E53935", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer", marginTop: 10 }}>✏️ Edit Experience</button>}
