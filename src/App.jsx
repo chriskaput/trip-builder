@@ -13,11 +13,7 @@ const CATS = [
   { id: "event", label: "Events", icon: "🎪", color: "#E91E63", grad: "linear-gradient(135deg,#E91E63,#C2185B)" },
 ];
 
-const SLOTS = [
-  { id: "morning", label: "Morning", icon: "☀️", hint: "Great for sightseeing and outdoor activities" },
-  { id: "afternoon", label: "Afternoon", icon: "🌤️", hint: "Culture, museums, or a slower pace" },
-  { id: "evening", label: "Evening", icon: "🌙", hint: "Perfect for dinner or nightlife" },
-];
+// SLOTS removed — using flexible timeline model
 
 const REC = {
   cantmiss: { label: "Can't Miss", color: "#E53935", bg: "#FFEBEE", icon: "🔥" },
@@ -185,44 +181,69 @@ const DAY_META = {
   "2026-04-07": { location: "Panama City", theme: "Departure", icon: "✈️" },
 };
 
-// Pre-populated calendar matching the actual itinerary
+// New calendar model — ordered array per day with times and travel
 const INIT_CAL = {
-  // Day 1 — Arrival (Sun Mar 29)
-  "2026-03-29|afternoon": "h1",
-  "2026-03-29|evening": "h2",
-  // Day 2 — City Orientation (Mon Mar 30)
-  "2026-03-30|morning": "a10",
-  "2026-03-30|afternoon": "h3",
-  "2026-03-30|evening": "a9",
-  // Day 3 — Canal Day (Tue Mar 31) ⭐
-  "2026-03-31|morning": "a6",
-  "2026-03-31|afternoon": "a1",
-  "2026-03-31|evening": "h3",
-  // Day 4 — Drive to El Valle (Wed Apr 1)
-  "2026-04-01|morning": "h6",
-  "2026-04-01|afternoon": "v1",
-  "2026-04-01|evening": "v4",
-  // Day 5 — Hike & Waterfall (Thu Apr 2) ⭐
-  "2026-04-02|morning": "v5",
-  "2026-04-02|afternoon": "v6",
-  // Day 6 — Return via Chamé (Fri Apr 3)
-  "2026-04-03|morning": "h7",
-  // Day 7 — Recovery + Culture (Sat Apr 4)
-  "2026-04-04|morning": "f4",
-  "2026-04-04|afternoon": "c1",
-  "2026-04-04|evening": "f10",
-  // Day 8 — Easter Sunday / Casco Viejo (Sun Apr 5) ⭐
-  "2026-04-05|morning": "a5",
-  "2026-04-05|afternoon": "h3",
-  "2026-04-05|evening": "h4",
-  // Day 9 — Flexible Day with Kianu (Mon Apr 6)
-  "2026-04-06|morning": "h3",
-  "2026-04-06|afternoon": "h8",
-  "2026-04-06|evening": "f3",
-  // Day 10 — Departure (Tue Apr 7)
-  "2026-04-07|morning": "h3",
-  "2026-04-07|afternoon": "h5",
+  "2026-03-29": [
+    { modId: "h1", startTime: "16:00", duration: 60, travelNote: "" },
+    { modId: "h2", startTime: "18:00", duration: 120, travelMins: 40, travelNote: "40 min drive from airport" },
+  ],
+  "2026-03-30": [
+    { modId: "a10", startTime: "08:30", duration: 120, travelNote: "" },
+    { modId: "f2", startTime: "11:00", duration: 30, travelMins: 10, travelNote: "" },
+    { modId: "h3", startTime: "12:00", duration: 180, travelNote: "" },
+    { modId: "a9", startTime: "16:30", duration: 90, travelMins: 15, travelNote: "" },
+  ],
+  "2026-03-31": [
+    { modId: "a6", startTime: "06:30", duration: 240, travelMins: 45, travelNote: "45 min drive to Gamboa" },
+    { modId: "f9", startTime: "12:00", duration: 90, travelNote: "" },
+    { modId: "a1", startTime: "14:30", duration: 120, travelMins: 30, travelNote: "30 min to Miraflores" },
+    { modId: "h3", startTime: "18:00", duration: 120, travelMins: 25, travelNote: "" },
+  ],
+  "2026-04-01": [
+    { modId: "h6", startTime: "07:30", duration: 60, travelMins: 90, travelNote: "~1.5 hrs on Pan-American Hwy" },
+    { modId: "v1", startTime: "10:30", duration: 120, travelMins: 60, travelNote: "Continue to El Valle" },
+    { modId: "v2", startTime: "13:00", duration: 60, travelNote: "" },
+    { modId: "v3", startTime: "14:30", duration: 45, travelMins: 5, travelNote: "" },
+    { modId: "v4", startTime: "17:00", duration: 60, travelMins: 10, travelNote: "" },
+    { modId: "h3", startTime: "18:30", duration: 120, travelMins: 30, travelNote: "30 min to El Nancito Airbnb" },
+  ],
+  "2026-04-02": [
+    { modId: "v5", startTime: "06:00", duration: 120, travelMins: 20, travelNote: "Drive to trailhead" },
+    { modId: "v6", startTime: "10:00", duration: 120, travelMins: 15, travelNote: "" },
+    { modId: "v7", startTime: "14:00", duration: 90, travelMins: 10, travelNote: "" },
+  ],
+  "2026-04-03": [
+    { modId: "h7", startTime: "09:00", duration: 300, travelMins: 60, travelNote: "Drive to Chamé coast" },
+    { modId: "h3", startTime: "17:00", duration: 120, travelMins: 75, travelNote: "~1.25 hrs back to Panama City" },
+  ],
+  "2026-04-04": [
+    { modId: "f4", startTime: "08:30", duration: 90, travelNote: "" },
+    { modId: "c1", startTime: "10:30", duration: 120, travelMins: 15, travelNote: "Drive to Amador" },
+    { modId: "c2", startTime: "13:30", duration: 60, travelMins: 5, travelNote: "" },
+    { modId: "a2", startTime: "15:00", duration: 60, travelNote: "" },
+    { modId: "f10", startTime: "19:00", duration: 150, travelMins: 20, travelNote: "" },
+  ],
+  "2026-04-05": [
+    { modId: "a5", startTime: "08:00", duration: 150, travelNote: "" },
+    { modId: "f7", startTime: "11:00", duration: 60, travelNote: "" },
+    { modId: "h3", startTime: "13:00", duration: 240, travelNote: "" },
+    { modId: "h4", startTime: "17:00", duration: 180, travelNote: "" },
+  ],
+  "2026-04-06": [
+    { modId: "h3", startTime: "08:00", duration: 180, travelNote: "" },
+    { modId: "h8", startTime: "12:00", duration: 60, travelNote: "" },
+    { modId: "f5", startTime: "12:30", duration: 90, travelMins: 10, travelNote: "" },
+    { modId: "f2", startTime: "14:30", duration: 30, travelMins: 5, travelNote: "" },
+    { modId: "a4", startTime: "16:00", duration: 90, travelMins: 15, travelNote: "Optional" },
+    { modId: "f3", startTime: "19:00", duration: 120, travelMins: 15, travelNote: "" },
+  ],
+  "2026-04-07": [
+    { modId: "h3", startTime: "08:00", duration: 180, travelNote: "" },
+    { modId: "a8", startTime: "09:00", duration: 60, travelMins: 15, travelNote: "Optional" },
+    { modId: "h5", startTime: "14:00", duration: 120, travelMins: 30, travelNote: "Drive to Tocumen" },
+  ],
 };
+
 
 
 
@@ -443,12 +464,9 @@ const PanamaSlider = ({ photos }) => {
   );
 };
 
-const Overview = ({ days, occ, mods, onClose, onJump }) => {
-  const plannedDays = days.filter(d => SLOTS.some(s => occ[d.date + "|" + s.id])).length;
-  const totalSlots = days.length * 3;
-  const filledSlots = days.reduce((n, d) => n + SLOTS.filter(s => occ[d.date + "|" + s.id]).length, 0);
-  const openSlots = totalSlots - filledSlots;
-  const pct = Math.round(filledSlots / totalSlots * 100);
+const Overview = ({ days, occ, mods, cal, onClose, onJump }) => {
+  const totalItems = Object.values(cal).reduce((n, items) => n + (Array.isArray(items) ? items.length : 0), 0);
+  const plannedDays = days.filter(d => (cal[d.date] || []).length > 0).length;
   return (
   <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
     <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
@@ -458,48 +476,39 @@ const Overview = ({ days, occ, mods, onClose, onJump }) => {
         <button onClick={onClose} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
       </div>
       <div style={{ flex: 1, overflowY: "auto", padding: "12px 16px 24px" }}>
-        {/* Progress summary */}
-        <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 16px", marginBottom: 14 }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <span style={{ fontSize: 12, fontWeight: 700, color: "#555" }}>Planning Progress</span>
-            <span style={{ fontSize: 12, fontWeight: 800, color: "#0B4D3B" }}>{pct}%</span>
+        <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 16px", marginBottom: 14, display: "flex", gap: 8 }}>
+          <div style={{ flex: 1, background: "#fff", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}</div>
+            <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>days planned</div>
           </div>
-          <div style={{ height: 8, borderRadius: 4, background: "#e0e0e0", overflow: "hidden", marginBottom: 10 }}>
-            <div style={{ height: "100%", borderRadius: 4, background: "linear-gradient(90deg, #0B4D3B, #2E8B57)", width: pct + "%", transition: "width 0.4s" }} />
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <div style={{ flex: 1, background: "#fff", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
-              <div style={{ fontSize: 18, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}</div>
-              <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>days planned</div>
-            </div>
-            <div style={{ flex: 1, background: "#fff", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
-              <div style={{ fontSize: 18, fontWeight: 800, color: "#F2994A" }}>{openSlots}</div>
-              <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>open slots</div>
-            </div>
-            <div style={{ flex: 1, background: "#fff", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
-              <div style={{ fontSize: 18, fontWeight: 800, color: "#2D9CDB" }}>{filledSlots}</div>
-              <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>experiences</div>
-            </div>
+          <div style={{ flex: 1, background: "#fff", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "#2D9CDB" }}>{totalItems}</div>
+            <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>activities</div>
           </div>
         </div>
-        {/* Day list */}
         {days.map((day, di) => {
-          const sl = SLOTS.map(s => { const mid = occ[day.date + "|" + s.id]; return mid ? mods.find(m => m.id === mid) : null; });
-          const fl = sl.filter(Boolean).length;
+          const items = cal[day.date] || [];
+          const meta = DAY_META[day.date] || {};
           return (
-            <button key={day.date} onClick={() => { onJump(di); onClose(); }} style={{ width: "100%", textAlign: "left", padding: "10px 14px", borderRadius: 14, border: "none", background: fl === 3 ? "#F1F8E9" : "#fff", marginBottom: 5, cursor: "pointer", display: "flex", gap: 12, alignItems: "flex-start", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-              <div style={{ width: 44, textAlign: "center", flexShrink: 0 }}>
-                <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa" }}>{day.wd}</div>
-                <div style={{ fontSize: 14, fontWeight: 800 }}>{day.md}</div>
+            <button key={day.date} onClick={() => { onJump(di); onClose(); }} style={{ width: "100%", textAlign: "left", padding: "10px 14px", borderRadius: 14, border: "none", background: items.length > 0 ? "#fff" : "#fafafa", marginBottom: 5, cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+                <div style={{ width: 44, textAlign: "center", flexShrink: 0 }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa" }}>{day.wd}</div>
+                  <div style={{ fontSize: 14, fontWeight: 800 }}>{day.md}</div>
+                </div>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  {meta.theme && <div style={{ fontSize: 12, fontWeight: 800, color: "#0B4D3B", marginBottom: 2 }}>{meta.icon} {meta.theme}</div>}
+                  {meta.location && <div style={{ fontSize: 10, color: "#999", marginBottom: 4 }}>📍 {meta.location}</div>}
+                  {items.map((item, ii) => {
+                    const mod = mods.find(m => m.id === item.modId);
+                    if (!mod) return null;
+                    const ct = CATS.find(c => c.id === mod.category);
+                    return <div key={ii} style={{ fontSize: 11, color: "#555", padding: "1px 0", display: "flex", alignItems: "center", gap: 4, overflow: "hidden" }}><span style={{ fontSize: 10, color: "#aaa", fontWeight: 600, width: 38, flexShrink: 0 }}>{item.startTime}</span><span style={{ fontSize: 10 }}>{mod.icon || ct?.icon}</span><span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mod.name}</span></div>;
+                  })}
+                  {items.length === 0 && <div style={{ fontSize: 11, color: "#ddd" }}>No activities planned</div>}
+                </div>
+                <div style={{ fontSize: 11, color: items.length > 0 ? "#0B4D3B" : "#ddd", fontWeight: 700, flexShrink: 0 }}>{items.length}</div>
               </div>
-              <div style={{ flex: 1, minWidth: 0 }}>
-                {sl.map((mod, si) => {
-                  if (!mod) return <div key={si} style={{ fontSize: 11, color: "#ddd", padding: "1px 0" }}>— {SLOTS[si].label}</div>;
-                  const ct = CATS.find(c => c.id === mod.category);
-                  return <div key={si} style={{ fontSize: 12, fontWeight: 600, color: "#333", padding: "1px 0", display: "flex", alignItems: "center", gap: 4, overflow: "hidden" }}><span style={{ fontSize: 11 }}>{mod.icon || ct?.icon}</span><span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mod.name}</span></div>;
-                })}
-              </div>
-              <div style={{ fontSize: 11, color: fl === 3 ? "#4CAF50" : "#ccc", fontWeight: 700, flexShrink: 0 }}>{fl}/3</div>
             </button>
           );
         })}
@@ -616,129 +625,106 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
 // ═══ ITINERARY ═══
 const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onShowEvent, favs, setFavs, onOverlayChange }) => {
   const [aDay, sDay] = useState(initDay || 0);
-  const [exp, sExp] = useState(null);
   const [lib, sLib] = useState(false);
   const [cust, sCust] = useState(false);
-  const [aSlot, sSlot] = useState(null);
+  const [insertIdx, sInsertIdx] = useState(null); // index to insert new item at
   const [fCat, sFCat] = useState("all");
   const [libSort, sLibSort] = useState("favorites");
   const [libPreview, sLibPreview] = useState(null);
-  const [guide, sGuide] = useState(null);
   const [showInfo, sInfo] = useState(false);
   const [showOv, sOv] = useState(false);
   const [notes, sNotes] = useState(() => { try { const s = localStorage.getItem("tb_notes"); return s ? JSON.parse(s) : {}; } catch { return {}; } });
   useEffect(() => { try { localStorage.setItem("tb_notes", JSON.stringify(notes)); } catch {} }, [notes]);
-  const [noteFor, sNoteFor] = useState(null);
   const [mapMod, sMap] = useState(null);
-  const [pInfo, sPInfo] = useState({});
-  const [confRm, sConfRm] = useState(null);
-  const [skipConf, sSkipConf] = useState(false);
-  const [sw, sSw] = useState(null);
-  const [itinDetail, sItinDetail] = useState(null); // { mod, sk, cat }
+  const [itinDetail, sItinDetail] = useState(null);
+  const [dragIdx, sDragIdx] = useState(null);
   const dRef = useRef(null);
+  const touchRef = useRef(null);
 
   const days = mkDays(trip.startDate, trip.dayCount);
   useEffect(() => { dRef.current?.children[aDay]?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }, [aDay]);
 
-  const getOcc = useCallback(() => {
-    const o = {};
-    Object.entries(cal).forEach(([sk, mid]) => {
-      const mod = mods.find(m => m.id === mid);
-      if (!mod) return;
-      o[sk] = mid;
-      if (mod.duration > 1) {
-        const [ds, tid] = sk.split("|");
-        const di = days.findIndex(d => d.date === ds);
-        const si = SLOTS.findIndex(s => s.id === tid);
-        let left = mod.duration - 1, cd = di, cs = si + 1;
-        while (left > 0 && cd < days.length) {
-          if (cs >= SLOTS.length) { cd++; cs = 0; }
-          if (cd < days.length) o[days[cd].date + "|" + SLOTS[cs].id] = mid;
-          cs++; left--;
-        }
-      }
-    });
-    return o;
-  }, [cal, mods, days]);
-
-  const occ = getOcc();
   const cDay = days[aDay];
-  const pIds = new Set(Object.values(cal));
+  const dayItems = cal[cDay.date] || [];
+  const meta = DAY_META[cDay.date] || {};
 
-  const place = (mid) => {
-    if (!aSlot) return;
-    const mod = mods.find(m => m.id === mid);
-    if (!mod) return;
-    const nc = { ...cal };
-    Object.keys(nc).forEach(k => { if (nc[k] === mid) delete nc[k]; });
-    nc[aSlot] = mid;
+  // Helper: format duration
+  const fmtDur = (m) => { if (!m) return ""; const h = Math.floor(m / 60); const r = m % 60; if (h && r) return `${h}h ${r}m`; if (h) return `${h}h`; return `${r}m`; };
+
+  // Helper: get time-of-day period
+  const getPeriod = (time) => {
+    if (!time) return "morning";
+    const h = parseInt(time.split(":")[0]);
+    if (h < 12) return "morning";
+    if (h < 17) return "afternoon";
+    return "evening";
+  };
+
+  // Helper: format time for display
+  const fmtTime = (t) => {
+    if (!t) return "";
+    const [h, m] = t.split(":").map(Number);
+    const ampm = h >= 12 ? "PM" : "AM";
+    const h12 = h > 12 ? h - 12 : h === 0 ? 12 : h;
+    return m > 0 ? `${h12}:${m.toString().padStart(2, "0")} ${ampm}` : `${h12} ${ampm}`;
+  };
+
+  // Update a day's items
+  const updateDay = (date, newItems) => {
+    const nc = { ...cal, [date]: newItems };
     setCal(nc);
+  };
+
+  // Remove item at index
+  const removeItem = (idx) => {
+    const newItems = dayItems.filter((_, i) => i !== idx);
+    updateDay(cDay.date, newItems);
+  };
+
+  // Move item (drag reorder)
+  const moveItem = (fromIdx, toIdx) => {
+    if (fromIdx === toIdx) return;
+    const items = [...dayItems];
+    const [moved] = items.splice(fromIdx, 1);
+    items.splice(toIdx, 0, moved);
+    updateDay(cDay.date, items);
+  };
+
+  // Add item at position
+  const addItem = (modId, atIdx) => {
+    const items = [...dayItems];
+    const prev = atIdx > 0 ? items[atIdx - 1] : null;
+    // Calculate suggested time based on previous item
+    let sugTime = "09:00";
+    if (prev) {
+      const [ph, pm] = prev.startTime.split(":").map(Number);
+      const endMin = ph * 60 + pm + (prev.duration || 60) + (prev.travelMins || 0);
+      const sh = Math.floor(endMin / 60);
+      const sm = endMin % 60;
+      sugTime = `${sh.toString().padStart(2, "0")}:${sm.toString().padStart(2, "0")}`;
+    } else if (items.length === 0) {
+      sugTime = "09:00";
+    }
+    const newItem = { modId, startTime: sugTime, duration: 90, travelMins: 0, travelNote: "" };
+    items.splice(atIdx, 0, newItem);
+    updateDay(cDay.date, items);
     sLib(false);
-    sSlot(null);
+    sInsertIdx(null);
   };
 
-  const rmSlot = (sk) => {
-    const mid = occ[sk];
-    if (!mid) return;
-    const originKey = Object.keys(cal).find(k => cal[k] === mid) || sk;
-    if (!skipConf) { sConfRm(originKey); return; }
-    doRm(originKey);
-  };
-
-  const doRm = (sk) => {
-    const mid = cal[sk] || occ[sk];
-    if (!mid) return;
-    const nc = { ...cal };
-    Object.keys(nc).forEach(k => { if (nc[k] === mid) delete nc[k]; });
-    setCal(nc);
-    sConfRm(null);
-    sExp(null);
-  };
-
-  const addCust = (mod) => {
-    setMods(p => [...p, mod]);
-    if (aSlot) { const nc = { ...cal }; nc[aSlot] = mod.id; setCal(nc); }
-    sCust(false);
-    sSlot(null);
-  };
-
-  const slots = SLOTS.map(s => {
-    const sk = cDay.date + "|" + s.id;
-    const mid = occ[sk];
-    const mod = mid ? mods.find(m => m.id === mid) : null;
-    const cat = mod ? CATS.find(c => c.id === mod.category) : null;
-    return { s, sk, mid, mod, cat };
+  // All placed mod IDs across entire trip
+  const pIds = new Set();
+  Object.values(cal).forEach(dayArr => {
+    if (Array.isArray(dayArr)) dayArr.forEach(item => pIds.add(item.modId));
   });
 
-  const getSug = (sid) => {
-    const cm = { morning: ["activity", "daytrip"], afternoon: ["culture", "activity"], evening: ["restaurant", "nightlife"] };
-    const cs = cm[sid] || [];
-    return mods.filter(m => !pIds.has(m.id) && cs.includes(m.category) && m.tier === "curated").sort((a, b) => (a.rec === "cantmiss" ? 0 : 1) - (b.rec === "cantmiss" ? 0 : 1))[0] || null;
-  };
-
-  const getPos = (sk) => {
-    const mid = occ[sk];
-    if (!mid) return null;
-    const mod = mods.find(m => m.id === mid);
-    if (!mod || mod.duration <= 1) return null;
-    const ok = Object.keys(cal).find(k => cal[k] === mid);
-    if (!ok) return null;
-    const [ds, tid] = ok.split("|");
-    const di = days.findIndex(d => d.date === ds);
-    const si = SLOTS.findIndex(s2 => s2.id === tid);
-    const all = [];
-    let cd = di, cs2 = si;
-    for (let i = 0; i < mod.duration; i++) { if (cd >= days.length) break; all.push(days[cd].date + "|" + SLOTS[cs2].id); cs2++; if (cs2 >= SLOTS.length) { cd++; cs2 = 0; } }
-    return { cur: all.indexOf(sk) + 1, tot: mod.duration };
-  };
-
+  // Library items
   const availRaw = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat);
   const avail = (() => {
     let list = [...availRaw];
     if (libSort === "favorites") {
       const favList = list.filter(m => favs.includes(m.id));
       const rest = list.filter(m => !favs.includes(m.id));
-      // Show favorites first, then the rest
       list = [...favList, ...rest];
     } else if (libSort === "picks") {
       const picks = list.filter(m => m.tier === "curated");
@@ -750,186 +736,222 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
     return list;
   })();
 
+  const addCust = (mod) => {
+    setMods(p => [...p, mod]);
+    addItem(mod.id, insertIdx != null ? insertIdx : dayItems.length);
+    sCust(false);
+  };
+
   return (
     <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", maxWidth: 430, margin: "0 auto", position: "relative" }}>
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
-      <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
+      <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
-      {/* Day strip with teal background */}
+      {/* Day strip */}
       <div style={{ background: "linear-gradient(180deg, #1B3B32 0%, #244A3F 100%)", padding: "12px 16px 0" }}>
         <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 8 }}>📅 Itinerary</div>
-        {/* Day strip — scrollable */}
         <div ref={dRef} style={{ display: "flex", gap: 5, overflowX: "auto", paddingBottom: 12, WebkitOverflowScrolling: "touch" }}>
           {days.map((day, i) => {
             const isA = i === aDay;
-            const ds = SLOTS.map(s => occ[day.date + "|" + s.id]).filter(Boolean);
+            const items = cal[day.date] || [];
+            const filled = items.length;
             return (
-              <button key={day.date} onClick={() => sDay(i)} style={{ flexShrink: 0, padding: "7px 4px", width: 54, borderRadius: 12, border: "none", cursor: "pointer", background: isA ? "#fff" : ds.length === 3 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)", color: isA ? "#1B3B32" : "#fff", transition: "all 0.2s", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, boxShadow: isA ? "0 2px 10px rgba(0,0,0,0.2)" : "none" }}>
+              <button key={day.date} onClick={() => sDay(i)} style={{ flexShrink: 0, padding: "7px 4px", width: 54, borderRadius: 12, border: "none", cursor: "pointer", background: isA ? "#fff" : filled > 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)", color: isA ? "#1B3B32" : "#fff", transition: "all 0.2s", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, boxShadow: isA ? "0 2px 10px rgba(0,0,0,0.2)" : "none" }}>
                 <span style={{ fontSize: 9, fontWeight: 700, opacity: isA ? 0.6 : 0.4 }}>{day.wd}</span>
                 <span style={{ fontSize: 13, fontWeight: 800, lineHeight: 1 }}>{day.md.split(" ")[1]}</span>
                 <span style={{ fontSize: 8, fontWeight: 600, opacity: isA ? 0.5 : 0.3 }}>{day.md.split(" ")[0]}</span>
-                <div style={{ display: "flex", gap: 2, marginTop: 1 }}>
-                  {[0, 1, 2].map(si => <div key={si} style={{ width: 4, height: 4, borderRadius: "50%", background: ds[si] ? (isA ? "#0B4D3B" : "rgba(255,255,255,0.6)") : (isA ? "rgba(27,59,50,0.2)" : "rgba(255,255,255,0.15)") }} />)}
-                </div>
+                {filled > 0 && <span style={{ fontSize: 8, fontWeight: 700, color: isA ? "#0B4D3B" : "rgba(255,255,255,0.5)" }}>{filled} stops</span>}
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Day Content */}
-      <div onTouchStart={e => sSw(e.touches[0].clientX)} onTouchEnd={e => { if (sw === null) return; const d = sw - e.changedTouches[0].clientX; if (Math.abs(d) > 60) { if (d > 0 && aDay < days.length - 1) sDay(aDay + 1); if (d < 0 && aDay > 0) sDay(aDay - 1); } sSw(null); }} style={{ padding: "14px 16px 100px", minHeight: "55vh" }}>
-        <div style={{ marginBottom: 14, animation: "fi 0.2s ease-out" }}>
-          <div style={{ fontSize: 15, fontWeight: 800 }}>Day {cDay.num} · {cDay.full}</div>
-          {/* Events happening on this day */}
-          {events && (() => {
-            const dayEvents = events.filter(ev => {
-              if (cDay.date < ev.date || cDay.date > (ev.endDate || ev.date)) return false;
-              if (ev.hours) {
-                const h = ev.hours.toLowerCase();
-                const dayNames = ["sun","mon","tue","wed","thu","fri","sat"];
-                const mentioned = [];
-                dayNames.forEach((d, i) => { if (h.includes(d)) mentioned.push(i); });
-                if (mentioned.length > 0) {
-                  let allowed = [...mentioned];
-                  if (mentioned.length === 2 && /[–\-]/.test(h)) {
-                    // Determine order from string position
-                    const pos = mentioned.map(i => ({ i, p: h.indexOf(dayNames[i]) })).sort((a, b) => a.p - b.p);
-                    const first = pos[0].i, second = pos[1].i;
-                    allowed = [];
-                    if (first <= second) {
-                      for (let i = first; i <= second; i++) allowed.push(i);
-                    } else {
-                      for (let i = first; i <= 6; i++) allowed.push(i);
-                      for (let i = 0; i <= second; i++) allowed.push(i);
-                    }
-                  }
-                  const dow = new Date(cDay.date + "T12:00:00").getDay();
-                  if (!allowed.includes(dow)) return false;
+      {/* Day content — scrollable */}
+      <div style={{ padding: "0 16px 120px", background: "linear-gradient(180deg, #F2F1EE 0%, #CDD5CE 100%)", backgroundAttachment: "fixed", minHeight: "calc(100vh - 120px)" }}>
+        
+        {/* Day header with location and theme */}
+        <div style={{ padding: "16px 0 12px" }}>
+          <div style={{ fontSize: 18, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginBottom: 2 }}>Day {cDay.num} — {cDay.full}</div>
+          {meta.theme && (
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
+              <span style={{ fontSize: 14 }}>{meta.icon}</span>
+              <span style={{ fontSize: 13, fontWeight: 700, color: "#0B4D3B" }}>{meta.theme}</span>
+            </div>
+          )}
+          {meta.location && (
+            <div style={{ fontSize: 11, fontWeight: 600, color: "#888", marginTop: 2 }}>📍 {meta.location}</div>
+          )}
+        </div>
+
+        {/* Add button at top if no items */}
+        {dayItems.length === 0 && (
+          <button onClick={() => { sInsertIdx(0); sLib(true); sFCat("all"); }} style={{ width: "100%", padding: "24px 14px", background: "#FEFDFB", borderRadius: 16, border: "2px dashed #d5d0c8", cursor: "pointer", marginBottom: 8 }}>
+            <div style={{ fontSize: 20, marginBottom: 4 }}>➕</div>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#555" }}>Add first activity</div>
+          </button>
+        )}
+
+        {/* Timeline items */}
+        {dayItems.map((item, idx) => {
+          const mod = mods.find(m => m.id === item.modId);
+          if (!mod) return null;
+          const cat = CATS.find(c => c.id === mod.category);
+          const period = getPeriod(item.startTime);
+          const prevPeriod = idx > 0 ? getPeriod(dayItems[idx - 1].startTime) : null;
+          const showPeriodLabel = period !== prevPeriod;
+
+          return (
+            <div key={idx} style={{ animation: `ci 0.2s ease-out ${idx * 0.03}s both` }}>
+              {/* Period label */}
+              {showPeriodLabel && (
+                <div style={{ display: "flex", alignItems: "center", gap: 6, padding: "8px 0 4px" }}>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: period === "morning" ? "#FFA000" : period === "afternoon" ? "#1976D2" : "#7C4DFF", textTransform: "uppercase", letterSpacing: 0.8 }}>
+                    {period === "morning" ? "☀️ Morning" : period === "afternoon" ? "🌤️ Afternoon" : "🌙 Evening"}
+                  </span>
+                  <div style={{ flex: 1, height: 1, background: period === "morning" ? "rgba(255,160,0,0.15)" : period === "afternoon" ? "rgba(25,118,210,0.15)" : "rgba(124,77,255,0.15)" }} />
+                </div>
+              )}
+
+              {/* Activity card */}
+              <div onClick={() => { sItinDetail({ mod, idx, cat }); if (onOverlayChange) onOverlayChange("itinerary"); }} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer", marginBottom: 0, opacity: dragIdx === idx ? 0.5 : 1 }}>
+                <div style={{ display: "flex", minHeight: 68 }}>
+                  {/* Time column */}
+                  <div style={{ width: 56, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "8px 0", borderRight: "1px solid " + (cat?.color || "#eee") + "15" }}>
+                    <span style={{ fontSize: 12, fontWeight: 800, color: "#333" }}>{fmtTime(item.startTime)}</span>
+                    {item.duration > 0 && <span style={{ fontSize: 9, fontWeight: 600, color: "#aaa", marginTop: 1 }}>{fmtDur(item.duration)}</span>}
+                  </div>
+                  {/* Content */}
+                  <div style={{ flex: 1, padding: "10px 12px", borderLeft: "3px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
+                    <div style={{ fontSize: 14, fontWeight: 700, lineHeight: 1.2, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</div>
+                    {mod.vibe && <div style={{ marginTop: 3 }}><span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "1px 7px", borderRadius: 5 }}>{mod.vibe}</span></div>}
+                    {notes[mod.id] && <div style={{ marginTop: 3, fontSize: 10, color: "#999", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📝 {notes[mod.id]}</div>}
+                  </div>
+                  {/* Thumbnail */}
+                  {mod.photo && <div style={{ width: 60, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /></div>}
+                  {/* Drag handle */}
+                  <div style={{ width: 24, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "grab", touchAction: "none", color: "#ccc", fontSize: 14 }}
+                    onTouchStart={e => { touchRef.current = { idx, y: e.touches[0].clientY }; sDragIdx(idx); }}
+                    onTouchMove={e => {
+                      if (!touchRef.current) return;
+                      const dy = e.touches[0].clientY - touchRef.current.y;
+                      const step = 80; // approx card height
+                      const offset = Math.round(dy / step);
+                      if (offset !== 0) {
+                        const newIdx = Math.max(0, Math.min(dayItems.length - 1, touchRef.current.idx + offset));
+                        if (newIdx !== idx) {
+                          moveItem(idx, newIdx);
+                          touchRef.current = { idx: newIdx, y: e.touches[0].clientY };
+                        }
+                      }
+                    }}
+                    onTouchEnd={() => { touchRef.current = null; sDragIdx(null); }}
+                    onClick={e => e.stopPropagation()}
+                  >⋮⋮</div>
+                </div>
+              </div>
+
+              {/* Travel connector + add button between items */}
+              {idx < dayItems.length - 1 ? (
+                <div style={{ display: "flex", alignItems: "center", padding: "2px 0", marginLeft: 28 }}>
+                  {/* Dotted line */}
+                  <div style={{ width: 1, height: item.travelMins ? 28 : 16, borderLeft: "2px dotted #d0d0d0", marginRight: 10 }} />
+                  <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
+                    {item.travelMins > 0 && (
+                      <span style={{ fontSize: 9, fontWeight: 700, color: "#aaa", background: "#f0f0f0", padding: "2px 8px", borderRadius: 4 }}>🚗 {fmtDur(item.travelMins)}{item.travelNote ? ` — ${item.travelNote}` : ""}</span>
+                    )}
+                    <button onClick={e => { e.stopPropagation(); sInsertIdx(idx + 1); sLib(true); sFCat("all"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 6px", fontSize: 14, color: "#ccc" }}>+</button>
+                  </div>
+                </div>
+              ) : (
+                /* Add button at the end */
+                <div style={{ display: "flex", alignItems: "center", padding: "6px 0", marginLeft: 28 }}>
+                  <div style={{ width: 1, height: 16, borderLeft: "2px dotted #d0d0d0", marginRight: 10 }} />
+                  <button onClick={() => { sInsertIdx(dayItems.length); sLib(true); sFCat("all"); }} style={{ background: "none", border: "1px dashed #ccc", borderRadius: 8, cursor: "pointer", padding: "4px 12px", fontSize: 11, color: "#aaa", fontWeight: 600 }}>+ Add activity</button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {/* Events for this day */}
+        {(() => {
+          const dayEvents = events.filter(ev => {
+            if (!ev.date) return false;
+            const s = new Date(ev.date + "T12:00:00"), e = ev.endDate ? new Date(ev.endDate + "T12:00:00") : s;
+            const d = new Date(cDay.date + "T12:00:00");
+            if (d < s || d > e) return false;
+            if (ev.hours) {
+              const dayAbbrs = { 0: "Sun", 1: "Mon", 2: "Tue", 3: "Wed", 4: "Thu", 5: "Fri", 6: "Sat" };
+              const wd = dayAbbrs[d.getDay()];
+              if (ev.hours.includes("–") && /[A-Z][a-z]{2}/.test(ev.hours)) {
+                const parts = ev.hours.match(/([A-Z][a-z]{2})–([A-Z][a-z]{2})/);
+                if (parts) {
+                  const allDays = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+                  let si = allDays.indexOf(parts[1]), ei = allDays.indexOf(parts[2]);
+                  if (si > ei) { const range = [...allDays.slice(si), ...allDays.slice(0, ei + 1)]; if (!range.includes(wd)) return false; }
+                  else { if (allDays.indexOf(wd) < si || allDays.indexOf(wd) > ei) return false; }
                 }
               }
-              return true;
-            });
-            if (dayEvents.length === 0) return null;
-            return (
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+            }
+            return true;
+          });
+          if (dayEvents.length === 0) return null;
+          return (
+            <div style={{ marginTop: 12 }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#E91E63", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 6 }}>🎪 Happening today</div>
+              <div style={{ display: "flex", gap: 6, overflowX: "auto", paddingBottom: 4 }}>
                 {dayEvents.map(ev => (
-                  <button key={ev.id} onClick={() => onShowEvent && onShowEvent(ev)} style={{ display: "flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 10, background: "#E91E6310", border: "1px solid #E91E6325", cursor: "pointer" }}>
-                    <span style={{ fontSize: 13 }}>{ev.icon}</span>
-                    <div style={{ textAlign: "left" }}>
-                      <div style={{ fontSize: 11, fontWeight: 700, color: "#E91E63" }}>{ev.name}</div>
-                      {ev.hours && <div style={{ fontSize: 9, color: "#999" }}>{ev.hours}</div>}
-                    </div>
-                    <span style={{ fontSize: 9, color: "#E91E6380", marginLeft: 4 }}>→</span>
+                  <button key={ev.id} onClick={() => onShowEvent(ev)} style={{ flexShrink: 0, padding: "8px 12px", borderRadius: 12, background: "#FFF0F3", border: "1px solid #F48FB1", cursor: "pointer", minWidth: 120 }}>
+                    <div style={{ fontSize: 16, marginBottom: 2 }}>{ev.icon}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#C2185B" }}>{ev.name}</div>
                   </button>
                 ))}
               </div>
-            );
-          })()}
-        </div>
-
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {slots.map(({ s: slot, sk, mid, mod, cat }, idx) => {
-            const isX = exp === sk;
-            const pos = mid ? getPos(sk) : null;
-
-            return (
-              <div key={sk} style={{ animation: `ci 0.2s ease-out ${idx * 0.05}s both` }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
-                  <div style={{ width: 12, height: 12, borderRadius: 6, background: mod ? (cat?.color || "#888") : "#ddd", border: "2px solid #fff", boxShadow: "0 0 0 2px " + (mod ? (cat?.color || "#888") + "30" : "#eee"), flexShrink: 0 }} />
-                  <span style={{ fontSize: 11, fontWeight: 700, color: mod ? "#555" : "#bbb", textTransform: "uppercase", letterSpacing: 0.8 }}>{slot.icon} {slot.label}</span>
-                  {pos && <span style={{ fontSize: 10, color: cat?.color, fontWeight: 700 }}>Slot {pos.cur}/{pos.tot}</span>}
-                </div>
-
-                {mod ? (
-                  <div onClick={() => { sItinDetail({ mod, sk, cat }); if (onOverlayChange) onOverlayChange("itinerary"); }} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer" }}>
-                    <div style={{ display: "flex", minHeight: 74 }}>
-                      <div style={{ flex: 1, padding: "10px 14px", borderLeft: "4px solid " + (cat?.color || "#888"), display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                        <div style={{ fontSize: 15, fontWeight: 700, lineHeight: 1.2, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</div>
-                        {mod.vibe && <div style={{ marginTop: 4 }}><span style={{ fontSize: 9, fontWeight: 700, color: cat?.color || "#888", background: (cat?.color || "#888") + "12", padding: "2px 8px", borderRadius: 5 }}>{mod.vibe}</span></div>}
-                        {notes[mod.id] && <div style={{ marginTop: 3, fontSize: 10, color: "#999", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📝 {notes[mod.id]}</div>}
-                      </div>
-                      <div style={{ width: "26%", minWidth: 78, flexShrink: 0, position: "relative" }}>
-                        <Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} />
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <button onClick={() => { sSlot(sk); sLib(true); sFCat("all"); }} style={{ width: "100%", padding: "20px 14px", background: "#FEFDFB", borderRadius: 16, border: "2px dashed #d5d0c8", cursor: "pointer" }}>
-                    <div style={{ textAlign: "center" }}>
-                      <div style={{ fontSize: 20, opacity: 0.2, marginBottom: 3 }}>+</div>
-                      <div style={{ fontSize: 11, fontWeight: 600, color: "#bbb" }}>Add experience</div>
-                    </div>
-                  </button>
-                )}
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Nav */}
-        <div style={{ display: "flex", justifyContent: "space-between", marginTop: 24 }}>
-          <button disabled={aDay === 0} onClick={() => { sDay(aDay - 1); sExp(null); }} style={{ padding: "10px 16px", borderRadius: 12, border: "none", background: aDay > 0 ? "#fff" : "#f0f0f0", color: aDay > 0 ? "#1a1a1a" : "#ccc", fontSize: 13, fontWeight: 700, cursor: aDay > 0 ? "pointer" : "default" }}>← {aDay > 0 ? days[aDay - 1].md : ""}</button>
-          <button disabled={aDay >= days.length - 1} onClick={() => { sDay(aDay + 1); sExp(null); }} style={{ padding: "10px 16px", borderRadius: 12, border: "none", background: aDay < days.length - 1 ? "#0B4D3B" : "#f0f0f0", color: aDay < days.length - 1 ? "#fff" : "#ccc", fontSize: 13, fontWeight: 700, cursor: aDay < days.length - 1 ? "pointer" : "default" }}>{aDay < days.length - 1 ? days[aDay + 1].md : ""} →</button>
-        </div>
+            </div>
+          );
+        })()}
       </div>
 
-      {/* Itinerary detail — full screen, matching Explore design language */}
+      {/* Itinerary detail — full screen */}
       {itinDetail && (() => {
-        const { mod, sk, cat } = itinDetail;
+        const { mod, idx, cat } = itinDetail;
+        const item = dayItems[idx];
+        if (!item) { sItinDetail(null); return null; }
         const isFav = favs.includes(mod.id);
         const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
-        const slotParts = sk.split("|");
-        const dayObj = days.find(d => d.date === slotParts[0]);
-        const slotObj = SLOTS.find(s => s.id === slotParts[1]);
         return (
           <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
-            {/* Floating back button — stays visible on scroll */}
             <button onClick={() => { sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ position: "fixed", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 260 }}>←</button>
-
-            {/* Hero image — only date badge overlay */}
             <div style={{ position: "relative", height: 260 }}>
               <Vis mod={mod} cat={cat} h={260} />
-              <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#fff" }}>{dayObj?.wd} {dayObj?.md} · {slotObj?.label}</div>
-              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, lineHeight: "40px" }}>{favs.includes(mod.id) ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>}</button>
+              <div style={{ position: "absolute", top: 12, right: 12, background: "rgba(0,0,0,0.4)", backdropFilter: "blur(8px)", borderRadius: 8, padding: "4px 10px", fontSize: 10, fontWeight: 700, color: "#fff" }}>{cDay.wd} {cDay.md} · {fmtTime(item.startTime)}</div>
+              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{favs.includes(mod.id) ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>}</button>
             </div>
-
             <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
               <h2 style={{ margin: "0 0 6px", fontSize: 24, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.15 }}>{mod.icon || cat?.icon} {mod.name}</h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 14 }}>
                 {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
-                {mod.tags && mod.tags.map(t => <span key={t} style={{ fontSize: 10, fontWeight: 600, color: "#888", background: "#f0f0f0", padding: "3px 8px", borderRadius: 5 }}>{t}</span>)}
               </div>
-
-              {/* Description */}
               <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 18 }}>{mod.notes}</div>
-
-              {/* Practical info — includes rating */}
               <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 16px", marginBottom: 16, display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8 }}>Practical info</div>
-                {mod.hours && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.hours}</span></div>}
+                {item.startTime && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{fmtTime(item.startTime)} · {fmtDur(item.duration)}</span></div>}
                 {mod.cost && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.cost}</span></div>}
-                {mod.address && <button onClick={() => sMap(mod)} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}><span>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span><span style={{ fontSize: 9, color: "#aaa" }}>→ Map</span></button>}
+                {mod.address && <button onClick={() => sMap(mod)} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}><span>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span></button>}
                 {mod.mapsRating > 0 && <a href={mUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, textDecoration: "none" }}><span>⭐</span><GR r={mod.mapsRating} rv={mod.mapsReviews} /><span style={{ fontSize: 9, fontWeight: 700, color: "#4285F4" }}>Google</span></a>}
-                {mod.bookingUrl && <a href={mod.bookingUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, padding: "10px 14px", borderRadius: 10, background: cat?.color, color: "#fff", fontSize: 13, fontWeight: 700, textDecoration: "none", marginTop: 4 }}>🔗 Book / Reserve</a>}
               </div>
-
-              {/* Personal note */}
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 11, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 6 }}>📝 Your note</div>
-                <textarea value={notes[mod.id] || ""} onChange={e => sNotes(p => ({ ...p, [mod.id]: e.target.value }))} placeholder="Add a personal note..." rows={2} style={{ ...IS, fontSize: 13, padding: "12px 14px", resize: "vertical", borderRadius: 12, border: notes[mod.id] ? "1.5px solid #FFE082" : "1.5px solid #e0e0e0", background: notes[mod.id] ? "#FFFDE7" : "#fff" }} />
+                <textarea value={notes[mod.id] || ""} onChange={e => sNotes(p => ({ ...p, [mod.id]: e.target.value }))} placeholder="Add a personal note..." rows={2} style={{ width: "100%", boxSizing: "border-box", fontSize: 13, padding: "12px 14px", resize: "vertical", borderRadius: 12, border: notes[mod.id] ? "1.5px solid #FFE082" : "1.5px solid #e0e0e0", background: notes[mod.id] ? "#FFFDE7" : "#fff", fontFamily: "inherit" }} />
               </div>
-
-              {/* Actions — Remove & Save first (primary), then Remove (secondary/destructive) */}
               <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                 <button onClick={() => {
                   if (mod.id && setFavs) { setFavs(p => p.includes(mod.id) ? p : [...p, mod.id]); }
-                  const nc = { ...cal };
-                  Object.keys(nc).forEach(k => { if (nc[k] === mod.id) delete nc[k]; });
-                  setCal(nc);
+                  removeItem(idx);
                   sItinDetail(null); if (onOverlayChange) onOverlayChange(false);
-                }} style={{ width: "100%", padding: 14, borderRadius: 14, background: isFav ? "#E8F5E9" : "#E91E63", border: "none", fontSize: 14, fontWeight: 700, color: isFav ? "#4CAF50" : "#fff", cursor: "pointer", boxShadow: isFav ? "none" : "0 3px 12px rgba(233,30,99,0.2)" }}>{isFav ? "❤️ Already in favorites — Remove from itinerary" : "❤️ Remove & save to favorites"}</button>
-                <button onClick={() => { rmSlot(sk); sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ width: "100%", padding: 13, borderRadius: 14, background: "#1a1a1a", border: "none", fontSize: 13, fontWeight: 700, color: "#fff", cursor: "pointer" }}>🗑️ Remove from itinerary</button>
+                }} style={{ width: "100%", padding: 14, borderRadius: 14, background: isFav ? "#E8F5E9" : "#E91E63", border: "none", fontSize: 14, fontWeight: 700, color: isFav ? "#4CAF50" : "#fff", cursor: "pointer" }}>{isFav ? "❤️ Already in favorites — Remove from itinerary" : "❤️ Remove & save to favorites"}</button>
+                <button onClick={() => { removeItem(idx); sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ width: "100%", padding: 13, borderRadius: 14, background: "#1a1a1a", border: "none", fontSize: 13, fontWeight: 700, color: "#fff", cursor: "pointer" }}>🗑️ Remove from itinerary</button>
               </div>
             </div>
           </div>
@@ -938,38 +960,24 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
 
       {/* Library */}
       {lib && (
-        <div onClick={() => { sLib(false); sSlot(null); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 200, animation: "fi 0.12s ease-out" }}>
+        <div onClick={() => { sLib(false); sInsertIdx(null); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 200, animation: "fi 0.12s ease-out" }}>
           <div onClick={e => e.stopPropagation()} style={{ position: "absolute", bottom: 0, left: 0, right: 0, maxWidth: 430, margin: "0 auto", background: "#fff", borderRadius: "24px 24px 0 0", height: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-            <DragHandle onClose={() => { sLib(false); sSlot(null); }} />
-            <div style={{ padding: "6px 20px 12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>Choose Experience</h3>
-              <button onClick={() => { sLib(false); sSlot(null); }} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Cancel</button>
+            <DragHandle onClose={() => { sLib(false); sInsertIdx(null); }} />
+            <div style={{ padding: "4px 20px 10px" }}>
+              <h3 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 800 }}>Choose experience</h3>
+              <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                {["favorites", "picks", "rating"].map(s => (
+                  <button key={s} onClick={() => sLibSort(s)} style={{ padding: "5px 10px", borderRadius: 8, border: "none", background: libSort === s ? "#1B3B32" : "#f0f0f0", color: libSort === s ? "#fff" : "#666", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
+                    {s === "favorites" ? "❤️ Favorites" : s === "picks" ? "⭐ Chris's Picks" : "📊 Top Rated"}
+                  </button>
+                ))}
+              </div>
             </div>
-            {/* Category filters */}
-            <div style={{ padding: "0 16px 6px", display: "flex", gap: 5, overflowX: "auto" }}>
-              <button onClick={() => sFCat("all")} style={{ flexShrink: 0, padding: "6px 12px", borderRadius: 10, border: "none", fontSize: 11, fontWeight: 700, cursor: "pointer", background: fCat === "all" ? "#0B4D3B" : "#f0f0f0", color: fCat === "all" ? "#fff" : "#777" }}>All</button>
-              {CATS.filter(c => c.id !== "custom" && c.id !== "event").map(c => <button key={c.id} onClick={() => sFCat(fCat === c.id ? "all" : c.id)} style={{ flexShrink: 0, padding: "6px 10px", borderRadius: 10, border: "none", fontSize: 11, fontWeight: 700, cursor: "pointer", background: fCat === c.id ? c.color : "#f0f0f0", color: fCat === c.id ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 3 }}><span style={{ fontSize: 12 }}>{c.icon}</span>{c.label}</button>)}
-            </div>
-            {/* Sort pills */}
-            <div style={{ padding: "6px 16px 8px", display: "flex", gap: 4 }}>
-              {[["favorites", "❤️ Favorites"], ["picks", "⭐ Chris's Picks"], ["rating", "📊 Top Rated (Google)"]].map(([k, label]) => (
-                <button key={k} onClick={() => sLibSort(k)} style={{
-                  padding: "5px 10px", borderRadius: 8, border: libSort === k ? "1.5px solid #0B4D3B" : "1.5px solid #eee",
-                  background: libSort === k ? "#0B4D3B10" : "#fff", fontSize: 10, fontWeight: 700,
-                  color: libSort === k ? "#0B4D3B" : "#999", cursor: "pointer",
-                }}>{label}</button>
-              ))}
-            </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "4px 16px 24px" }}>
-              <button onClick={() => { sLib(false); sCust(true); }} style={{ width: "100%", textAlign: "left", display: "flex", gap: 12, padding: "10px 14px", borderRadius: 14, border: "2px dashed #B0BEC5", background: "#FAFAFA", marginBottom: 10, cursor: "pointer", alignItems: "center" }}>
-                <div style={{ width: 42, height: 42, borderRadius: 10, background: "#ECEFF1", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>📌</div>
-                <div><div style={{ fontSize: 13, fontWeight: 700, color: "#546E7A" }}>Custom Event</div></div>
-              </button>
-              {/* Section header for favorites mode */}
+            <div style={{ flex: 1, overflowY: "auto", padding: "0 16px 24px" }}>
+              {/* Section headers for favorites/picks */}
               {libSort === "favorites" && favs.length > 0 && (
                 <div>
                   <div style={{ fontSize: 10, fontWeight: 700, color: "#E91E63", textTransform: "uppercase", letterSpacing: 0.8, padding: "6px 0 4px" }}>❤️ Your favorites</div>
-                  {/* Show already-placed favorites as grayed out */}
                   {favs.filter(fid => pIds.has(fid) && !avail.some(m => m.id === fid)).map(fid => {
                     const fm = mods.find(m => m.id === fid);
                     if (!fm) return null;
@@ -987,39 +995,37 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 </div>
               )}
               {libSort === "favorites" && favs.length === 0 && (
-                <div style={{ textAlign: "center", padding: "16px 10px 8px", color: "#ccc" }}>
+                <div style={{ textAlign: "center", padding: "16px 10px 8px" }}>
                   <div style={{ fontSize: 11, color: "#999" }}>No favorites yet — heart experiences to save them here</div>
                 </div>
               )}
-              {/* Section header for picks mode */}
               {libSort === "picks" && (
                 <div style={{ fontSize: 10, fontWeight: 700, color: "#0B4D3B", textTransform: "uppercase", letterSpacing: 0.8, padding: "6px 0 4px" }}>⭐ Chris's Picks</div>
               )}
-              {avail.map((mod, idx) => {
+              {avail.map((mod, aIdx) => {
                 const mc = CATS.find(c => c.id === mod.category);
                 const isFav = favs.includes(mod.id);
-                // Add divider between favorites and non-favorites
-                const showDivider = libSort === "favorites" && idx > 0 && favs.includes(avail[idx-1]?.id) && !favs.includes(mod.id);
-                const showPicksDivider = libSort === "picks" && idx > 0 && avail[idx-1]?.tier === "curated" && mod.tier !== "curated";
+                const showDivider = libSort === "favorites" && aIdx > 0 && favs.includes(avail[aIdx-1]?.id) && !favs.includes(mod.id);
+                const showPicksDivider = libSort === "picks" && aIdx > 0 && avail[aIdx-1]?.tier === "curated" && mod.tier !== "curated";
                 return (
                   <div key={mod.id}>
                     {showDivider && <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, padding: "10px 0 4px" }}>All experiences</div>}
                     {showPicksDivider && <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, padding: "10px 0 4px" }}>More options</div>}
                     <div style={{ display: "flex", gap: 6, marginBottom: 6, alignItems: "stretch" }}>
-                    <button onClick={() => sLibPreview(mod)} style={{ flex: 1, textAlign: "left", display: "flex", gap: 10, padding: "8px 10px", borderRadius: 14, border: isFav ? "1.5px solid #E91E6325" : "1.5px solid #f0f0f0", background: isFav ? "#FFF5F7" : "#FAFAF8", cursor: "pointer", alignItems: "center" }}>
-                      <div style={{ width: 50, height: 50, borderRadius: 12, flexShrink: 0, overflow: "hidden" }}><Vis mod={mod} cat={mc} h={50} br={12} /></div>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: 13, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || mc?.icon} {mod.name}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3, flexWrap: "wrap" }}>
-                          {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: mc?.color || "#888", background: (mc?.color || "#888") + "12", padding: "1px 6px", borderRadius: 4 }}>{mod.vibe}</span>}
-                          {mod.tier === "curated" && <span style={{ fontSize: 8, fontWeight: 800, color: "#0B4D3B", background: "#0B4D3B15", padding: "1px 5px", borderRadius: 4 }}>Chris's Pick</span>}
-                          {isFav && <span style={{ fontSize: 8, fontWeight: 800, color: "#E91E63", background: "#E91E6315", padding: "1px 5px", borderRadius: 4 }}>Favorite</span>}
-                          {mod.mapsRating > 0 && <span style={{ fontSize: 8, fontWeight: 700, color: "#888" }}>Google {mod.mapsRating}★</span>}
+                      <button onClick={() => sLibPreview(mod)} style={{ flex: 1, display: "flex", gap: 10, padding: "8px 10px", borderRadius: 14, border: "1.5px solid #eee", background: "#fff", cursor: "pointer", textAlign: "left", alignItems: "center" }}>
+                        <div style={{ width: 50, height: 50, borderRadius: 12, flexShrink: 0, overflow: "hidden" }}><Vis mod={mod} cat={mc} h={50} br={12} /></div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: 13, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || mc?.icon} {mod.name}</div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3, flexWrap: "wrap" }}>
+                            {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: mc?.color || "#888", background: (mc?.color || "#888") + "12", padding: "1px 6px", borderRadius: 4 }}>{mod.vibe}</span>}
+                            {mod.tier === "curated" && <span style={{ fontSize: 8, fontWeight: 800, color: "#0B4D3B", background: "#0B4D3B15", padding: "1px 5px", borderRadius: 4 }}>Chris's Pick</span>}
+                            {isFav && <span style={{ fontSize: 8, fontWeight: 800, color: "#E91E63", background: "#E91E6315", padding: "1px 5px", borderRadius: 4 }}>Favorite</span>}
+                            {mod.mapsRating > 0 && <span style={{ fontSize: 8, fontWeight: 700, color: "#888" }}>Google {mod.mapsRating}★</span>}
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                    <button onClick={() => place(mod.id)} style={{ width: 44, borderRadius: 14, border: "none", background: (mc?.color || "#888") + "15", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: mc?.color, fontWeight: 700, flexShrink: 0 }}>+</button>
-                  </div>
+                      </button>
+                      <button onClick={() => addItem(mod.id, insertIdx != null ? insertIdx : dayItems.length)} style={{ width: 44, borderRadius: 14, border: "none", background: (mc?.color || "#888") + "15", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, color: mc?.color, fontWeight: 700, flexShrink: 0 }}>+</button>
+                    </div>
                   </div>
                 );
               })}
@@ -1029,125 +1035,39 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
         </div>
       )}
 
-      {/* Library preview — full detail view from itinerary library */}
+      {/* Library preview detail */}
       {libPreview && (() => {
         const mod = libPreview;
         const cat = CATS.find(c => c.id === mod.category);
-        const mUrl = "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
         return (
           <div style={{ position: "fixed", inset: 0, zIndex: 250, background: "#FEFDFB", animation: "slideIn 0.25s ease-out", overflowY: "auto" }}>
             <button onClick={() => sLibPreview(null)} style={{ position: "fixed", top: 12, left: 12, width: 36, height: 36, borderRadius: 18, background: "rgba(0,0,0,0.5)", backdropFilter: "blur(8px)", border: "none", color: "#fff", fontSize: 18, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 260 }}>←</button>
             <div style={{ position: "relative", height: 220 }}>
               <Vis mod={mod} cat={cat} h={220} />
-              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>{favs.includes(mod.id) ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>}</button>
+              <button onClick={() => { if (setFavs) setFavs(p => p.includes(mod.id) ? p.filter(x => x !== mod.id) : [...p, mod.id]); }} style={{ position: "absolute", bottom: 12, right: 12, width: 40, height: 40, borderRadius: 20, background: "rgba(0,0,0,0.35)", backdropFilter: "blur(8px)", border: "none", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{favs.includes(mod.id) ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#E91E63" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" xmlns="http://www.w3.org/2000/svg"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>}</button>
             </div>
-            <div style={{ padding: "18px 20px 120px", maxWidth: 430, margin: "0 auto" }}>
+            <div style={{ padding: "18px 20px 120px" }}>
               <h2 style={{ margin: "0 0 6px", fontSize: 22, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>{mod.icon || cat?.icon} {mod.name}</h2>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 5, marginBottom: 12 }}>
                 {mod.vibe && <span style={{ fontSize: 11, fontWeight: 700, color: cat?.color, background: (cat?.color || "#888") + "12", padding: "3px 10px", borderRadius: 7 }}>{mod.vibe}</span>}
-                {mod.mapsRating > 0 && <span style={{ fontSize: 11, fontWeight: 700, color: "#FBBC04", background: "#FFF8E1", padding: "3px 10px", borderRadius: 7 }}>★ {mod.mapsRating} Google</span>}
               </div>
               <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 16 }}>{mod.notes}</div>
-              {(mod.hours || mod.cost || mod.address) && (
-                <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "12px 16px", marginBottom: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-                  {mod.hours && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>🕐</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.hours}</span></div>}
-                  {mod.cost && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>💰</span><span style={{ color: "#555", fontWeight: 600 }}>{mod.cost}</span></div>}
-                  {mod.address && <div style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}><span>📍</span><span style={{ color: "#2D9CDB", fontWeight: 600 }}>{mod.address}</span></div>}
-                  {mod.mapsRating > 0 && <a href={mUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, textDecoration: "none" }}><span>⭐</span><GR r={mod.mapsRating} rv={mod.mapsReviews} /><span style={{ fontSize: 9, fontWeight: 700, color: "#4285F4" }}>Google</span></a>}
-                </div>
-              )}
-              <button onClick={() => { place(mod.id); sLibPreview(null); }} style={{
-                width: "100%", padding: 14, borderRadius: 14, border: "none",
-                background: cat?.color || "#0B4D3B", color: "#fff",
-                fontSize: 15, fontWeight: 700, cursor: "pointer",
-                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
-                boxShadow: "0 4px 16px " + (cat?.color || "#888") + "40",
-              }}>➕ Add to {aSlot ? (days[aDay]?.wd + " " + days[aDay]?.md + " · " + SLOTS.find(s => s.id === aSlot?.split("|")[1])?.label) : "Itinerary"}</button>
+              <button onClick={() => { addItem(mod.id, insertIdx != null ? insertIdx : dayItems.length); sLibPreview(null); }} style={{ width: "100%", padding: 14, borderRadius: 14, border: "none", background: "#0B4D3B", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>➕ Add to {cDay.wd} {cDay.md}</button>
             </div>
           </div>
         );
       })()}
 
-      {cust && <CustomModal onSave={addCust} onClose={() => { sCust(false); sSlot(null); }} />}
-      {guide && <AiGuide mod={guide} onClose={() => sGuide(null)} />}
+      {/* Custom event */}
+      {cust && <CustomEvent onSave={addCust} onClose={() => sCust(false)} />}
+
+      {/* Practical info */}
       {showInfo && <InfoPanel info={trip.info} onClose={() => sInfo(false)} />}
-      {showOv && <Overview days={days} occ={occ} mods={mods} onClose={() => sOv(false)} onJump={di => { sDay(di); sOv(false); }} />}
-      {mapMod && <MapPopup mod={mapMod} onClose={() => sMap(null)} />}
-
-      {/* Confirm Remove */}
-      {confRm && (() => {
-        const mid = cal[confRm];
-        const mod = mods.find(m => m.id === mid);
-        return (
-          <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 400, display: "flex", alignItems: "center", justifyContent: "center", padding: 24 }} onClick={() => sConfRm(null)}>
-            <div onClick={e => e.stopPropagation()} style={{ background: "#fff", borderRadius: 20, padding: "24px 28px", maxWidth: 340, width: "100%", boxShadow: "0 16px 48px rgba(0,0,0,0.2)", animation: "fi 0.15s ease-out" }}>
-              <div style={{ fontSize: 28, textAlign: "center", marginBottom: 12 }}>🗑️</div>
-              <div style={{ fontSize: 16, fontWeight: 800, textAlign: "center", marginBottom: 6 }}>Remove?</div>
-              <div style={{ fontSize: 13, color: "#666", textAlign: "center", lineHeight: 1.5, marginBottom: 20 }}><strong>{mod?.name}</strong> will be removed.</div>
-              <button onClick={() => doRm(confRm)} style={{ width: "100%", padding: 12, borderRadius: 12, border: "none", background: "#E53935", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", marginBottom: 8 }}>Yes, Remove</button>
-              <button onClick={() => { sSkipConf(true); doRm(confRm); }} style={{ width: "100%", padding: 10, borderRadius: 12, border: "none", background: "transparent", color: "#999", fontSize: 12, fontWeight: 600, cursor: "pointer", marginBottom: 4 }}>Don't ask again</button>
-              <button onClick={() => sConfRm(null)} style={{ width: "100%", padding: 10, borderRadius: 12, border: "1.5px solid #eee", background: "#fff", color: "#555", fontSize: 13, fontWeight: 600, cursor: "pointer" }}>Cancel</button>
-            </div>
-          </div>
-        );
-      })()}
-
     </div>
   );
 };
 
-// ═══ EDIT MODAL (Admin) ═══
-const ALL_TAGS = ["kid-friendly","nature","history","indoor","budget","sunset","adventure","walking","date-night","fine-dining","adults-only"];
 
-const EditModal = ({ mod, onSave, onDelete, onClose }) => {
-  const [f, sF] = useState({
-    name: mod?.name || "", category: mod?.category || "activity", icon: mod?.icon || "", vibe: mod?.vibe || "", notes: mod?.notes || "",
-    rec: mod?.rec || "", hours: mod?.hours || "", address: mod?.address || "",
-    cost: mod?.cost || "", bookingUrl: mod?.bookingUrl || "", tier: mod?.tier || "curated",
-    duration: mod?.duration || 1, mapsRating: mod?.mapsRating || 0, mapsReviews: mod?.mapsReviews || "",
-    tags: mod?.tags || [], photo: mod?.photo || "",
-  });
-  const set = (k, v) => sF(p => ({ ...p, [k]: v }));
-  const toggleTag = (t) => sF(p => ({ ...p, tags: p.tags.includes(t) ? p.tags.filter(x => x !== t) : [...p.tags, t] }));
-  const LS = { fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 };
-  return (
-    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 350, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "90vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-        <DragHandle onClose={onClose} />
-        <div style={{ padding: "4px 20px 12px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>{mod ? "✏️ Edit" : "➕ New Experience"}</h3>
-          <button onClick={onClose} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Cancel</button>
-        </div>
-        <div style={{ flex: 1, overflowY: "auto", padding: "14px 20px 24px" }}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            <div><label style={LS}>Name</label><input value={f.name} onChange={e => set("name", e.target.value)} style={IS} /></div>
-            <div style={{ display: "flex", gap: 10 }}>
-              <div style={{ width: 70 }}><label style={LS}>Icon</label><input value={f.icon} onChange={e => set("icon", e.target.value)} placeholder="🍸" style={{ ...IS, textAlign: "center", fontSize: 20, padding: "6px" }} /></div>
-              <div style={{ flex: 1 }}><label style={LS}>Vibe / Type</label><input value={f.vibe} onChange={e => set("vibe", e.target.value)} placeholder="Cocktail Bar" style={IS} /></div>
-            </div>
-            <div><label style={LS}>Category</label><div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>{CATS.filter(c => c.id !== "custom").map(c => <button key={c.id} onClick={() => set("category", c.id)} style={{ padding: "5px 10px", borderRadius: 8, border: f.category === c.id ? "2px solid " + c.color : "1.5px solid #e0e0e0", background: f.category === c.id ? c.color + "15" : "#fff", fontSize: 11, fontWeight: 700, cursor: "pointer", color: f.category === c.id ? c.color : "#888" }}>{c.icon} {c.label}</button>)}</div></div>
-            <div><label style={LS}>Description</label><textarea value={f.notes} onChange={e => set("notes", e.target.value)} rows={3} style={{ ...IS, resize: "vertical" }} /></div>
-            <div><label style={LS}>Recommendation</label><div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>{[["cantmiss", "🔥 Can't Miss"], ["recommended", "👍 Recommended"], ["worthit", "✓ Worth It"], ["", "None"]].map(([v, l]) => <button key={v} onClick={() => set("rec", v)} style={{ padding: "5px 10px", borderRadius: 8, border: f.rec === v ? "2px solid #1a1a1a" : "1.5px solid #e0e0e0", background: f.rec === v ? "#1a1a1a" : "#fff", fontSize: 10, fontWeight: 700, cursor: "pointer", color: f.rec === v ? "#fff" : "#888" }}>{l}</button>)}</div></div>
-            <div style={{ display: "flex", gap: 10 }}>
-              <div style={{ flex: 1 }}><label style={LS}>Tier</label><div style={{ display: "flex", gap: 4 }}>{[["curated", "⭐ Curated"], ["extended", "📋 Extended"]].map(([v, l]) => <button key={v} onClick={() => set("tier", v)} style={{ flex: 1, padding: "6px", borderRadius: 8, border: f.tier === v ? "2px solid #1a1a1a" : "1.5px solid #e0e0e0", background: f.tier === v ? "#1a1a1a" : "#fff", fontSize: 10, fontWeight: 700, cursor: "pointer", color: f.tier === v ? "#fff" : "#888" }}>{l}</button>)}</div></div>
-              <div style={{ width: 90 }}><label style={LS}>Slots</label><div style={{ display: "flex", gap: 3 }}>{[1, 2, 3, 4].map(n => <button key={n} onClick={() => set("duration", n)} style={{ width: 30, height: 30, borderRadius: 8, border: f.duration === n ? "2px solid #1a1a1a" : "1.5px solid #e0e0e0", background: f.duration === n ? "#1a1a1a" : "#fff", color: f.duration === n ? "#fff" : "#888", fontWeight: 700, fontSize: 12, cursor: "pointer" }}>{n}</button>)}</div></div>
-            </div>
-            <div style={{ display: "flex", gap: 10 }}><div style={{ flex: 1 }}><label style={LS}>Hours</label><input value={f.hours} onChange={e => set("hours", e.target.value)} placeholder="Daily 9AM–5PM" style={IS} /></div><div style={{ flex: 1 }}><label style={LS}>Cost</label><input value={f.cost} onChange={e => set("cost", e.target.value)} placeholder="$20/pp" style={IS} /></div></div>
-            <div><label style={LS}>Address</label><input value={f.address} onChange={e => set("address", e.target.value)} placeholder="Calle 50, Panama" style={IS} /></div>
-            <div style={{ display: "flex", gap: 10 }}><div style={{ flex: 1 }}><label style={LS}>Google Rating</label><input type="number" step="0.1" min="0" max="5" value={f.mapsRating} onChange={e => set("mapsRating", parseFloat(e.target.value) || 0)} style={IS} /></div><div style={{ flex: 1 }}><label style={LS}>Reviews</label><input value={f.mapsReviews} onChange={e => set("mapsReviews", e.target.value)} placeholder="1.2K" style={IS} /></div></div>
-            <div><label style={LS}>Booking URL</label><input value={f.bookingUrl} onChange={e => set("bookingUrl", e.target.value)} placeholder="https://..." style={IS} /></div>
-            <div><label style={LS}>Photo URL</label><input value={f.photo} onChange={e => set("photo", e.target.value)} placeholder="https://images.unsplash.com/..." style={IS} /></div>
-            <div><label style={LS}>Tags</label><div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>{ALL_TAGS.map(t => <button key={t} onClick={() => toggleTag(t)} style={{ padding: "4px 10px", borderRadius: 16, border: f.tags.includes(t) ? "2px solid #1a1a1a" : "1.5px solid #e0e0e0", background: f.tags.includes(t) ? "#1a1a1a" : "#fff", fontSize: 10, fontWeight: 700, cursor: "pointer", color: f.tags.includes(t) ? "#fff" : "#888" }}>{t}</button>)}</div></div>
-          </div>
-          <div style={{ marginTop: 20, display: "flex", flexDirection: "column", gap: 8 }}>
-            <button disabled={!f.name.trim()} onClick={() => onSave({ ...f, id: mod?.id || ("exp-" + Date.now()), mapsRating: f.mapsRating || 0 })} style={{ width: "100%", padding: 14, borderRadius: 12, border: "none", background: f.name.trim() ? "#1a1a1a" : "#ccc", color: "#fff", fontSize: 15, fontWeight: 800, cursor: f.name.trim() ? "pointer" : "default" }}>{mod ? "Save Changes" : "Add Experience"}</button>
-            {mod && onDelete && <button onClick={() => onDelete(mod.id)} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #FFCDD2", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>🗑️ Delete</button>}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // ═══ EXPLORE TAB ═══
 const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs, events, trip, onShowOverview, onOverlayChange }) => {
@@ -1183,7 +1103,8 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
   const [editMod, sEditMod] = useState(undefined);
   const [showAbout, sShowAbout] = useState(false);
   const [search, sSearch] = useState("");
-  const pIds = new Set(Object.values(cal));
+  const pIds = new Set();
+  Object.values(cal).forEach(items => { if (Array.isArray(items)) items.forEach(item => pIds.add(item.modId)); });
 
   const TAG_OPTIONS = [
     { id: "kid-friendly", label: "👶 Kid-Friendly" },
@@ -1210,11 +1131,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
   const extended = filtered.filter(m => m.tier === "extended");
 
   const getSlots = (mod) => {
-    const best = mod.category === "restaurant" ? ["evening", "afternoon", "morning"]
-      : mod.category === "nightlife" ? ["evening", "afternoon", "morning"]
-      : ["morning", "afternoon", "evening"];
     const results = [];
-    // For events with specific dates, only show those dates
     const eventDates = mod.date ? (() => {
       const dates = [];
       const start = new Date(mod.date + "T12:00:00");
@@ -1227,20 +1144,32 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
     days.forEach(day => {
       if (eventDates && !eventDates.includes(day.date)) return;
-      best.forEach(sid => {
-        const sk = day.date + "|" + sid;
-        const existingId = occ[sk];
-        const existing = existingId ? mods.find(m => m.id === existingId) : null;
-        results.push({ sk, day, slot: SLOTS.find(s => s.id === sid), existing });
+      const items = cal[day.date] || [];
+      const count = items.length;
+      // Suggest time based on last item or defaults
+      const periods = ["morning", "afternoon", "evening"];
+      periods.forEach(period => {
+        const timeMap = { morning: "09:00", afternoon: "14:00", evening: "19:00" };
+        const sk = day.date + "|" + period;
+        results.push({ sk, day, slot: { id: period, label: period.charAt(0).toUpperCase() + period.slice(1), icon: period === "morning" ? "☀️" : period === "afternoon" ? "🌤️" : "🌙" }, existing: null, time: timeMap[period] });
       });
     });
     return results.slice(0, 12);
   };
 
   const addToSlot = (modId, sk) => {
+    const [date, period] = sk.split("|");
+    const timeMap = { morning: "09:00", afternoon: "14:00", evening: "19:00" };
     const nc = { ...cal };
-    Object.keys(nc).forEach(k => { if (nc[k] === modId) delete nc[k]; });
-    nc[sk] = modId;
+    // Remove from any other day first
+    Object.keys(nc).forEach(d => {
+      if (Array.isArray(nc[d])) nc[d] = nc[d].filter(item => item.modId !== modId);
+    });
+    // Add to target day
+    if (!nc[date]) nc[date] = [];
+    nc[date].push({ modId, startTime: timeMap[period] || "12:00", duration: 90, travelMins: 0, travelNote: "" });
+    // Sort by time
+    nc[date].sort((a, b) => a.startTime.localeCompare(b.startTime));
     setCal(nc);
     sSlotPicker(null);
     closeDetail();
@@ -1425,8 +1354,8 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
   const hlSwRef = useRef(null);
 
   // Planning progress
-  const plannedDays = days.filter(d => SLOTS.some(s => occ[d.date + "|" + s.id])).length;
-  const openSlots = days.reduce((n, d) => n + SLOTS.filter(s => !occ[d.date + "|" + s.id]).length, 0);
+  const plannedDays = days.filter(d => (cal[d.date] || []).length > 0).length;
+  const totalActivities = Object.values(cal).reduce((n, items) => n + (Array.isArray(items) ? items.length : 0), 0);
 
   return (
     <div style={{ padding: "16px 16px 100px" }}>
@@ -1457,7 +1386,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         <div style={{ height: 6, borderRadius: 3, background: "#eee", overflow: "hidden" }}>
           <div style={{ height: "100%", borderRadius: 3, background: "linear-gradient(90deg, #0B4D3B, #2E8B57)", width: Math.round(plannedDays / days.length * 100) + "%", transition: "width 0.4s" }} />
         </div>
-        <div style={{ fontSize: 10, color: "#aaa", marginTop: 4 }}>{openSlots} open slots remaining{favs.length > 0 && ` · ${favs.length} saved`}</div>
+        <div style={{ fontSize: 10, color: "#aaa", marginTop: 4 }}>{totalActivities} activities planned{favs.length > 0 && ` · ${favs.length} saved`}</div>
       </button>
 
       <div style={{ marginBottom: 14 }}>
@@ -1810,23 +1739,36 @@ export default function App() {
   const isAdmin = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("admin") === "true";
 
   const days = mkDays(trip.startDate, trip.dayCount);
+  // Build compatibility occ object from new array-per-day calendar
   const getOcc = useCallback(() => {
     const o = {};
-    Object.entries(cal).forEach(([sk, mid]) => {
-      const mod = mods.find(m => m.id === mid);
-      if (!mod) return;
-      o[sk] = mid;
-      if (mod.duration > 1) {
-        const [ds, tid] = sk.split("|");
-        const di = days.findIndex(d => d.date === ds);
-        const si = SLOTS.findIndex(s => s.id === tid);
-        let left = mod.duration - 1, cd = di, cs = si + 1;
-        while (left > 0 && cd < days.length) { if (cs >= SLOTS.length) { cd++; cs = 0; } if (cd < days.length) o[days[cd].date + "|" + SLOTS[cs].id] = mid; cs++; left--; }
-      }
+    Object.entries(cal).forEach(([date, items]) => {
+      if (!Array.isArray(items)) return;
+      items.forEach((item, idx) => {
+        // Create slot-style keys for backwards compat with Explore/Overview
+        const period = (() => {
+          if (!item.startTime) return "morning";
+          const h = parseInt(item.startTime.split(":")[0]);
+          if (h < 12) return "morning";
+          if (h < 17) return "afternoon";
+          return "evening";
+        })();
+        // Use idx-based key to avoid collisions when multiple items in same period
+        const sk = date + "|" + period + (idx > 0 ? "_" + idx : "");
+        o[sk] = item.modId;
+        // Also put simpler slot keys for the first item in each period
+        const simpleSk = date + "|" + period;
+        if (!o[simpleSk]) o[simpleSk] = item.modId;
+      });
     });
     return o;
-  }, [cal, mods, days]);
+  }, [cal]);
   const occ = getOcc();
+  // Set of all placed mod IDs for quick lookup
+  const allPlacedIds = new Set();
+  Object.values(cal).forEach(items => {
+    if (Array.isArray(items)) items.forEach(item => allPlacedIds.add(item.modId));
+  });
 
   if (scr === "welcome") return <Welcome trip={trip} days={days} occ={occ} mods={mods} cal={cal} onStart={(t) => { sTab(t || "explore"); sJd(0); sScr("main"); }} onJump={di => { sJd(di); sTab("itinerary"); sScr("main"); }} />;
 
@@ -1882,7 +1824,7 @@ export default function App() {
       )}
 
       {/* Overview + Info panels (shared across both tabs) */}
-      {showOv && <Overview days={days} occ={occ} mods={mods} onClose={() => setShowOv(false)} onJump={di => { sJd(di); sTab("itinerary"); setShowOv(false); }} />}
+      {showOv && <Overview days={days} occ={occ} mods={mods} cal={cal} onClose={() => setShowOv(false)} onJump={di => { sJd(di); sTab("itinerary"); setShowOv(false); }} />}
       {showInfo && <InfoPanel info={trip.info} onClose={() => setShowInfo(false)} />}
 
       {/* Event detail — full screen from itinerary */}
@@ -1939,7 +1881,7 @@ export default function App() {
                     const sk = day.date + "|" + sid;
                     const existingId = occ[sk];
                     const existing = existingId ? mods.find(m => m.id === existingId) : null;
-                    evSlots.push({ sk, day, slot: SLOTS.find(s => s.id === sid), existing });
+                    evSlots.push({ sk, day, slot: { id: sid, label: sid.charAt(0).toUpperCase() + sid.slice(1), icon: sid === "morning" ? "☀️" : sid === "afternoon" ? "🌤️" : "🌙" }, existing });
                   });
                 });
                 return (
@@ -1957,10 +1899,16 @@ export default function App() {
                         <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
                           {evSlots.map(({ sk, day, slot, existing }) => (
                             <button key={sk} onClick={() => {
-                              // Add event as an experience to mods if not already there
                               const evMod = { ...ev, duration: 1, tier: "curated", rec: "", mapsRating: 0, tags: [], mapsReviews: "" };
                               sMods(prev => prev.find(m => m.id === ev.id) ? prev : [...prev, evMod]);
-                              const nc = { ...cal }; nc[sk] = ev.id; sCal(nc);
+                              const nc = { ...cal };
+                              const [date, period] = sk.split("|");
+                              const timeMap = { morning: "09:00", afternoon: "14:00", evening: "19:00" };
+                              if (!nc[date]) nc[date] = [];
+                              nc[date] = Array.isArray(nc[date]) ? nc[date] : [];
+                              nc[date].push({ modId: ev.id, startTime: timeMap[period] || "12:00", duration: 90, travelMins: 0, travelNote: "" });
+                              nc[date].sort((a, b) => a.startTime.localeCompare(b.startTime));
+                              sCal(nc);
                               sEvSlotPicker(false); sEventDetail(null);
                             }} style={{
                               display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
@@ -2103,8 +2051,9 @@ export default function App() {
                 if (e.key !== "Enter" || !assistInput.trim() || assistLoading) return;
                 const q = assistInput.trim(); sAssistInput("");
                 const nm = [...assistMsgs, { role: "user", text: q }]; sAssistMsgs(nm); sAssistLoading(true);
-                const pIds2 = new Set(Object.values(cal));
-                const sysCtx = "Trip assistant for Panama trip Mar 29-Apr 7 2026. Travelers: parents 60s + sometimes 2.5yr toddler. Context: " + assistCtx + ". Planned: " + Object.entries(cal).map(([sk, mid]) => { const m = mods.find(x => x.id === mid); return m ? m.name : ""; }).filter(Boolean).join(", ") + ". Available: " + mods.filter(m => !pIds2.has(m.id)).map(m => m.name).join(", ") + ". Concise, under 150 words.";
+                const allPlanned = []; Object.values(cal).forEach(items => { if (Array.isArray(items)) items.forEach(item => { const m = mods.find(x => x.id === item.modId); if (m) allPlanned.push(m.name); }); });
+                const pIds2 = new Set(); Object.values(cal).forEach(items => { if (Array.isArray(items)) items.forEach(item => pIds2.add(item.modId)); });
+                const sysCtx = "Trip assistant for Panama trip Mar 29-Apr 7 2026. Travelers: parents 60s + sometimes 2.5yr toddler. Context: " + assistCtx + ". Planned: " + allPlanned.join(", ") + ". Available: " + mods.filter(m => !pIds2.has(m.id)).map(m => m.name).join(", ") + ". Concise, under 150 words.";
                 fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: sysCtx + "\n\n" + q }] }) })
                   .then(r => r.json()).then(d => { sAssistMsgs([...nm, { role: "assistant", text: d.content?.map(b => b.type === "text" ? b.text : "").join("") || "Couldn't respond." }]); })
                   .catch(() => { sAssistMsgs([...nm, { role: "assistant", text: "Couldn't connect." }]); })
