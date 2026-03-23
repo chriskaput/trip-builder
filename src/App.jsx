@@ -813,6 +813,14 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 </div>
               )}
 
+              {/* Travel connector BEFORE activity — shows travel to get here */}
+              {item.travelMins > 0 && (
+                <div style={{ display: "flex", alignItems: "center", padding: "2px 0 2px 28px" }}>
+                  <div style={{ width: 1, height: 24, borderLeft: "2px dotted #c0c0c0", marginRight: 10 }} />
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "#78909C", background: "#ECEFF1", padding: "3px 10px", borderRadius: 6, display: "inline-flex", alignItems: "center", gap: 4 }}>🚗 {fmtDur(item.travelMins)}{item.travelNote ? ` — ${item.travelNote}` : ""}</span>
+                </div>
+              )}
+
               {/* Activity card */}
               <div onClick={() => { sItinDetail({ mod, idx, cat }); if (onOverlayChange) onOverlayChange("itinerary"); }} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer", marginBottom: 0, opacity: dragIdx === idx ? 0.5 : 1 }}>
                 <div style={{ display: "flex", minHeight: 68 }}>
@@ -829,13 +837,13 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                   </div>
                   {/* Thumbnail */}
                   {mod.photo && <div style={{ width: 60, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /></div>}
-                  {/* Drag handle */}
-                  <div style={{ width: 24, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "grab", touchAction: "none", color: "#ccc", fontSize: 14 }}
+                  {/* Drag handle — dark green with white dots */}
+                  <div style={{ width: 26, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "grab", touchAction: "none", background: "#1B3B32", borderRadius: "0 14px 14px 0" }}
                     onTouchStart={e => { touchRef.current = { idx, y: e.touches[0].clientY }; sDragIdx(idx); }}
                     onTouchMove={e => {
                       if (!touchRef.current) return;
                       const dy = e.touches[0].clientY - touchRef.current.y;
-                      const step = 80; // approx card height
+                      const step = 80;
                       const offset = Math.round(dy / step);
                       if (offset !== 0) {
                         const newIdx = Math.max(0, Math.min(dayItems.length - 1, touchRef.current.idx + offset));
@@ -847,29 +855,24 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                     }}
                     onTouchEnd={() => { touchRef.current = null; sDragIdx(null); }}
                     onClick={e => e.stopPropagation()}
-                  >⋮⋮</div>
+                  >
+                    <svg width="8" height="18" viewBox="0 0 8 18">
+                      <circle cx="2" cy="3" r="1.3" fill="rgba(255,255,255,0.7)"/>
+                      <circle cx="6" cy="3" r="1.3" fill="rgba(255,255,255,0.7)"/>
+                      <circle cx="2" cy="9" r="1.3" fill="rgba(255,255,255,0.7)"/>
+                      <circle cx="6" cy="9" r="1.3" fill="rgba(255,255,255,0.7)"/>
+                      <circle cx="2" cy="15" r="1.3" fill="rgba(255,255,255,0.7)"/>
+                      <circle cx="6" cy="15" r="1.3" fill="rgba(255,255,255,0.7)"/>
+                    </svg>
+                  </div>
                 </div>
               </div>
 
-              {/* Travel connector + add button between items */}
-              {idx < dayItems.length - 1 ? (
-                <div style={{ display: "flex", alignItems: "center", padding: "2px 0", marginLeft: 28 }}>
-                  {/* Dotted line */}
-                  <div style={{ width: 1, height: item.travelMins ? 28 : 16, borderLeft: "2px dotted #d0d0d0", marginRight: 10 }} />
-                  <div style={{ flex: 1, display: "flex", alignItems: "center", gap: 6 }}>
-                    {item.travelMins > 0 && (
-                      <span style={{ fontSize: 9, fontWeight: 700, color: "#aaa", background: "#f0f0f0", padding: "2px 8px", borderRadius: 4 }}>🚗 {fmtDur(item.travelMins)}{item.travelNote ? ` — ${item.travelNote}` : ""}</span>
-                    )}
-                    <button onClick={e => { e.stopPropagation(); sInsertIdx(idx + 1); sLib(true); sFCat("all"); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 6px", fontSize: 14, color: "#ccc" }}>+</button>
-                  </div>
-                </div>
-              ) : (
-                /* Add button at the end */
-                <div style={{ display: "flex", alignItems: "center", padding: "6px 0", marginLeft: 28 }}>
-                  <div style={{ width: 1, height: 16, borderLeft: "2px dotted #d0d0d0", marginRight: 10 }} />
-                  <button onClick={() => { sInsertIdx(dayItems.length); sLib(true); sFCat("all"); }} style={{ background: "none", border: "1px dashed #ccc", borderRadius: 8, cursor: "pointer", padding: "4px 12px", fontSize: 11, color: "#aaa", fontWeight: 600 }}>+ Add activity</button>
-                </div>
-              )}
+              {/* Add button between items / at end */}
+              <div style={{ display: "flex", alignItems: "center", padding: "3px 0", marginLeft: 28 }}>
+                <div style={{ width: 1, height: 12, borderLeft: "2px dotted #d8d8d8", marginRight: 10 }} />
+                <button onClick={e => { e.stopPropagation(); sInsertIdx(idx + 1); sLib(true); sFCat("all"); }} style={{ background: "none", border: "1px dashed #d0d0d0", borderRadius: 6, cursor: "pointer", padding: "2px 10px", fontSize: 10, color: "#bbb", fontWeight: 600 }}>+</button>
+              </div>
             </div>
           );
         })}
