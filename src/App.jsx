@@ -505,9 +505,7 @@ const AiGuide = ({ mod, onClose }) => {
 
 // ═══ INFO PANEL ═══
 const InfoPanel = ({ info, onClose }) => (
-  <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
-    <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-      <DragHandle onClose={onClose} />
+  <SwipeSheet onClose={onClose} zIndex={300} maxH="85vh">
       <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>💡 Practical Info</h3>
         <button onClick={onClose} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
@@ -551,8 +549,7 @@ const InfoPanel = ({ info, onClose }) => (
         </div>}
         <div style={{ background: "#FFF0F0", borderRadius: 12, padding: "12px 16px", fontSize: 12, color: "#D44", fontWeight: 600 }}>🚨 {info.emergency}</div>
       </div>
-    </div>
-  </div>
+  </SwipeSheet>
 );
 
 // ═══ OVERVIEW ═══
@@ -635,9 +632,7 @@ const Overview = ({ days, occ, mods, cal, onClose, onJump, trip }) => {
   }
 
   return (
-  <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
-    <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-      <DragHandle onClose={onClose} />
+  <SwipeSheet onClose={onClose} zIndex={300} maxH="85vh">
       <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>📋 Trip Overview</h3>
         <button onClick={onClose} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
@@ -681,8 +676,7 @@ const Overview = ({ days, occ, mods, cal, onClose, onJump, trip }) => {
           );
         })}
       </div>
-    </div>
-  </div>
+  </SwipeSheet>
   );
 };
 
