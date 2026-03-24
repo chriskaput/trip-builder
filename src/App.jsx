@@ -638,6 +638,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const [mapMod, sMap] = useState(null);
   const [itinDetail, sItinDetail] = useState(null);
   const [dragIdx, sDragIdx] = useState(null);
+  const [travelEdit, sTravelEdit] = useState(null); // index of item being travel-edited
   const dRef = useRef(null);
   const touchRef = useRef(null);
 
@@ -687,6 +688,27 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
     const items = [...dayItems];
     const [moved] = items.splice(fromIdx, 1);
     items.splice(toIdx, 0, moved);
+    updateDay(cDay.date, items);
+  };
+
+  // Update travel time for an item
+  const updateTravel = (idx, mins, note) => {
+    const items = [...dayItems];
+    items[idx] = { ...items[idx], travelMins: mins, travelNote: note || "" };
+    updateDay(cDay.date, items);
+  };
+
+  // Update start time for an item
+  const updateTime = (idx, time) => {
+    const items = [...dayItems];
+    items[idx] = { ...items[idx], startTime: time };
+    updateDay(cDay.date, items);
+  };
+
+  // Update duration for an item
+  const updateDuration = (idx, dur) => {
+    const items = [...dayItems];
+    items[idx] = { ...items[idx], duration: dur };
     updateDay(cDay.date, items);
   };
 
@@ -813,13 +835,27 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                 </div>
               )}
 
-              {/* Travel connector BEFORE activity — shows travel to get here */}
-              {item.travelMins > 0 && (
-                <div style={{ display: "flex", alignItems: "center", padding: "2px 0 2px 28px" }}>
-                  <div style={{ width: 1, height: 24, borderLeft: "2px dotted #c0c0c0", marginRight: 10 }} />
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "#78909C", background: "#ECEFF1", padding: "3px 10px", borderRadius: 6, display: "inline-flex", alignItems: "center", gap: 4 }}>🚗 {fmtDur(item.travelMins)}{item.travelNote ? ` — ${item.travelNote}` : ""}</span>
-                </div>
-              )}
+              {/* Travel connector BEFORE activity — tappable to add/edit travel time */}
+              <div style={{ display: "flex", alignItems: "center", padding: "2px 0 2px 28px" }}>
+                <div style={{ width: 1, height: item.travelMins ? 24 : 12, borderLeft: "2px dotted #d0d0d0", marginRight: 10 }} />
+                {travelEdit === idx ? (
+                  <div onClick={e => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 6, background: "#fff", border: "1.5px solid #90A4AE", borderRadius: 10, padding: "6px 10px", boxShadow: "0 2px 8px rgba(0,0,0,0.1)" }}>
+                    <span style={{ fontSize: 12 }}>🚗</span>
+                    <input type="number" value={item.travelMins || ""} onChange={e => updateTravel(idx, parseInt(e.target.value) || 0, item.travelNote)} placeholder="min" style={{ width: 40, border: "1px solid #ddd", borderRadius: 6, padding: "3px 6px", fontSize: 11, fontWeight: 700, textAlign: "center", fontFamily: "inherit" }} />
+                    <span style={{ fontSize: 10, color: "#999" }}>min</span>
+                    <input value={item.travelNote || ""} onChange={e => updateTravel(idx, item.travelMins || 0, e.target.value)} placeholder="note (optional)" style={{ width: 100, border: "1px solid #ddd", borderRadius: 6, padding: "3px 6px", fontSize: 10, fontFamily: "inherit" }} />
+                    <button onClick={() => sTravelEdit(null)} style={{ background: "#1B3B32", border: "none", borderRadius: 6, padding: "3px 8px", fontSize: 10, fontWeight: 700, color: "#fff", cursor: "pointer" }}>✓</button>
+                  </div>
+                ) : (
+                  <button onClick={e => { e.stopPropagation(); sTravelEdit(idx); }} style={{ background: "none", border: "none", cursor: "pointer", padding: "2px 0", display: "flex", alignItems: "center", gap: 4 }}>
+                    {item.travelMins > 0 ? (
+                      <span style={{ fontSize: 10, fontWeight: 700, color: "#78909C", background: "#ECEFF1", padding: "3px 10px", borderRadius: 6, display: "inline-flex", alignItems: "center", gap: 4 }}>🚗 {fmtDur(item.travelMins)}{item.travelNote ? ` — ${item.travelNote}` : ""} <span style={{ fontSize: 8, color: "#aaa" }}>✎</span></span>
+                    ) : (
+                      <span style={{ fontSize: 9, color: "#ccc", fontWeight: 600 }}>+ travel time</span>
+                    )}
+                  </button>
+                )}
+              </div>
 
               {/* Activity card */}
               <div onClick={() => { sItinDetail({ mod, idx, cat }); if (onOverlayChange) onOverlayChange("itinerary"); }} style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "1.5px solid " + (cat?.color || "#ddd") + "20", boxShadow: "0 1px 6px rgba(0,0,0,0.04)", cursor: "pointer", marginBottom: 0, opacity: dragIdx === idx ? 0.5 : 1 }}>
