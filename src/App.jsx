@@ -1971,6 +1971,8 @@ export default function App() {
   const [assistMsgs, sAssistMsgs] = useState([]);
   const [assistInput, sAssistInput] = useState("");
   const [assistLoading, sAssistLoading] = useState(false);
+  const [listening, sListening] = useState(false);
+  const recognitionRef = useRef(null);
   const openAssist = (ctx) => { sAssistCtx(ctx || "general"); sAssist(true); };
   const [eventDetail, sEventDetail] = useState(null);
   const [evSlotPicker, sEvSlotPicker] = useState(false);
@@ -2292,8 +2294,39 @@ export default function App() {
               ))}
               {assistLoading && <div style={{ marginBottom: 10 }}><div style={{ display: "inline-block", padding: "10px 14px", borderRadius: 14, background: "#F5F5F5", fontSize: 13, color: "#999" }}>Thinking...</div></div>}
             </div>
-            <div style={{ padding: "10px 20px 20px", borderTop: "1px solid #f0f0f0", display: "flex", gap: 8 }}>
-              <input value={assistInput} onChange={e => sAssistInput(e.target.value)} placeholder="Ask about Panama..." onKeyDown={e => {
+            <div style={{ padding: "10px 20px 20px", borderTop: "1px solid #f0f0f0", display: "flex", gap: 6, alignItems: "center" }}>
+              {/* Mic button */}
+              <button onClick={() => {
+                const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+                if (!SR) { alert("Speech recognition not supported in this browser"); return; }
+                if (listening && recognitionRef.current) { recognitionRef.current.stop(); sListening(false); return; }
+                const rec = new SR();
+                rec.lang = "en-US";
+                rec.interimResults = true;
+                rec.maxAlternatives = 1;
+                recognitionRef.current = rec;
+                sListening(true);
+                let finalTranscript = "";
+                rec.onresult = (ev) => {
+                  let interim = "";
+                  for (let i = ev.resultIndex; i < ev.results.length; i++) {
+                    if (ev.results[i].isFinal) { finalTranscript += ev.results[i][0].transcript; }
+                    else { interim += ev.results[i][0].transcript; }
+                  }
+                  sAssistInput(finalTranscript + interim);
+                };
+                rec.onend = () => { sListening(false); recognitionRef.current = null; };
+                rec.onerror = () => { sListening(false); recognitionRef.current = null; };
+                rec.start();
+              }} style={{
+                width: 40, height: 40, borderRadius: 20, border: "none", flexShrink: 0,
+                background: listening ? "#E53935" : "#f0f0f0",
+                color: listening ? "#fff" : "#888",
+                fontSize: 16, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                animation: listening ? "pulse 1.5s ease-in-out infinite" : "none",
+              }}>{listening ? "⏹" : "🎤"}</button>
+              <input value={assistInput} onChange={e => sAssistInput(e.target.value)} placeholder={listening ? "Listening..." : "Ask about Panama..."} onKeyDown={e => {
                 if (e.key !== "Enter" || !assistInput.trim() || assistLoading) return;
                 const q = assistInput.trim(); sAssistInput("");
                 const nm = [...assistMsgs, { role: "user", text: q }]; sAssistMsgs(nm); sAssistLoading(true);
