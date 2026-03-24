@@ -464,9 +464,64 @@ const PanamaSlider = ({ photos }) => {
   );
 };
 
-const Overview = ({ days, occ, mods, cal, onClose, onJump }) => {
+const Overview = ({ days, occ, mods, cal, onClose, onJump, trip }) => {
   const totalItems = Object.values(cal).reduce((n, items) => n + (Array.isArray(items) ? items.length : 0), 0);
   const plannedDays = days.filter(d => (cal[d.date] || []).length > 0).length;
+  const [shareView, sShareView] = useState(false);
+
+  // Shareable summary view
+  if (shareView) {
+    const fmtTime = (t) => { if (!t) return ""; const [h,m] = t.split(":").map(Number); const ap = h>=12?"PM":"AM"; const h12=h>12?h-12:h===0?12:h; return m>0?`${h12}:${m.toString().padStart(2,"0")} ${ap}`:`${h12} ${ap}`; };
+    const fmtDur = (m) => { if(!m)return""; const h=Math.floor(m/60); const r=m%60; if(h&&r)return`${h}h${r}m`; if(h)return`${h}h`; return`${r}m`; };
+    return (
+      <div style={{ position: "fixed", inset: 0, zIndex: 400, background: "#fff", overflowY: "auto" }}>
+        <div style={{ maxWidth: 430, margin: "0 auto", padding: "20px 20px 40px" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+            <button onClick={() => sShareView(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#555" }}>← Back</button>
+            <span style={{ fontSize: 10, color: "#aaa" }}>Screenshot-friendly view</span>
+          </div>
+          <div style={{ textAlign: "center", marginBottom: 24 }}>
+            <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Playfair Display',Georgia,serif" }}>{trip?.name || "Panama 2026"}</div>
+            <div style={{ fontSize: 14, color: "#888", marginTop: 4 }}>{trip?.subtitle || ""}</div>
+            <div style={{ fontSize: 12, color: "#aaa", marginTop: 2 }}>📅 {days[0]?.full} – {days[days.length-1]?.full}</div>
+          </div>
+          {days.map(day => {
+            const items = cal[day.date] || [];
+            const meta = DAY_META[day.date] || {};
+            return (
+              <div key={day.date} style={{ marginBottom: 20 }}>
+                <div style={{ background: "#1B3B32", borderRadius: 12, padding: "10px 14px", color: "#fff", marginBottom: 8 }}>
+                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1 }}>Day {day.num} · {day.wd} {day.md}</div>
+                  <div style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginTop: 2 }}>{meta.icon} {meta.theme}</div>
+                  {meta.location && <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>📍 {meta.location}</div>}
+                </div>
+                {items.length === 0 && <div style={{ fontSize: 12, color: "#ccc", padding: "4px 14px" }}>Free day</div>}
+                {items.map((item, ii) => {
+                  const mod = mods.find(m => m.id === item.modId);
+                  if (!mod) return null;
+                  const cat = CATS.find(c => c.id === mod.category);
+                  return (
+                    <div key={ii} style={{ display: "flex", gap: 10, padding: "4px 0", alignItems: "flex-start" }}>
+                      <div style={{ width: 50, flexShrink: 0, textAlign: "right", paddingTop: 2 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#333" }}>{fmtTime(item.startTime)}</div>
+                        <div style={{ fontSize: 9, color: "#aaa" }}>{fmtDur(item.duration)}</div>
+                      </div>
+                      <div style={{ width: 3, flexShrink: 0, background: cat?.color || "#ddd", borderRadius: 2, minHeight: 28, marginTop: 2 }} />
+                      <div>
+                        <div style={{ fontSize: 13, fontWeight: 700 }}>{mod.icon || cat?.icon} {mod.name}</div>
+                        {mod.vibe && <div style={{ fontSize: 10, color: "#888" }}>{mod.vibe}{mod.address ? ` · ${mod.address}` : ""}</div>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
   return (
   <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 300, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
     <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
@@ -486,6 +541,7 @@ const Overview = ({ days, occ, mods, cal, onClose, onJump }) => {
             <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>activities</div>
           </div>
         </div>
+        <button onClick={() => sShareView(true)} style={{ width: "100%", padding: 12, borderRadius: 12, border: "none", background: "#0B4D3B", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>📤 Shareable Summary</button>
         {days.map((day, di) => {
           const items = cal[day.date] || [];
           const meta = DAY_META[day.date] || {};
@@ -550,12 +606,14 @@ const CustomModal = ({ onSave, onClose }) => {
 // ═══ WELCOME ═══
 const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
   const [bgIdx, setBgIdx] = useState(0);
-  const [splashPhase, setSplashPhase] = useState("in"); // "in" → "dissolve" → "done"
+  const hasSeenSplash = typeof window !== "undefined" && localStorage.getItem("tb_splash_seen");
+  const [splashPhase, setSplashPhase] = useState(hasSeenSplash ? "done" : "in");
   const bgPhotos = mods.filter(m => m.photo && m.tier === "curated").map(m => m.photo);
   useEffect(() => { if (bgPhotos.length <= 1) return; const t = setInterval(() => setBgIdx(i => (i + 1) % bgPhotos.length), 5000); return () => clearInterval(t); }, [bgPhotos.length]);
   useEffect(() => {
+    if (hasSeenSplash) return;
     const t1 = setTimeout(() => setSplashPhase("dissolve"), 2800);
-    const t2 = setTimeout(() => setSplashPhase("done"), 4000);
+    const t2 = setTimeout(() => { setSplashPhase("done"); try { localStorage.setItem("tb_splash_seen", "1"); } catch {} }, 4000);
     return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
@@ -586,7 +644,7 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
 
       {/* Full-bleed background photo — starts zooming during dissolve */}
       {bgPhotos.length > 0 && (
-        <div key={bgIdx} style={{ position: "absolute", inset: 0, animation: bgIdx === 0 ? "heroZoom 2s ease-out 2.5s both" : "bgFade 1.5s ease-out" }}>
+        <div key={bgIdx} style={{ position: "absolute", inset: 0, animation: bgIdx === 0 ? "heroZoom 2s ease-out " + (hasSeenSplash ? "0" : "2.5") + "s both" : "bgFade 1.5s ease-out" }}>
           <img src={bgPhotos[bgIdx]} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
         </div>
       )}
@@ -595,27 +653,27 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
       <div style={{ position: "absolute", inset: 0, background: "linear-gradient(160deg, rgba(11,77,59,0.4) 0%, rgba(33,147,176,0.2) 50%, rgba(15,76,117,0.3) 100%)" }} />
 
       <div style={{ position: "relative", zIndex: 1, minHeight: "100vh", display: "flex", flexDirection: "column", padding: "0 24px" }}>
-        <div style={{ padding: "20px 0 0", animation: "subtitleFade 0.6s ease-out 3.6s both" }}>
+        <div style={{ padding: "20px 0 0", animation: "subtitleFade 0.6s ease-out " + (hasSeenSplash ? "0.1" : "3.6") + "s both" }}>
           <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1.2 }}>🗺️ Trip Builder: Your Curated Travel Experience</span>
         </div>
 
         <div style={{ flex: 1, minHeight: 60 }} />
 
         <div>
-          <h1 style={{ animation: "titleRise 0.8s cubic-bezier(0.16,1,0.3,1) 3.8s both", fontFamily: "'Playfair Display',Georgia,serif", fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 8px", lineHeight: 1.0, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>{trip.name}</h1>
-          <div style={{ animation: "subtitleFade 0.6s ease-out 4.0s both", fontSize: 18, fontWeight: 500, color: "rgba(255,255,255,0.75)", marginBottom: 6, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>{trip.subtitle}</div>
-          <div style={{ animation: "subtitleFade 0.6s ease-out 4.15s both", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
+          <h1 style={{ animation: "titleRise 0.8s cubic-bezier(0.16,1,0.3,1) " + (hasSeenSplash ? "0.2" : "3.8") + "s both", fontFamily: "'Playfair Display',Georgia,serif", fontSize: 44, fontWeight: 900, color: "#fff", margin: "0 0 8px", lineHeight: 1.0, textShadow: "0 2px 20px rgba(0,0,0,0.4)" }}>{trip.name}</h1>
+          <div style={{ animation: "subtitleFade 0.6s ease-out " + (hasSeenSplash ? "0.35" : "4.0") + "s both", fontSize: 18, fontWeight: 500, color: "rgba(255,255,255,0.75)", marginBottom: 6, textShadow: "0 1px 8px rgba(0,0,0,0.3)" }}>{trip.subtitle}</div>
+          <div style={{ animation: "subtitleFade 0.6s ease-out " + (hasSeenSplash ? "0.45" : "4.15") + "s both", fontSize: 14, fontWeight: 600, color: "rgba(255,255,255,0.45)", marginBottom: 8 }}>📅 {fmtRange(trip.startDate, trip.dayCount)} · {trip.dayCount} days</div>
         </div>
 
         {trip.brief && (
-          <div style={{ animation: "subtitleFade 0.6s ease-out 4.3s both", marginBottom: 16 }}>
+          <div style={{ animation: "subtitleFade 0.6s ease-out " + (hasSeenSplash ? "0.55" : "4.3") + "s both", marginBottom: 16 }}>
             <div style={{ fontSize: 14, fontStyle: "italic", color: "rgba(255,255,255,0.55)", lineHeight: 1.6 }}>{trip.brief}</div>
           </div>
         )}
 
         <div style={{ padding: "4px 0 36px", display: "flex", flexDirection: "column", gap: 10 }}>
-          <button onClick={() => onStart("explore")} style={{ animation: "subtitleFade 0.5s cubic-bezier(0.16,1,0.3,1) 4.5s both", width: "100%", padding: "17px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
-          <button onClick={() => onStart("itinerary")} style={{ animation: "subtitleFade 0.5s cubic-bezier(0.16,1,0.3,1) 4.65s both", width: "100%", padding: "15px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
+          <button onClick={() => onStart("explore")} style={{ animation: "subtitleFade 0.5s cubic-bezier(0.16,1,0.3,1) " + (hasSeenSplash ? "0.65" : "4.5") + "s both", width: "100%", padding: "17px 24px", borderRadius: 16, border: "none", background: "#fff", color: "#1a1a1a", fontSize: 15, fontWeight: 800, cursor: "pointer", boxShadow: "0 4px 24px rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>✨ Explore Experiences</button>
+          <button onClick={() => onStart("itinerary")} style={{ animation: "subtitleFade 0.5s cubic-bezier(0.16,1,0.3,1) " + (hasSeenSplash ? "0.75" : "4.65") + "s both", width: "100%", padding: "15px 24px", borderRadius: 16, border: "1.5px solid rgba(255,255,255,0.25)", background: "rgba(255,255,255,0.1)", backdropFilter: "blur(10px)", WebkitBackdropFilter: "blur(10px)", color: "#fff", fontSize: 14, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 8 }}>📅 View Itinerary</button>
         </div>
       </div>
     </div>
@@ -1391,25 +1449,28 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
               }}>➕ Add to Itinerary</button>
               {slotPicker === mod.id && (
                 <div style={{ background: "#F7F6F3", borderRadius: 14, padding: 14, marginTop: 10, animation: "fi 0.15s ease-out" }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#555", marginBottom: 8 }}>Choose a slot:</div>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#555", marginBottom: 8 }}>Choose a day:</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                    {getSlots(mod).map(({ sk, day, slot, existing }) => (
-                      <button key={sk} onClick={() => addToSlot(mod.id, sk)} style={{
-                        display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
-                        borderRadius: 10, border: existing ? "1.5px solid #FFCDD2" : "1.5px solid #e0e0e0",
-                        background: existing ? "#FFF8F8" : "#fff",
-                        cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#333", textAlign: "left",
-                      }}>
-                        <span>{slot.icon}</span>
-                        <div style={{ flex: 1 }}>
-                          <div>{day.wd} {day.md} · {slot.label}</div>
-                          {existing && <div style={{ fontSize: 10, color: "#E53935", marginTop: 2 }}>Replaces: {existing.icon || ""} {existing.name}</div>}
-                        </div>
-                        {!existing && <span style={{ fontSize: 10, color: "#4CAF50", fontWeight: 700 }}>Open</span>}
-                        {existing && <span style={{ fontSize: 10, color: "#E53935", fontWeight: 700 }}>Replace</span>}
-                      </button>
-                    ))}
-                    {getSlots(mod).length === 0 && <div style={{ fontSize: 12, color: "#999", padding: 8 }}>No available slots for this {mod.date ? "date" : "experience"}</div>}
+                    {days.map((day, di) => {
+                      const dayItems = cal[day.date] || [];
+                      const meta = DAY_META[day.date] || {};
+                      return (
+                        <button key={day.date} onClick={() => addToSlot(mod.id, day.date + "|afternoon")} style={{
+                          display: "flex", alignItems: "center", gap: 8, padding: "10px 14px",
+                          borderRadius: 10, border: "1.5px solid #e0e0e0", background: "#fff",
+                          cursor: "pointer", fontSize: 13, fontWeight: 600, color: "#333", textAlign: "left",
+                        }}>
+                          <div style={{ width: 36, textAlign: "center", flexShrink: 0 }}>
+                            <div style={{ fontSize: 9, fontWeight: 700, color: "#aaa" }}>{day.wd}</div>
+                            <div style={{ fontSize: 14, fontWeight: 800 }}>{day.md.split(" ")[1]}</div>
+                          </div>
+                          <div style={{ flex: 1 }}>
+                            <div>{meta.icon} {meta.theme || day.md}</div>
+                            <div style={{ fontSize: 10, color: "#999", marginTop: 1 }}>{dayItems.length} {dayItems.length === 1 ? "activity" : "activities"} · 📍 {meta.location || "Panama City"}</div>
+                          </div>
+                        </button>
+                      );
+                    })}
                   </div>
                   <button onClick={() => sSlotPicker(null)} style={{ marginTop: 8, fontSize: 11, color: "#888", background: "none", border: "none", cursor: "pointer", fontWeight: 600 }}>Cancel</button>
                 </div>
@@ -1813,7 +1874,7 @@ export default function App() {
       )}
 
       {/* Overview + Info panels (shared across both tabs) */}
-      {showOv && <Overview days={days} occ={occ} mods={mods} cal={cal} onClose={() => setShowOv(false)} onJump={di => { sJd(di); sTab("itinerary"); setShowOv(false); }} />}
+      {showOv && <Overview days={days} occ={occ} mods={mods} cal={cal} trip={trip} onClose={() => setShowOv(false)} onJump={di => { sJd(di); sTab("itinerary"); setShowOv(false); }} />}
       {showInfo && <InfoPanel info={trip.info} onClose={() => setShowInfo(false)} />}
 
       {/* Event detail — full screen from itinerary */}
@@ -2040,13 +2101,31 @@ export default function App() {
                 if (e.key !== "Enter" || !assistInput.trim() || assistLoading) return;
                 const q = assistInput.trim(); sAssistInput("");
                 const nm = [...assistMsgs, { role: "user", text: q }]; sAssistMsgs(nm); sAssistLoading(true);
-                const allPlanned = []; Object.values(cal).forEach(items => { if (Array.isArray(items)) items.forEach(item => { const m = mods.find(x => x.id === item.modId); if (m) allPlanned.push(m.name); }); });
-                const pIds2 = new Set(); Object.values(cal).forEach(items => { if (Array.isArray(items)) items.forEach(item => pIds2.add(item.modId)); });
-                const sysCtx = "Trip assistant for Panama trip Mar 29-Apr 7 2026. Travelers: parents 60s + sometimes 2.5yr toddler. Context: " + assistCtx + ". Planned: " + allPlanned.join(", ") + ". Available: " + mods.filter(m => !pIds2.has(m.id)).map(m => m.name).join(", ") + ". Concise, under 150 words.";
-                fetch("https://api.anthropic.com/v1/messages", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: sysCtx + "\n\n" + q }] }) })
-                  .then(r => r.json()).then(d => { sAssistMsgs([...nm, { role: "assistant", text: d.content?.map(b => b.type === "text" ? b.text : "").join("") || "Couldn't respond." }]); })
-                  .catch(() => { sAssistMsgs([...nm, { role: "assistant", text: "Couldn't connect." }]); })
-                  .finally(() => sAssistLoading(false));
+                // Smart pre-generated responses — keyword matching
+                const ql = q.toLowerCase();
+                const responses = [
+                  { keys: ["weather", "climate", "hot", "rain", "temperature"], text: "Late March/early April is the end of dry season — expect 32-34°C in Panama City. It's hot and humid, so schedule outdoor activities before 10 AM or after 3:30 PM. El Valle de Antón (Day 4-5) is noticeably cooler at 600m elevation. Bring sunscreen, hats, and a light layer for AC indoors." },
+                  { keys: ["toddler", "kianu", "kid", "child", "baby"], text: "Kianu joins on Day 9 (Monday). The morning is flexible — parents can rest while you pick him up from school. Lunch at Sassi is right next to the school. Afternoon at home together, no pressure. If energy allows, Parque Natural Metropolitano has easy trails (El Roble: 0.7km, 30 min) where you might spot sloths and monkeys." },
+                  { keys: ["restaurant", "dinner", "eat", "food", "lunch"], text: "The highlight meals: Don Caimán for riverside lunch after Monkey Island (Day 3), Maito for the splurge dinner (Day 7 — book NOW, Easter weekend!), Mercado de Mariscos for the freshest ceviche (Day 8), and La Pulpería with Karyna's parents (Day 9). For casual, Gamboa Bakery (Day 7) and Sassi (Day 9) are solid." },
+                  { keys: ["canal", "miraflores", "lock", "ship"], text: "Canal Day is Tuesday Mar 31. Morning: Monkey Island boat tour (depart 6:30 AM from Gamboa, 4 hours). Afternoon: Miraflores Visitor Center — watch the IMAX film first (Morgan Freeman narration), then the viewing platform for the afternoon transit window from ~2 PM. Museum exhibits are closed for renovation, but the viewing platform + IMAX are worth it. ~$17/adult." },
+                  { keys: ["valle", "mountain", "hike", "waterfall", "e-bike", "bike"], text: "El Valle de Antón is Days 4-5. Day 4: drive from the city (~2.5 hrs), stop in Bejuco, then e-bikes around town — Butterfly Haven, Orchid Nursery, sunset at Cerro La Cruz. Day 5: early morning Cerro La Silla ridge hike (360° views, easy trail), then Chorro El Macho waterfall with a swimming hole. Bring swimwear! Optional hot springs in the afternoon." },
+                  { keys: ["casco", "viejo", "historic", "old town", "easter"], text: "Casco Viejo is Day 8 (Easter Sunday). Self-guided walk ~2km: Plaza Herrera → Cathedral → Plaza Bolívar → Plaza de Francia → Paseo Esteban Huertas along the old wall. Churches will be open with possible processions. Comfortable shoes for cobblestones, modest dress for churches. After the walk, Mercado de Mariscos for ceviche." },
+                  { keys: ["uber", "taxi", "transport", "drive", "airport", "getting"], text: "Chris drives the whole trip in the Outback — handles all roads including El Valle access roads. From the airport to Ciudad del Saber is ~40 min. For backup, Uber works well in Panama City and is cheap. Gas up before leaving the Pan-American Highway for rural areas — no stations on the Bejuco-Sorá road." },
+                  { keys: ["safe", "safety", "danger", "crime"], text: "Panama City is generally safe, especially in Casco Viejo, banking district, and tourist areas. Normal precautions — don't flash valuables. Avoid Curundú and El Chorrillo neighborhoods. Tourist police are present in Casco Viejo. Uber is the safest option at night." },
+                  { keys: ["book", "reserv", "advance", "maito"], text: "Three bookings needed: 1) Monkey Island tour (Tue Mar 31) — Panama Road Trips or Almiza Tours, AM slot. 2) Maito dinner (Sat Apr 4) — reserve NOW, Easter weekend fills up. 3) La Pulpería (Mon Apr 6) — reserve for dinner with Karyna's parents." },
+                  { keys: ["pack", "bring", "clothes", "what to"], text: "Pack: light breathable clothing, reef-safe sunscreen SPF 50+, comfortable walking shoes, light rain jacket (El Valle evenings get cool), hat and sunglasses, insect repellent (DEET), light layer for AC (restaurants are freezing), swimwear for Chorro El Macho waterfall, reusable water bottle." },
+                  { keys: ["money", "currency", "tip", "cost", "budget", "dollar"], text: "USD is the currency — no need to exchange anything. Tip 10-15% at restaurants. Budget estimates per person: Monkey Island tour $30-60, Miraflores $17, Biomuseo $16 (senior non-resident), Maito dinner $60-100, most other meals $12-35/pp. Many activities are $5 entry." },
+                  { keys: ["day 1", "arrival", "march 29", "first day"], text: "Day 1 (Sun Mar 29): Chris picks you up at Tocumen Airport in the afternoon. ~40 min drive to Ciudad del Saber. Light dinner at home — no agenda, just decompress and meet Django the dog. Palm Sunday events happening in Casco Viejo if you're curious." },
+                  { keys: ["flexible", "free", "nothing", "rest", "day off"], text: "Day 9 (Mon Apr 6) is the flexible day. Morning is completely free — rest at home, garden time with Django. Kianu joins at noon. Lunch at Sassi, visit Karyna's ice cream shop. Optional: Parque Natural Metropolitano or Panama Viejo ruins in the late afternoon. Dinner at La Pulpería with the family." },
+                  { keys: ["biomuseo", "gehry", "museum", "amador"], text: "Biomuseo is on Day 7 (Sat Apr 4). Frank Gehry's only Latin American building — eight galleries on Panama's biodiversity, air-conditioned. Botanical gardens outside. $16/senior with proof of age. Budget 2 hours. Combine with Punta Culebra (Smithsonian marine center, ~$8, 1 hour) and a drive along the Amador Causeway." },
+                  { keys: ["monkey", "gamboa", "boat", "animal", "wildlife"], text: "Monkey Island is Day 3 (Tue Mar 31). Depart 6:30-7 AM, drive ~45 min to Gamboa. Cruise Gatun Lake alongside cargo ships. Visit monkey islands — capuchins, howlers, tamarins. Also toucans, herons, kingfishers, possibly crocodiles. ~4 hours total. Book in advance via Panama Road Trips or Almiza Tours." },
+                ];
+                const match = responses.find(r => r.keys.some(k => ql.includes(k)));
+                const fallback = "I can help with questions about the itinerary, restaurants, activities, weather, packing, transport, safety, and bookings. Try asking about specific days, places, or practical details!";
+                setTimeout(() => {
+                  sAssistMsgs([...nm, { role: "assistant", text: match ? match.text : fallback }]);
+                  sAssistLoading(false);
+                }, 600);
               }} style={{ ...IS, fontSize: 14, padding: "12px 16px" }} />
               <button onClick={() => { document.querySelector("input[placeholder='Ask about Panama...']")?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })); }} style={{ padding: "12px 18px", borderRadius: 12, border: "none", background: "#1B3B32", color: "#fff", fontWeight: 700, fontSize: 16, cursor: "pointer", flexShrink: 0 }}>→</button>
             </div>
