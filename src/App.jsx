@@ -169,16 +169,16 @@ const TRIP = {
 };
 
 const DAY_META = {
-  "2026-03-29": { location: "Panama City", theme: "Arrival", icon: "✈️" },
-  "2026-03-30": { location: "Panama City", theme: "City Orientation", icon: "🚗" },
-  "2026-03-31": { location: "Gamboa → Miraflores", theme: "Canal Day ⭐", icon: "🚢" },
-  "2026-04-01": { location: "Panama City → El Valle", theme: "Mountain Escape", icon: "⛰️" },
-  "2026-04-02": { location: "El Valle de Antón", theme: "Hike & Waterfall ⭐", icon: "🥾" },
-  "2026-04-03": { location: "El Valle → Chamé → Panama City", theme: "Beach & Family", icon: "🏖️" },
-  "2026-04-04": { location: "Panama City", theme: "Recovery + Culture", icon: "🎨" },
-  "2026-04-05": { location: "Casco Viejo", theme: "Easter Sunday ⭐", icon: "🏛️" },
-  "2026-04-06": { location: "Panama City", theme: "Flexible Day (with Kianu)", icon: "👶" },
-  "2026-04-07": { location: "Panama City", theme: "Departure", icon: "✈️" },
+  "2026-03-29": { location: "Panama City", theme: "Arrival", icon: "✈️", brief: "Welcome to Panama! Settling in at Ciudad del Saber and meeting Django." },
+  "2026-03-30": { location: "Panama City", theme: "City Orientation", icon: "🚗", brief: "Easy first day — gentle drive around the city, ice cream, and a park stroll." },
+  "2026-03-31": { location: "Gamboa → Miraflores", theme: "Canal Day ⭐", icon: "🚢", brief: "The big one — monkeys on Gatun Lake, lunch on the river, and ships at Miraflores." },
+  "2026-04-01": { location: "Panama City → El Valle", theme: "Mountain Escape", icon: "⛰️", brief: "Leaving the city behind — e-bikes, butterflies, orchids, and a sunset viewpoint." },
+  "2026-04-02": { location: "El Valle de Antón", theme: "Hike & Waterfall ⭐", icon: "🥾", brief: "Active morning on a stunning ridge, then cooling off under a jungle waterfall." },
+  "2026-04-03": { location: "El Valle → Chamé → Panama City", theme: "Beach & Family", icon: "🏖️", brief: "Heading back to the coast — beach time and lunch with Karyna's family in Chamé." },
+  "2026-04-04": { location: "Panama City", theme: "Recovery + Culture", icon: "🎨", brief: "Taking it easy after a few days on the road — Gehry's Biomuseo and a splurge dinner." },
+  "2026-04-05": { location: "Casco Viejo", theme: "Easter Sunday ⭐", icon: "🏛️", brief: "Walking through history on Easter morning, fresh ceviche, then a BBQ with friends." },
+  "2026-04-06": { location: "Panama City", theme: "Flexible Day", icon: "👶", brief: "No pressure — Kianu joins, neighbourhood lunch, maybe a rainforest walk if the energy is there." },
+  "2026-04-07": { location: "Panama City", theme: "Departure", icon: "✈️", brief: "Last morning together. Optional ruins or a quiet walk, then farewell at the airport." },
 };
 
 // New calendar model — ordered array per day with times and travel
@@ -798,18 +798,27 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
       {/* Day content — scrollable */}
       <div style={{ padding: "0 16px 120px", background: "linear-gradient(180deg, #F2F1EE 0%, #CDD5CE 100%)", backgroundAttachment: "fixed", minHeight: "calc(100vh - 120px)" }}>
         
-        {/* Day header with location and theme */}
-        <div style={{ padding: "16px 0 12px" }}>
-          <div style={{ fontSize: 18, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginBottom: 2 }}>Day {cDay.num} — {cDay.full}</div>
-          {meta.theme && (
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 4 }}>
-              <span style={{ fontSize: 14 }}>{meta.icon}</span>
-              <span style={{ fontSize: 13, fontWeight: 700, color: "#0B4D3B" }}>{meta.theme}</span>
+        {/* Day header — prominent card */}
+        <div style={{ margin: "14px 0 14px", background: "#1B3B32", borderRadius: 18, padding: "18px 20px", color: "#fff", position: "relative", overflow: "hidden" }}>
+          {/* Subtle pattern overlay */}
+          <div style={{ position: "absolute", top: -20, right: -20, fontSize: 80, opacity: 0.06, lineHeight: 1 }}>{meta.icon || "📅"}</div>
+          <div style={{ position: "relative" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+              <div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: 1.2 }}>Day {cDay.num} · {cDay.wd}</div>
+                <div style={{ fontSize: 22, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.1, marginTop: 4 }}>{meta.icon} {meta.theme || cDay.full}</div>
+              </div>
+              <div style={{ textAlign: "right", flexShrink: 0 }}>
+                <div style={{ fontSize: 20, fontWeight: 800, lineHeight: 1 }}>{cDay.md.split(" ")[1]}</div>
+                <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>{cDay.md.split(" ")[0]}</div>
+              </div>
             </div>
-          )}
-          {meta.location && (
-            <div style={{ fontSize: 11, fontWeight: 600, color: "#888", marginTop: 2 }}>📍 {meta.location}</div>
-          )}
+            {meta.brief && <div style={{ fontSize: 12, color: "rgba(255,255,255,0.65)", lineHeight: 1.5, marginTop: 8, fontStyle: "italic" }}>{meta.brief}</div>}
+            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
+              {meta.location && <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.8)", background: "rgba(255,255,255,0.12)", padding: "3px 10px", borderRadius: 6 }}>📍 {meta.location}</span>}
+              {dayItems.length > 0 && <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.8)", background: "rgba(255,255,255,0.12)", padding: "3px 10px", borderRadius: 6 }}>{dayItems.length} {dayItems.length === 1 ? "stop" : "stops"}</span>}
+            </div>
+          </div>
         </div>
 
         {/* Add button at top if no items */}
