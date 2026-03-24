@@ -285,6 +285,13 @@ const SwipeSheet = ({ onClose, children, zIndex = 300, maxH = "85vh" }) => {
   const [dragging, setDragging] = useState(false);
   const startY = useRef(null);
 
+  // Lock body scroll when sheet is open
+  useEffect(() => {
+    const orig = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = orig; };
+  }, []);
+
   const onTS = e => { startY.current = e.touches[0].clientY; setDragging(true); };
   const onTM = e => {
     if (startY.current === null) return;
@@ -299,17 +306,22 @@ const SwipeSheet = ({ onClose, children, zIndex = 300, maxH = "85vh" }) => {
   };
 
   return (
-    <div style={{ position: "fixed", inset: 0, background: `rgba(0,0,0,${Math.max(0, 0.5 - offset * 0.002)})`, zIndex, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{
+    <div
+      style={{ position: "fixed", inset: 0, background: `rgba(0,0,0,${Math.max(0, 0.5 - offset * 0.002)})`, zIndex, display: "flex", alignItems: "flex-end", justifyContent: "center", touchAction: "none" }}
+      onClick={onClose}
+      onTouchMove={e => e.preventDefault()}
+    >
+      <div onClick={e => e.stopPropagation()} onTouchMove={e => e.stopPropagation()} style={{
         maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0",
         maxHeight: maxH, display: "flex", flexDirection: "column",
         animation: !dragging && offset === 0 ? "su 0.25s ease-out" : "none",
         transform: `translateY(${offset}px)`,
         transition: dragging ? "none" : "transform 0.25s ease-out",
+        touchAction: "pan-y",
       }}>
         {/* Handle bar */}
         <div
-          onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}
+          onTouchStart={onTS} onTouchMove={e => { e.stopPropagation(); onTM(e); }} onTouchEnd={onTE}
           style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 0 10px", cursor: "grab", userSelect: "none", touchAction: "none" }}
         >
           <div style={{ width: 44, height: 5, background: "#bbb", borderRadius: 3 }} />
