@@ -746,7 +746,8 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const availRaw = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat).filter(m => {
     if (!libSearch.trim()) return true;
     const q = libSearch.toLowerCase();
-    return (m.name || "").toLowerCase().includes(q) || (m.vibe || "").toLowerCase().includes(q) || (m.notes || "").toLowerCase().includes(q) || (m.category || "").toLowerCase().includes(q) || (m.address || "").toLowerCase().includes(q);
+    const catLabel = (CATS.find(c => c.id === m.category)?.label || "").toLowerCase();
+    return (m.name || "").toLowerCase().includes(q) || (m.vibe || "").toLowerCase().includes(q) || (m.notes || "").toLowerCase().includes(q) || (m.category || "").toLowerCase().includes(q) || catLabel.includes(q) || (m.address || "").toLowerCase().includes(q) || (m.tags || []).some(t => t.toLowerCase().includes(q));
   });
   const avail = (() => {
     let list = [...availRaw];
@@ -1199,15 +1200,28 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
   const toggleTag = (t) => sFilterTags(prev => prev.includes(t) ? prev.filter(x => x !== t) : [...prev, t]);
 
-  const filtered = mods.filter(m => {
-    if (filterCat !== "all" && m.category !== filterCat) return false;
-    if (filterTags.length > 0 && (!m.tags || !filterTags.some(t => m.tags.includes(t)))) return false;
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      if (!m.name.toLowerCase().includes(q) && !(m.vibe || "").toLowerCase().includes(q) && !(m.notes || "").toLowerCase().includes(q) && !(m.category || "").toLowerCase().includes(q)) return false;
+  const filtered = (() => {
+    if (filterCat === "_events") {
+      // Show events as experience cards
+      const tripDays = days.map(d => d.date);
+      return events.filter(ev => {
+        const start = ev.date;
+        const end = ev.endDate || ev.date;
+        return tripDays.some(d => d >= start && d <= end);
+      }).map(ev => ({ ...ev, duration: 1, tier: "curated", mapsRating: 0, tags: [], rec: "recommended" }));
     }
-    return true;
-  });
+    return mods.filter(m => {
+      if (filterCat === "_picks") { if (m.tier !== "curated") return false; }
+      else if (filterCat !== "all" && m.category !== filterCat) return false;
+      if (filterTags.length > 0 && (!m.tags || !filterTags.some(t => m.tags.includes(t)))) return false;
+      if (search.trim()) {
+        const q = search.toLowerCase();
+        const catLabel = (CATS.find(c => c.id === m.category)?.label || "").toLowerCase();
+        if (!m.name.toLowerCase().includes(q) && !(m.vibe || "").toLowerCase().includes(q) && !(m.notes || "").toLowerCase().includes(q) && !(m.category || "").toLowerCase().includes(q) && !catLabel.includes(q) && !(m.address || "").toLowerCase().includes(q) && !(m.tags || []).some(t => t.toLowerCase().includes(q))) return false;
+      }
+      return true;
+    });
+  })();
   const curated = filtered.filter(m => m.tier === "curated");
   const extended = filtered.filter(m => m.tier === "extended");
 
@@ -1267,7 +1281,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
           <Vis mod={mod} cat={cat} h={180} br={18} />
           <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "16px 18px" }}>
             <div style={{ display: "flex", gap: 5, marginBottom: 5, flexWrap: "wrap" }}>
-              <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", background: "rgba(255,255,255,0.25)", backdropFilter: "blur(4px)", padding: "2px 8px", borderRadius: 5 }}>⭐ Chris's Pick</span>
+              <span style={{ fontSize: 11, fontWeight: 900, color: "#fff", background: "rgba(11,77,59,0.85)", backdropFilter: "blur(4px)", padding: "4px 12px", borderRadius: 6, letterSpacing: 0.5 }}>⭐ CHRIS'S PICK</span>
               {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", background: "rgba(255,255,255,0.2)", backdropFilter: "blur(4px)", padding: "2px 8px", borderRadius: 5 }}>{cat?.icon} {mod.vibe}</span>}
               {isPlaced && <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", background: "rgba(76,175,80,0.8)", padding: "2px 8px", borderRadius: 5 }}>✅ Planned</span>}
             </div>
@@ -1440,50 +1454,36 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
   return (
     <div style={{ padding: "16px 16px 100px" }}>
-      {/* About Panama — large hero card with image */}
-      <button onClick={() => { sShowAbout(true); if (onOverlayChange) onOverlayChange("explore"); }} style={{
-        width: "100%", position: "relative", overflow: "hidden", borderRadius: 18, border: "none",
-        cursor: "pointer", marginBottom: 14, height: 160, display: "block",
-        boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-      }}>
-        <img src="https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=600&h=300&fit=crop" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.7), rgba(33,147,176,0.5))" }} />
-        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 30%, rgba(0,0,0,0.6) 100%)" }} />
-        <div style={{ position: "absolute", bottom: 16, left: 18, right: 18 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-            <span style={{ fontSize: 24 }}>🇵🇦</span>
-            <span style={{ fontSize: 20, fontWeight: 900, color: "#fff", fontFamily: "'Playfair Display',Georgia,serif", textShadow: "0 2px 8px rgba(0,0,0,0.3)" }}>Discover Panama</span>
+      {/* Top row — two compact cards */}
+      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+        {/* Discover Panama — compact */}
+        <button onClick={() => { sShowAbout(true); if (onOverlayChange) onOverlayChange("explore"); }} style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 14, border: "none", cursor: "pointer", height: 80, display: "block", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
+          <img src="https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=300&h=160&fit=crop" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.75), rgba(33,147,176,0.6))" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
+            <span style={{ fontSize: 20 }}>🇵🇦</span>
+            <span style={{ fontSize: 12, fontWeight: 800, color: "#fff", marginTop: 2 }}>Discover Panama</span>
           </div>
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.8)" }}>Culture, nature, history & what makes it special →</div>
-        </div>
-      </button>
-
-      {/* Progress indicator — tappable to open Trip Overview */}
-      <button onClick={() => onShowOverview && onShowOverview()} style={{ width: "100%", background: "#FEFDFB", borderRadius: 12, padding: "10px 14px", marginBottom: 14, border: "1px solid #eee", cursor: "pointer", textAlign: "left" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-          <span style={{ fontSize: 11, fontWeight: 700, color: "#888" }}>Trip planning progress</span>
-          <span style={{ fontSize: 11, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}/{days.length} days · View overview →</span>
-        </div>
-        <div style={{ height: 6, borderRadius: 3, background: "#eee", overflow: "hidden" }}>
-          <div style={{ height: "100%", borderRadius: 3, background: "linear-gradient(90deg, #0B4D3B, #2E8B57)", width: Math.round(plannedDays / days.length * 100) + "%", transition: "width 0.4s" }} />
-        </div>
-        <div style={{ fontSize: 10, color: "#aaa", marginTop: 4 }}>{totalActivities} activities planned{favs.length > 0 && ` · ${favs.length} saved`}</div>
-      </button>
-
-      <div style={{ marginBottom: 14 }}>
-        <h2 style={{ margin: 0, fontSize: 20, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>Experiences</h2>
-        <div style={{ fontSize: 12, color: "#888", marginTop: 4 }}>Browse, learn more, and add to your itinerary</div>
+        </button>
+        {/* Trip progress — compact */}
+        <button onClick={() => onShowOverview && onShowOverview()} style={{ flex: 1, background: "#FEFDFB", borderRadius: 14, border: "1px solid #eee", cursor: "pointer", height: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "8px 12px" }}>
+          <div style={{ fontSize: 22, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}<span style={{ fontSize: 12, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "#888", marginTop: 2 }}>days planned</div>
+          <div style={{ width: "80%", height: 4, borderRadius: 2, background: "#eee", overflow: "hidden", marginTop: 4 }}>
+            <div style={{ height: "100%", borderRadius: 2, background: "#0B4D3B", width: Math.round(plannedDays / days.length * 100) + "%" }} />
+          </div>
+        </button>
       </div>
 
       {/* Search */}
-      <div style={{ marginBottom: 12, position: "relative" }}>
+      <div style={{ marginBottom: 10, position: "relative" }}>
         <input value={search} onChange={e => sSearch(e.target.value)} placeholder="🔍 Search experiences..." style={{
           width: "100%", padding: "10px 14px", borderRadius: 12, border: "1.5px solid #e0e0e0",
           fontSize: 13, fontFamily: "inherit", outline: "none", background: "#FEFDFB", boxSizing: "border-box",
         }} />
         {search.trim() && (() => {
           const q = search.toLowerCase();
-          const results = mods.filter(m => (m.name || "").toLowerCase().includes(q) || (m.vibe || "").toLowerCase().includes(q) || (m.notes || "").toLowerCase().includes(q) || (m.address || "").toLowerCase().includes(q)).slice(0, 8);
+          const results = mods.filter(m => { const catLabel = (CATS.find(c => c.id === m.category)?.label || "").toLowerCase(); return (m.name || "").toLowerCase().includes(q) || (m.vibe || "").toLowerCase().includes(q) || (m.notes || "").toLowerCase().includes(q) || (m.address || "").toLowerCase().includes(q) || (m.category || "").toLowerCase().includes(q) || catLabel.includes(q) || (m.tags || []).some(t => t.toLowerCase().includes(q)); }).slice(0, 8);
           if (results.length === 0) return <div style={{ background: "#fff", borderRadius: 14, border: "1.5px solid #eee", padding: "16px 14px", marginTop: 6, boxShadow: "0 4px 16px rgba(0,0,0,0.08)", fontSize: 12, color: "#999", textAlign: "center" }}>No results for "{search}"</div>;
           return (
             <div style={{ background: "#fff", borderRadius: 14, border: "1.5px solid #eee", marginTop: 6, boxShadow: "0 4px 16px rgba(0,0,0,0.08)", overflow: "hidden" }}>
@@ -1506,128 +1506,13 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         })()}
       </div>
 
-      {/* ═══ CHRIS'S PICKS — heading + carousel ═══ */}
-      {highlights.length > 0 && (
-        <div style={{ marginBottom: 16 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-            <span style={{ fontSize: 13 }}>⭐</span>
-            <span style={{ fontSize: 12, fontWeight: 800, color: "#1a1a1a", textTransform: "uppercase", letterSpacing: 0.8 }}>Chris's Picks</span>
-            <div style={{ flex: 1, height: 1, background: "#eee" }} />
-          </div>
-          <div style={{ display: "flex", gap: 10, overflowX: "auto", scrollSnapType: "x mandatory", WebkitOverflowScrolling: "touch", paddingBottom: 8 }}
-            ref={hlSwRef}
-            onScroll={() => {
-              if (hlSwRef.current) {
-                const idx = Math.round(hlSwRef.current.scrollLeft / (hlSwRef.current.offsetWidth * 0.78));
-                if (idx !== hlIdx && idx >= 0 && idx < highlights.length) setHlIdx(idx);
-              }
-            }}
-          >
-            {highlights.map((mod, i) => {
-              const cat = CATS.find(c => c.id === mod.category);
-              const isPlcd = pIds.has(mod.id);
-              return (
-                <div key={mod.id} onClick={() => openDetail(mod, highlights)} style={{
-                  flexShrink: 0, width: "78%", scrollSnapAlign: "start",
-                  borderRadius: 16, overflow: "hidden", position: "relative",
-                  height: 160, cursor: "pointer",
-                  boxShadow: "0 4px 16px rgba(0,0,0,0.12)",
-                }}>
-                  <img src={mod.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(0deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 50%, transparent 100%)" }} />
-                  <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, padding: "14px 16px" }}>
-                    <div style={{ display: "flex", gap: 5, marginBottom: 4 }}>
-                      {mod.vibe && <span style={{ fontSize: 9, fontWeight: 700, color: "#fff", background: "rgba(255,255,255,0.2)", padding: "2px 7px", borderRadius: 5 }}>{mod.icon || cat?.icon} {mod.vibe}</span>}
-                      {isPlcd && <span style={{ fontSize: 9, fontWeight: 800, color: "#fff", background: "rgba(76,175,80,0.8)", padding: "2px 7px", borderRadius: 5 }}>✅ Planned</span>}
-                    </div>
-                    <div style={{ fontSize: 16, fontWeight: 800, color: "#fff", textShadow: "0 1px 4px rgba(0,0,0,0.4)" }}>{mod.icon || cat?.icon} {mod.name}</div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          {highlights.length > 1 && (
-            <div style={{ display: "flex", justifyContent: "center", gap: 4, marginTop: 6 }}>
-              {highlights.slice(0, 10).map((_, i) => <div key={i} style={{ width: i === hlIdx ? 14 : 5, height: 5, borderRadius: 3, background: i === hlIdx ? "#1a1a1a" : "#ccc", transition: "all 0.3s" }} />)}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Events happening during the trip */}
-      {events && events.length > 0 && (() => {
-        // Filter events that overlap with trip dates
-        const tripStart = trip?.startDate || "2026-03-29";
-        const tripDays = days.map(d => d.date);
-        const activeEvents = events.filter(ev => {
-          const start = ev.date;
-          const end = ev.endDate || ev.date;
-          return tripDays.some(d => d >= start && d <= end);
-        });
-        if (activeEvents.length === 0) return null;
-        return (
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-              <span style={{ fontSize: 11, fontWeight: 800, color: "#E91E63", textTransform: "uppercase", letterSpacing: 0.8 }}>🎪 Happening During Your Trip</span>
-            </div>
-            <div style={{ display: "flex", gap: 10, overflowX: "auto", WebkitOverflowScrolling: "touch", paddingBottom: 6 }}>
-              {activeEvents.map(ev => {
-                const cat = CATS.find(c => c.id === "event");
-                const isMultiDay = ev.endDate && ev.endDate !== ev.date;
-                const fmtD = (d) => { const dt = new Date(d + "T12:00:00"); return dt.toLocaleDateString("en-US", { month: "short", day: "numeric" }); };
-                return (
-                  <div key={ev.id} onClick={() => openDetail({ ...ev, duration: 1, tier: "curated", mapsRating: 0, tags: [] }, activeEvents.map(e => ({ ...e, duration: 1, tier: "curated", mapsRating: 0, tags: [] })))} style={{
-                    flexShrink: 0, width: "72%", borderRadius: 16, overflow: "hidden",
-                    background: "#FEFDFB", border: "1.5px solid #E91E6320",
-                    boxShadow: "0 2px 10px rgba(233,30,99,0.08)", cursor: "pointer",
-                  }}>
-                    {ev.photo ? (
-                      <div style={{ height: 100, position: "relative" }}>
-                        <img src={ev.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-                        <div style={{ position: "absolute", inset: 0, background: "linear-gradient(180deg, transparent 40%, rgba(0,0,0,0.5) 100%)" }} />
-                        <div style={{ position: "absolute", top: 8, left: 8, background: "#E91E63", borderRadius: 6, padding: "2px 8px", fontSize: 9, fontWeight: 800, color: "#fff" }}>
-                          {isMultiDay ? fmtD(ev.date) + " – " + fmtD(ev.endDate) : fmtD(ev.date)}
-                        </div>
-                      </div>
-                    ) : (
-                      <div style={{ height: 60, background: "linear-gradient(135deg, #E91E63, #C2185B)", display: "flex", alignItems: "center", justifyContent: "center", position: "relative" }}>
-                        <span style={{ fontSize: 28, opacity: 0.4 }}>{ev.icon}</span>
-                        <div style={{ position: "absolute", top: 8, left: 8, background: "rgba(0,0,0,0.3)", borderRadius: 6, padding: "2px 8px", fontSize: 9, fontWeight: 800, color: "#fff" }}>
-                          {isMultiDay ? fmtD(ev.date) + " – " + fmtD(ev.endDate) : fmtD(ev.date)}
-                        </div>
-                      </div>
-                    )}
-                    <div style={{ padding: "10px 12px" }}>
-                      <div style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.2, marginBottom: 3 }}>{ev.icon} {ev.name}</div>
-                      <span style={{ fontSize: 9, fontWeight: 700, color: "#E91E63", background: "#E91E6312", padding: "2px 7px", borderRadius: 5 }}>{ev.vibe}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* Interest tags */}
-      <div style={{ marginBottom: 12 }}>
-        <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 6 }}>I'm interested in</div>
-        <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
-          {TAG_OPTIONS.map(t => (
-            <button key={t.id} onClick={() => toggleTag(t.id)} style={{
-              padding: "6px 12px", borderRadius: 20, border: "1.5px solid " + (filterTags.includes(t.id) ? "#1a1a1a" : "#e0e0e0"),
-              background: filterTags.includes(t.id) ? "#1a1a1a" : "#fff", color: filterTags.includes(t.id) ? "#fff" : "#666",
-              fontSize: 11, fontWeight: 700, cursor: "pointer",
-            }}>{t.label}</button>
-          ))}
-        </div>
-      </div>
-
-      {/* Category filters */}
-      <div style={{ display: "flex", gap: 5, overflowX: "auto", marginBottom: 16, paddingBottom: 4, WebkitOverflowScrolling: "touch" }}>
-        <button onClick={() => sFilter("all")} style={{ flexShrink: 0, padding: "7px 14px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "all" ? "#1a1a1a" : "#fff", color: filterCat === "all" ? "#fff" : "#777", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>All</button>
-        {CATS.filter(c => c.id !== "custom").map(c => (
-          <button key={c.id} onClick={() => sFilter(filterCat === c.id ? "all" : c.id)} style={{
+      {/* Unified filter pills — single scrollable row */}
+      <div style={{ display: "flex", gap: 5, overflowX: "auto", marginBottom: 14, paddingBottom: 4, WebkitOverflowScrolling: "touch" }}>
+        <button onClick={() => { sFilter("all"); setFilterTags([]); }} style={{ flexShrink: 0, padding: "7px 14px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "all" && filterTags.length === 0 ? "#1a1a1a" : "#fff", color: filterCat === "all" && filterTags.length === 0 ? "#fff" : "#777", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>All</button>
+        <button onClick={() => { sFilter(filterCat === "_picks" ? "all" : "_picks"); setFilterTags([]); }} style={{ flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "_picks" ? "#0B4D3B" : "#fff", color: filterCat === "_picks" ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>⭐ Chris's Picks</button>
+        <button onClick={() => { sFilter(filterCat === "_events" ? "all" : "_events"); setFilterTags([]); }} style={{ flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "_events" ? "#E91E63" : "#fff", color: filterCat === "_events" ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>🎪 Events</button>
+        {CATS.filter(c => !["custom", "event", "home"].includes(c.id)).map(c => (
+          <button key={c.id} onClick={() => { sFilter(filterCat === c.id ? "all" : c.id); setFilterTags([]); }} style={{
             flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer",
             background: filterCat === c.id ? c.color : "#fff", color: filterCat === c.id ? "#fff" : "#777",
             display: "flex", alignItems: "center", gap: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
