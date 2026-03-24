@@ -1981,26 +1981,22 @@ export default function App() {
 
       {/* Trip edit modal (admin) */}
       {editTrip && (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 350, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={() => sEditTrip(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "80vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-            <DragHandle onClose={() => sEditTrip(false)} />
+        <SwipeSheet onClose={() => sEditTrip(false)} zIndex={350} maxH="80vh">
             <div style={{ padding: "4px 20px 12px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <h3 style={{ margin: 0, fontSize: 17, fontWeight: 800 }}>✏️ Edit Trip</h3>
-              <button onClick={() => sEditTrip(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Done</button>
+              <button onClick={() => sEditTrip(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
             </div>
             <div style={{ flex: 1, overflowY: "auto", padding: "14px 20px 24px" }}>
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 <div><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Trip Name</label><input value={trip.name} onChange={e => sTrip(p => ({ ...p, name: e.target.value }))} style={IS} /></div>
                 <div><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Subtitle</label><input value={trip.subtitle} onChange={e => sTrip(p => ({ ...p, subtitle: e.target.value }))} style={IS} /></div>
-                <div style={{ display: "flex", gap: 10 }}>
-                  <div style={{ flex: 1 }}><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Start Date</label><input type="date" value={trip.startDate} onChange={e => sTrip(p => ({ ...p, startDate: e.target.value }))} style={IS} /></div>
-                  <div style={{ width: 80 }}><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Days</label><input type="number" min="1" max="30" value={trip.dayCount} onChange={e => sTrip(p => ({ ...p, dayCount: parseInt(e.target.value) || 1 }))} style={IS} /></div>
-                </div>
+                <div><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Start Date</label><input type="date" value={trip.startDate} onChange={e => sTrip(p => ({ ...p, startDate: e.target.value }))} style={{ ...IS, boxSizing: "border-box" }} /></div>
+                <div><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Number of Days</label><input type="number" min="1" max="30" value={trip.dayCount} onChange={e => sTrip(p => ({ ...p, dayCount: parseInt(e.target.value) || 1 }))} style={{ ...IS, boxSizing: "border-box" }} /></div>
                 <div><label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Description</label><textarea value={trip.brief} onChange={e => sTrip(p => ({ ...p, brief: e.target.value }))} rows={3} style={{ ...IS, resize: "vertical" }} /></div>
+                <button onClick={() => { try { localStorage.setItem("tb_trip", JSON.stringify(trip)); } catch {} sEditTrip(false); }} style={{ width: "100%", padding: 14, borderRadius: 14, border: "none", background: "#0B4D3B", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", marginTop: 4 }}>💾 Save Changes</button>
               </div>
             </div>
-          </div>
-        </div>
+        </SwipeSheet>
       )}
 
       {/* Overview + Info panels (shared across both tabs) */}
