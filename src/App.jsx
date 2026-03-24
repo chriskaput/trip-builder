@@ -800,6 +800,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const [dragY, sDragY] = useState(0);
   const [dragMod, sDragMod] = useState(null);
   const [editMod, sEditMod] = useState(undefined);
+  const [editDay, sEditDay] = useState(false);
   const [travelEdit, sTravelEdit] = useState(null); // index of item being travel-edited
   const dRef = useRef(null);
   const touchRef = useRef(null);
@@ -958,8 +959,8 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
       {/* Day content — scrollable */}
       <div style={{ padding: "0 16px 120px", background: "linear-gradient(180deg, #F2F1EE 0%, #CDD5CE 100%)", backgroundAttachment: "fixed", minHeight: "calc(100vh - 120px)" }}>
         
-        {/* Day header — lighter card */}
-        <div style={{ margin: "14px 0 14px", background: "#FEFDFB", borderRadius: 18, padding: "16px 18px", border: "1.5px solid #1B3B3220", position: "relative", overflow: "hidden" }}>
+        {/* Day header — white card with green border */}
+        <div onClick={() => isAdmin && sEditDay(true)} style={{ margin: "14px 0 14px", background: "#FEFDFB", borderRadius: 18, padding: "16px 18px", border: "2.5px solid #1B3B32", position: "relative", overflow: "hidden", cursor: isAdmin ? "pointer" : "default" }}>
           {/* Subtle pattern overlay */}
           <div style={{ position: "absolute", top: -20, right: -20, fontSize: 80, opacity: 0.04, lineHeight: 1 }}>{meta.icon || "📅"}</div>
           <div style={{ position: "relative" }}>
@@ -977,6 +978,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
             <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
               {meta.location && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B", background: "#0B4D3B12", padding: "3px 10px", borderRadius: 6 }}>📍 {meta.location}</span>}
               {dayItems.length > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B", background: "#0B4D3B12", padding: "3px 10px", borderRadius: 6 }}>{dayItems.length} {dayItems.length === 1 ? "stop" : "stops"}</span>}
+              {isAdmin && <span style={{ fontSize: 9, fontWeight: 700, color: "#aaa" }}>✏️ tap to edit</span>}
             </div>
           </div>
         </div>
@@ -1326,6 +1328,51 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
           onClose={() => sEditMod(undefined)}
         />
       )}
+
+      {/* Admin edit day meta */}
+      {isAdmin && editDay && (() => {
+        const date = cDay.date;
+        const m = DAY_META[date] || {};
+        const [theme, setTheme] = useState(m.theme || "");
+        const [icon, setIcon] = useState(m.icon || "📅");
+        const [loc, setLoc] = useState(m.location || "");
+        const [brief, setBrief] = useState(m.brief || "");
+        return (
+          <SwipeSheet onClose={() => sEditDay(false)} zIndex={350} maxH="70vh">
+            <div style={{ padding: "4px 20px 12px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>✏️ Edit Day {cDay.num}</h3>
+              <button onClick={() => sEditDay(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
+            </div>
+            <div style={{ flex: 1, overflowY: "auto", padding: "14px 20px 24px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                <div style={{ display: "flex", gap: 8 }}>
+                  <div>
+                    <label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Icon</label>
+                    <input value={icon} onChange={e => setIcon(e.target.value)} style={{ width: 48, padding: "10px 6px", borderRadius: 10, border: "1.5px solid #e0e0e0", fontSize: 20, textAlign: "center", fontFamily: "inherit" }} />
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Theme</label>
+                    <input value={theme} onChange={e => setTheme(e.target.value)} placeholder="e.g. Canal Day" style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 10, border: "1.5px solid #e0e0e0", fontSize: 13, fontFamily: "inherit" }} />
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>Location</label>
+                  <input value={loc} onChange={e => setLoc(e.target.value)} placeholder="e.g. Panama City" style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 10, border: "1.5px solid #e0e0e0", fontSize: 13, fontFamily: "inherit" }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: 10, fontWeight: 700, color: "#999", textTransform: "uppercase", letterSpacing: 0.8, display: "block", marginBottom: 4 }}>One-liner</label>
+                  <textarea value={brief} onChange={e => setBrief(e.target.value)} placeholder="A sentence about the day..." rows={3} style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 10, border: "1.5px solid #e0e0e0", fontSize: 13, fontFamily: "inherit", resize: "vertical" }} />
+                </div>
+                <button onClick={() => {
+                  DAY_META[date] = { ...DAY_META[date], theme, icon, location: loc, brief };
+                  try { localStorage.setItem("tb_daymeta", JSON.stringify(DAY_META)); } catch {}
+                  sEditDay(false);
+                }} style={{ width: "100%", padding: 14, borderRadius: 14, border: "none", background: "#0B4D3B", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>💾 Save Day</button>
+              </div>
+            </div>
+          </SwipeSheet>
+        );
+      })()}
     </div>
   );
 };
@@ -1391,6 +1438,8 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
       }).map(ev => ({ ...ev, duration: 1, tier: "curated", mapsRating: 0, tags: [], rec: "recommended" }));
     }
     return mods.filter(m => {
+      // Hide personal/custom items from Explore — they only appear in itinerary
+      if (["home", "custom"].includes(m.category)) return false;
       if (filterCat === "_picks") { if (m.rec !== "cantmiss") return false; }
       else if (filterCat === "_kids") { if (!(m.tags || []).includes("great-with-kids")) return false; }
       else if (filterCat === "nature") { if (m.category !== "nature" && !(m.tags || []).includes("nature")) return false; }
@@ -1653,25 +1702,26 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
     <div style={{ padding: "0 0 100px" }}>
       <div style={{ padding: "12px 16px 0" }}>
       {/* Two action cards */}
-      <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+      <div style={{ display: "flex", gap: 10, marginBottom: 14 }}>
         {/* Discover Panama */}
-        <button onClick={() => { sShowAbout(true); if (onOverlayChange) onOverlayChange("explore"); }} style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 16, border: "none", cursor: "pointer", height: 100, display: "block", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-          <img src="https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=400&h=200&fit=crop" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+        <button onClick={() => { sShowAbout(true); if (onOverlayChange) onOverlayChange("explore"); }} style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 16, border: "none", cursor: "pointer", height: 120, display: "block", boxShadow: "0 2px 12px rgba(0,0,0,0.1)" }}>
+          <img src="https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=400&h=240&fit=crop" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
           <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.8), rgba(33,147,176,0.65))" }} />
-          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 10 }}>
-            <span style={{ fontSize: 24 }}>🇵🇦</span>
-            <span style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 3 }}>Discover Panama</span>
-            <span style={{ fontSize: 9, color: "rgba(255,255,255,0.6)", marginTop: 1 }}>Learn more →</span>
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 12 }}>
+            <span style={{ fontSize: 28 }}>🇵🇦</span>
+            <span style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginTop: 4 }}>Discover Panama</span>
+            <span style={{ fontSize: 10, color: "rgba(255,255,255,0.6)", marginTop: 2 }}>Culture, nature & history →</span>
           </div>
         </button>
-        {/* Trip progress */}
-        <button onClick={() => onShowOverview && onShowOverview()} style={{ flex: 1, background: "#FEFDFB", borderRadius: 16, border: "1px solid #eee", cursor: "pointer", height: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "8px 12px" }}>
-          <div style={{ fontSize: 24, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}<span style={{ fontSize: 12, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "#888", marginTop: 1 }}>days planned</div>
-          <div style={{ width: "80%", height: 4, borderRadius: 2, background: "#eee", overflow: "hidden", marginTop: 4 }}>
+        {/* Trip Overview */}
+        <button onClick={() => onShowOverview && onShowOverview()} style={{ flex: 1, background: "#FEFDFB", borderRadius: 16, border: "1px solid #eee", cursor: "pointer", height: 120, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "10px 14px" }}>
+          <div style={{ fontSize: 11, fontWeight: 800, color: "#0B4D3B", marginBottom: 4 }}>📅 {days[0]?.md} — {days[days.length-1]?.md}</div>
+          <div style={{ fontSize: 28, fontWeight: 800, color: "#0B4D3B", lineHeight: 1 }}>{plannedDays}<span style={{ fontSize: 14, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
+          <div style={{ fontSize: 10, fontWeight: 600, color: "#888", marginTop: 2 }}>days · {totalActivities} activities</div>
+          <div style={{ width: "85%", height: 4, borderRadius: 2, background: "#eee", overflow: "hidden", marginTop: 6 }}>
             <div style={{ height: "100%", borderRadius: 2, background: "#0B4D3B", width: Math.round(plannedDays / days.length * 100) + "%" }} />
           </div>
-          <span style={{ fontSize: 9, color: "#aaa", marginTop: 3 }}>📅 {days[0]?.md} — {days[days.length-1]?.md}</span>
+          <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B", marginTop: 5 }}>Full itinerary →</span>
         </button>
       </div>
 
