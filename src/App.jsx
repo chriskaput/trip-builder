@@ -59,23 +59,26 @@ const Vis = ({ mod, cat, h = 100, br = 0, st = {} }) => {
   const [imgErr, setImgErr] = useState(false);
   const [imgOk, setImgOk] = useState(false);
   if (mod.photo && !imgErr) {
-    // Use thumbnail for small renders (itinerary cards, library items)
     const isSmall = typeof h === "number" && h <= 100;
     const src = isSmall && mod.thumb ? mod.thumb : mod.photo;
     return (
       <div style={{ height: h, position: "relative", overflow: "hidden", borderRadius: br, background: cat?.grad || "#78909C", ...st }}>
-        {!imgOk && <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 100%)", backgroundSize: "200% 100%", animation: "shimmer 1.5s infinite" }} />}
+        {!imgOk && <div style={{ position: "absolute", inset: 0, background: cat?.grad || "#78909C", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ fontSize: isSmall ? 20 : 40, opacity: 0.4 }}>{mod.icon || cat?.icon || "📍"}</span></div>}
         <img src={src} alt="" loading="lazy" onLoad={() => setImgOk(true)} onError={() => setImgErr(true)} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", opacity: imgOk ? 1 : 0, transition: "opacity 0.4s ease-out" }} />
         <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "50%", background: "linear-gradient(0deg,rgba(0,0,0,0.4) 0%,transparent 100%)" }} />
       </div>
     );
   }
-  const scene = SCENES[mod.category] || SCENES.custom;
-  const w = 400;
+  // Styled placeholder — gradient background with centered icon
   const hN = typeof h === "number" ? h : 100;
+  const isSmall = hN <= 100;
+  const grad = cat?.grad || "linear-gradient(135deg, #78909C, #546E7A)";
   return (
-    <div style={{ height: h, position: "relative", overflow: "hidden", borderRadius: br, ...st }}>
-      <svg viewBox={`0 0 ${w} ${hN}`} preserveAspectRatio="xMidYMid slice" style={{ width: "100%", height: "100%", display: "block" }} dangerouslySetInnerHTML={{ __html: scene(w, hN) }} />
+    <div style={{ height: h, position: "relative", overflow: "hidden", borderRadius: br, background: grad, display: "flex", alignItems: "center", justifyContent: "center", ...st }}>
+      <div style={{ textAlign: "center" }}>
+        <span style={{ fontSize: isSmall ? 22 : 44, display: "block", opacity: 0.5, filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.2))" }}>{mod.icon || cat?.icon || "📍"}</span>
+        {!isSmall && mod.vibe && <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", marginTop: 4 }}>{mod.vibe}</div>}
+      </div>
       <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: "50%", background: "linear-gradient(0deg,rgba(0,0,0,0.35) 0%,transparent 100%)" }} />
     </div>
   );
