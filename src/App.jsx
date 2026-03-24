@@ -952,7 +952,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                     {notes[mod.id] && <div style={{ marginTop: 3, fontSize: 10, color: "#999", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>📝 {notes[mod.id]}</div>}
                   </div>
                   {/* Thumbnail */}
-                  {mod.photo && <div style={{ width: 60, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /></div>}
+                  <div style={{ width: 60, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /></div>
                   {/* Drag handle — dark green with white dots */}
                   <div style={{ width: 26, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "grab", touchAction: "none", background: "#1B3B32", borderRadius: "0 14px 14px 0" }}
                     onTouchStart={e => { touchRef.current = { idx, y: e.touches[0].clientY }; sDragIdx(idx); }}
@@ -1559,7 +1559,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
                 const cat = CATS.find(c => c.id === mod.category);
                 return (
                   <button key={mod.id} onClick={() => { sSearch(""); openDetail(mod, results); }} style={{ width: "100%", display: "flex", gap: 10, padding: "8px 14px", border: "none", borderTop: "1px solid #f5f5f5", background: "none", cursor: "pointer", textAlign: "left", alignItems: "center" }}>
-                    {mod.photo ? <div style={{ width: 40, height: 40, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}><Vis mod={mod} cat={cat} h={40} br={10} /></div> : <div style={{ width: 40, height: 40, borderRadius: 10, background: cat?.grad || "#eee", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{mod.icon || cat?.icon}</div>}
+                    <div style={{ width: 40, height: 40, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}><Vis mod={mod} cat={cat} h={40} br={10} /></div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontSize: 13, fontWeight: 700 }}>{mod.name}</div>
                       <div style={{ fontSize: 10, color: "#888" }}>{mod.vibe}{mod.address ? ` · ${mod.address}` : ""}</div>
