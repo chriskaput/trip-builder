@@ -623,13 +623,14 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
 };
 
 // ═══ ITINERARY ═══
-const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onShowEvent, favs, setFavs, onOverlayChange }) => {
+const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onShowEvent, favs, setFavs, onOverlayChange, isAdmin }) => {
   const [aDay, sDay] = useState(initDay || 0);
   const [lib, sLib] = useState(false);
   const [cust, sCust] = useState(false);
   const [insertIdx, sInsertIdx] = useState(null); // index to insert new item at
   const [fCat, sFCat] = useState("all");
   const [libSort, sLibSort] = useState("favorites");
+  const [libSearch, sLibSearch] = useState("");
   const [libPreview, sLibPreview] = useState(null);
   const [showInfo, sInfo] = useState(false);
   const [showOv, sOv] = useState(false);
@@ -638,6 +639,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const [mapMod, sMap] = useState(null);
   const [itinDetail, sItinDetail] = useState(null);
   const [dragIdx, sDragIdx] = useState(null);
+  const [editMod, sEditMod] = useState(undefined);
   const [travelEdit, sTravelEdit] = useState(null); // index of item being travel-edited
   const dRef = useRef(null);
   const touchRef = useRef(null);
@@ -741,7 +743,11 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   });
 
   // Library items
-  const availRaw = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat);
+  const availRaw = mods.filter(m => !pIds.has(m.id)).filter(m => fCat === "all" || m.category === fCat).filter(m => {
+    if (!libSearch.trim()) return true;
+    const q = libSearch.toLowerCase();
+    return (m.name || "").toLowerCase().includes(q) || (m.vibe || "").toLowerCase().includes(q) || (m.notes || "").toLowerCase().includes(q) || (m.category || "").toLowerCase().includes(q) || (m.address || "").toLowerCase().includes(q);
+  });
   const avail = (() => {
     let list = [...availRaw];
     if (libSort === "favorites") {
@@ -808,7 +814,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
 
         {/* Add button at top if no items */}
         {dayItems.length === 0 && (
-          <button onClick={() => { sInsertIdx(0); sLib(true); sFCat("all"); }} style={{ width: "100%", padding: "24px 14px", background: "#FEFDFB", borderRadius: 16, border: "2px dashed #d5d0c8", cursor: "pointer", marginBottom: 8 }}>
+          <button onClick={() => { sInsertIdx(0); sLib(true); sFCat("all"); sLibSearch(""); }} style={{ width: "100%", padding: "24px 14px", background: "#FEFDFB", borderRadius: 16, border: "2px dashed #d5d0c8", cursor: "pointer", marginBottom: 8 }}>
             <div style={{ fontSize: 20, marginBottom: 4 }}>➕</div>
             <div style={{ fontSize: 13, fontWeight: 700, color: "#555" }}>Add first activity</div>
           </button>
@@ -907,7 +913,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
               {/* Add button between items / at end */}
               <div style={{ display: "flex", alignItems: "center", padding: "3px 0", marginLeft: 28 }}>
                 <div style={{ width: 1, height: 12, borderLeft: "2px dotted #d8d8d8", marginRight: 10 }} />
-                <button onClick={e => { e.stopPropagation(); sInsertIdx(idx + 1); sLib(true); sFCat("all"); }} style={{ background: "none", border: "1px dashed #d0d0d0", borderRadius: 6, cursor: "pointer", padding: "2px 10px", fontSize: 10, color: "#bbb", fontWeight: 600 }}>+</button>
+                <button onClick={e => { e.stopPropagation(); sInsertIdx(idx + 1); sLib(true); sFCat("all"); sLibSearch(""); }} style={{ background: "none", border: "1px dashed #d0d0d0", borderRadius: 6, cursor: "pointer", padding: "2px 10px", fontSize: 10, color: "#bbb", fontWeight: 600 }}>+</button>
               </div>
             </div>
           );
@@ -991,6 +997,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                   sItinDetail(null); if (onOverlayChange) onOverlayChange(false);
                 }} style={{ width: "100%", padding: 14, borderRadius: 14, background: isFav ? "#E8F5E9" : "#E91E63", border: "none", fontSize: 14, fontWeight: 700, color: isFav ? "#4CAF50" : "#fff", cursor: "pointer" }}>{isFav ? "❤️ Already in favorites — Remove from itinerary" : "❤️ Remove & save to favorites"}</button>
                 <button onClick={() => { removeItem(idx); sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ width: "100%", padding: 13, borderRadius: 14, background: "#1a1a1a", border: "none", fontSize: 13, fontWeight: 700, color: "#fff", cursor: "pointer" }}>🗑️ Remove from itinerary</button>
+                {isAdmin && <button onClick={() => { sEditMod(mod); sItinDetail(null); if (onOverlayChange) onOverlayChange(false); }} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #E53935", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer", marginTop: 4 }}>✏️ Edit Experience</button>}
               </div>
             </div>
           </div>
@@ -1004,6 +1011,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
             <DragHandle onClose={() => { sLib(false); sInsertIdx(null); }} />
             <div style={{ padding: "4px 20px 10px" }}>
               <h3 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 800 }}>Choose experience</h3>
+              <input value={libSearch} onChange={e => sLibSearch(e.target.value)} placeholder="Search experiences..." autoFocus style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 12, border: "1.5px solid #e0e0e0", fontSize: 13, fontFamily: "inherit", marginBottom: 8, background: "#FAFAF8" }} />
               <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
                 {["favorites", "picks", "rating"].map(s => (
                   <button key={s} onClick={() => sLibSort(s)} style={{ padding: "5px 10px", borderRadius: 8, border: "none", background: libSort === s ? "#1B3B32" : "#f0f0f0", color: libSort === s ? "#fff" : "#666", fontSize: 11, fontWeight: 700, cursor: "pointer" }}>
@@ -1092,6 +1100,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
               </div>
               <div style={{ fontSize: 14, color: "#555", lineHeight: 1.7, marginBottom: 16 }}>{mod.notes}</div>
               <button onClick={() => { addItem(mod.id, insertIdx != null ? insertIdx : dayItems.length); sLibPreview(null); }} style={{ width: "100%", padding: 14, borderRadius: 14, border: "none", background: "#0B4D3B", color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer" }}>➕ Add to {cDay.wd} {cDay.md}</button>
+              {isAdmin && <button onClick={() => { sEditMod(mod); sLibPreview(null); sLib(false); }} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #E53935", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer", marginTop: 8 }}>✏️ Edit Experience</button>}
             </div>
           </div>
         );
@@ -1102,6 +1111,30 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
 
       {/* Practical info */}
       {showInfo && <InfoPanel info={trip.info} onClose={() => sInfo(false)} />}
+
+      {/* Admin edit experience */}
+      {isAdmin && editMod !== undefined && (
+        <EditExperience
+          mod={editMod}
+          onSave={(updated) => {
+            if (editMod) {
+              setMods(prev => prev.map(m => m.id === updated.id ? { ...m, ...updated } : m));
+            } else {
+              setMods(prev => [...prev, { ...updated, id: "x" + Date.now() }]);
+            }
+            sEditMod(undefined);
+          }}
+          onDelete={editMod ? (id) => {
+            setMods(prev => prev.filter(m => m.id !== id));
+            // Remove from all days
+            const nc = { ...cal };
+            Object.keys(nc).forEach(d => { if (Array.isArray(nc[d])) nc[d] = nc[d].filter(item => item.modId !== id); });
+            setCal(nc);
+            sEditMod(undefined);
+          } : null}
+          onClose={() => sEditMod(undefined)}
+        />
+      )}
     </div>
   );
 };
@@ -1434,11 +1467,34 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
       </div>
 
       {/* Search */}
-      <div style={{ marginBottom: 12 }}>
+      <div style={{ marginBottom: 12, position: "relative" }}>
         <input value={search} onChange={e => sSearch(e.target.value)} placeholder="🔍 Search experiences..." style={{
           width: "100%", padding: "10px 14px", borderRadius: 12, border: "1.5px solid #e0e0e0",
           fontSize: 13, fontFamily: "inherit", outline: "none", background: "#FEFDFB", boxSizing: "border-box",
         }} />
+        {search.trim() && (() => {
+          const q = search.toLowerCase();
+          const results = mods.filter(m => (m.name || "").toLowerCase().includes(q) || (m.vibe || "").toLowerCase().includes(q) || (m.notes || "").toLowerCase().includes(q) || (m.address || "").toLowerCase().includes(q)).slice(0, 8);
+          if (results.length === 0) return <div style={{ background: "#fff", borderRadius: 14, border: "1.5px solid #eee", padding: "16px 14px", marginTop: 6, boxShadow: "0 4px 16px rgba(0,0,0,0.08)", fontSize: 12, color: "#999", textAlign: "center" }}>No results for "{search}"</div>;
+          return (
+            <div style={{ background: "#fff", borderRadius: 14, border: "1.5px solid #eee", marginTop: 6, boxShadow: "0 4px 16px rgba(0,0,0,0.08)", overflow: "hidden" }}>
+              <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", padding: "8px 14px 4px", textTransform: "uppercase", letterSpacing: 0.8 }}>{results.length} result{results.length !== 1 ? "s" : ""}</div>
+              {results.map(mod => {
+                const cat = CATS.find(c => c.id === mod.category);
+                return (
+                  <button key={mod.id} onClick={() => { sSearch(""); openDetail(mod, results); }} style={{ width: "100%", display: "flex", gap: 10, padding: "8px 14px", border: "none", borderTop: "1px solid #f5f5f5", background: "none", cursor: "pointer", textAlign: "left", alignItems: "center" }}>
+                    {mod.photo ? <div style={{ width: 40, height: 40, borderRadius: 10, overflow: "hidden", flexShrink: 0 }}><Vis mod={mod} cat={cat} h={40} br={10} /></div> : <div style={{ width: 40, height: 40, borderRadius: 10, background: cat?.grad || "#eee", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>{mod.icon || cat?.icon}</div>}
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <div style={{ fontSize: 13, fontWeight: 700 }}>{mod.name}</div>
+                      <div style={{ fontSize: 10, color: "#888" }}>{mod.vibe}{mod.address ? ` · ${mod.address}` : ""}</div>
+                    </div>
+                    {pIds.has(mod.id) && <span style={{ fontSize: 9, color: "#4CAF50", fontWeight: 700 }}>✅</span>}
+                  </button>
+                );
+              })}
+            </div>
+          );
+        })()}
       </div>
 
       {/* ═══ CHRIS'S PICKS — heading + carousel ═══ */}
@@ -1835,7 +1891,7 @@ export default function App() {
       {tab === "explore" ? (
         <Explore mods={mods} setMods={sMods} cal={cal} setCal={sCal} days={days} occ={occ} isAdmin={isAdmin} favs={favs} setFavs={setFavs} events={EVENTS} trip={trip} onSwitchToDay={di => { sJd(di); sTab("itinerary"); }} onShowOverview={() => setShowOv(true)} onOverlayChange={sOverlayOpen} />
       ) : (
-        <Itin trip={trip} mods={mods} setMods={sMods} cal={cal} setCal={sCal} onBack={() => sScr("welcome")} initDay={jd} events={EVENTS} onShowEvent={ev => { sEventDetail(ev); sEvSlotPicker(false); }} favs={favs} setFavs={setFavs} onOverlayChange={sOverlayOpen} />
+        <Itin trip={trip} mods={mods} setMods={sMods} cal={cal} setCal={sCal} onBack={() => sScr("welcome")} initDay={jd} events={EVENTS} onShowEvent={ev => { sEventDetail(ev); sEvSlotPicker(false); }} favs={favs} setFavs={setFavs} onOverlayChange={sOverlayOpen} isAdmin={isAdmin} />
       )}
 
       {/* Trip edit modal (admin) */}
