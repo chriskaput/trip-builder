@@ -279,23 +279,58 @@ function fmtRange(sd, dc) {
 const IS = { padding: "10px 14px", borderRadius: 10, border: "1.5px solid #e0e0e0", fontSize: 14, fontFamily: "inherit", outline: "none", width: "100%", boxSizing: "border-box", background: "#fff" };
 
 // Swipe-down-to-close drag handle for bottom sheets
+// Swipeable bottom sheet wrapper — visually follows finger on drag down
+const SwipeSheet = ({ onClose, children, zIndex = 300, maxH = "85vh" }) => {
+  const [offset, setOffset] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const startY = useRef(null);
+
+  const onTS = e => { startY.current = e.touches[0].clientY; setDragging(true); };
+  const onTM = e => {
+    if (startY.current === null) return;
+    const dy = Math.max(0, e.touches[0].clientY - startY.current);
+    setOffset(dy);
+  };
+  const onTE = () => {
+    setDragging(false);
+    if (offset > 120) { onClose(); }
+    else { setOffset(0); }
+    startY.current = null;
+  };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: `rgba(0,0,0,${Math.max(0, 0.5 - offset * 0.002)})`, zIndex, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{
+        maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0",
+        maxHeight: maxH, display: "flex", flexDirection: "column",
+        animation: !dragging && offset === 0 ? "su 0.25s ease-out" : "none",
+        transform: `translateY(${offset}px)`,
+        transition: dragging ? "none" : "transform 0.25s ease-out",
+      }}>
+        {/* Handle bar */}
+        <div
+          onTouchStart={onTS} onTouchMove={onTM} onTouchEnd={onTE}
+          style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 0 10px", cursor: "grab", userSelect: "none", touchAction: "none" }}
+        >
+          <div style={{ width: 44, height: 5, background: "#bbb", borderRadius: 3 }} />
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+};
+
+// Legacy compat — some components still use DragHandle directly
 const DragHandle = ({ onClose }) => {
   const sy = useRef(null);
-  const handleTS = e => { sy.current = e.touches[0].clientY; e.preventDefault(); };
-  const handleTM = e => {
-    if (sy.current !== null) {
-      const dy = e.touches[0].clientY - sy.current;
-      if (dy > 40) { onClose(); sy.current = null; }
-    }
-  };
-  const handleTE = () => { sy.current = null; };
   return (
     <div
-      onTouchStart={handleTS} onTouchMove={handleTM} onTouchEnd={handleTE}
+      onTouchStart={e => { sy.current = e.touches[0].clientY; e.preventDefault(); }}
+      onTouchMove={e => { if (sy.current !== null && e.touches[0].clientY - sy.current > 40) { onClose(); sy.current = null; } }}
+      onTouchEnd={() => { sy.current = null; }}
       style={{ display: "flex", flexDirection: "column", alignItems: "center", padding: "14px 0 10px", cursor: "grab", userSelect: "none", touchAction: "none" }}
     >
       <div style={{ width: 44, height: 5, background: "#bbb", borderRadius: 3 }} />
-      <div style={{ fontSize: 9, color: "#ccc", marginTop: 6, fontWeight: 600 }}>swipe down to close</div>
     </div>
   );
 };
@@ -1178,9 +1213,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
 
       {/* Library */}
       {lib && (
-        <div onClick={() => { sLib(false); sInsertIdx(null); }} style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 200, animation: "fi 0.12s ease-out" }}>
-          <div onClick={e => e.stopPropagation()} style={{ position: "absolute", bottom: 0, left: 0, right: 0, maxWidth: 430, margin: "0 auto", background: "#fff", borderRadius: "24px 24px 0 0", height: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-            <DragHandle onClose={() => { sLib(false); sInsertIdx(null); }} />
+        <SwipeSheet onClose={() => { sLib(false); sInsertIdx(null); }} zIndex={200} maxH="85vh">
             <div style={{ padding: "4px 20px 10px" }}>
               <h3 style={{ margin: "0 0 8px", fontSize: 16, fontWeight: 800 }}>Choose experience</h3>
               <input value={libSearch} onChange={e => sLibSearch(e.target.value)} placeholder="Search experiences..." autoFocus style={{ width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 12, border: "1.5px solid #e0e0e0", fontSize: 13, fontFamily: "inherit", marginBottom: 8, background: "#FAFAF8" }} />
@@ -1250,8 +1283,7 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
               })}
               {avail.length === 0 && <div style={{ textAlign: "center", padding: "40px 20px", color: "#ccc" }}><div style={{ fontSize: 36, marginBottom: 10 }}>✅</div><div style={{ fontSize: 15, fontWeight: 700, color: "#999" }}>All experiences placed!</div></div>}
             </div>
-          </div>
-        </div>
+        </SwipeSheet>
       )}
 
       {/* Library preview detail */}
@@ -2158,9 +2190,7 @@ export default function App() {
         };
         const ctx = ctxPrompts[assistCtx] || ctxPrompts.general;
         return (
-        <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 500, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={() => sAssist(false)}>
-          <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", height: "85vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
-            <DragHandle onClose={() => sAssist(false)} />
+        <SwipeSheet onClose={() => sAssist(false)} zIndex={500} maxH="85vh">
             <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
@@ -2233,8 +2263,7 @@ export default function App() {
               }} style={{ ...IS, fontSize: 14, padding: "12px 16px" }} />
               <button onClick={() => { document.querySelector("input[placeholder='Ask about Panama...']")?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })); }} style={{ padding: "12px 18px", borderRadius: 12, border: "none", background: "#1B3B32", color: "#fff", fontWeight: 700, fontSize: 16, cursor: "pointer", flexShrink: 0 }}>→</button>
             </div>
-          </div>
-        </div>
+        </SwipeSheet>
         );
       })()}
     </div>
