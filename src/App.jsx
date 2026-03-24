@@ -576,103 +576,78 @@ const PanamaSlider = ({ photos }) => {
 const Overview = ({ days, occ, mods, cal, onClose, onJump, trip }) => {
   const totalItems = Object.values(cal).reduce((n, items) => n + (Array.isArray(items) ? items.length : 0), 0);
   const plannedDays = days.filter(d => (cal[d.date] || []).length > 0).length;
-  const [shareView, sShareView] = useState(false);
-
-  // Shareable summary view
-  if (shareView) {
     const fmtTime = (t) => { if (!t) return ""; const [h,m] = t.split(":").map(Number); const ap = h>=12?"PM":"AM"; const h12=h>12?h-12:h===0?12:h; return m>0?`${h12}:${m.toString().padStart(2,"0")} ${ap}`:`${h12} ${ap}`; };
-    const fmtDur = (m) => { if(!m)return""; const h=Math.floor(m/60); const r=m%60; if(h&&r)return`${h}h${r}m`; if(h)return`${h}h`; return`${r}m`; };
-    return (
-      <div style={{ position: "fixed", inset: 0, zIndex: 400, background: "#fff", overflowY: "auto" }}>
-        <div style={{ maxWidth: 430, margin: "0 auto", padding: "20px 20px 40px" }}>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <button onClick={() => sShareView(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "8px 14px", fontSize: 12, fontWeight: 700, cursor: "pointer", color: "#555" }}>← Back</button>
-            <span style={{ fontSize: 10, color: "#aaa" }}>Screenshot-friendly view</span>
-          </div>
-          <div style={{ textAlign: "center", marginBottom: 24 }}>
-            <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Playfair Display',Georgia,serif" }}>{trip?.name || "Panama 2026"}</div>
-            <div style={{ fontSize: 14, color: "#888", marginTop: 4 }}>{trip?.subtitle || ""}</div>
-            <div style={{ fontSize: 12, color: "#aaa", marginTop: 2 }}>📅 {days[0]?.full} – {days[days.length-1]?.full}</div>
-          </div>
-          {days.map(day => {
-            const items = cal[day.date] || [];
-            const meta = DAY_META[day.date] || {};
-            return (
-              <div key={day.date} style={{ marginBottom: 20 }}>
-                <div style={{ background: "#1B3B32", borderRadius: 12, padding: "10px 14px", color: "#fff", marginBottom: 8 }}>
-                  <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1 }}>Day {day.num} · {day.wd} {day.md}</div>
-                  <div style={{ fontSize: 16, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginTop: 2 }}>{meta.icon} {meta.theme}</div>
-                  {meta.location && <div style={{ fontSize: 10, color: "rgba(255,255,255,0.5)", marginTop: 2 }}>📍 {meta.location}</div>}
-                </div>
-                {items.length === 0 && <div style={{ fontSize: 12, color: "#ccc", padding: "4px 14px" }}>Free day</div>}
-                {items.map((item, ii) => {
-                  const mod = mods.find(m => m.id === item.modId);
-                  if (!mod) return null;
-                  const cat = CATS.find(c => c.id === mod.category);
-                  return (
-                    <div key={ii} style={{ display: "flex", gap: 10, padding: "4px 0", alignItems: "flex-start" }}>
-                      <div style={{ width: 50, flexShrink: 0, textAlign: "right", paddingTop: 2 }}>
-                        <div style={{ fontSize: 11, fontWeight: 700, color: "#333" }}>{fmtTime(item.startTime)}</div>
-                        <div style={{ fontSize: 9, color: "#aaa" }}>{fmtDur(item.duration)}</div>
-                      </div>
-                      <div style={{ width: 3, flexShrink: 0, background: cat?.color || "#ddd", borderRadius: 2, minHeight: 28, marginTop: 2 }} />
-                      <div>
-                        <div style={{ fontSize: 13, fontWeight: 700 }}>{mod.icon || cat?.icon} {mod.name}</div>
-                        {mod.vibe && <div style={{ fontSize: 10, color: "#888" }}>{mod.vibe}{mod.address ? ` · ${mod.address}` : ""}</div>}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }
+  const fmtDur = (m) => { if(!m)return""; const h=Math.floor(m/60); const r=m%60; if(h&&r)return`${h}h${r}m`; if(h)return`${h}h`; return`${r}m`; };
 
   return (
-  <SwipeSheet onClose={onClose} zIndex={300} maxH="85vh">
-      <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <h3 style={{ margin: 0, fontSize: 18, fontWeight: 800 }}>📋 Trip Overview</h3>
+  <SwipeSheet onClose={onClose} zIndex={300} maxH="92vh">
+      <div style={{ padding: "4px 20px 10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800, color: "#888" }}>Trip Overview</h3>
         <button onClick={onClose} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
       </div>
-      <div style={{ flex: 1, overflowY: "auto", padding: "12px 16px 24px" }}>
-        <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 16px", marginBottom: 14, display: "flex", gap: 8 }}>
-          <div style={{ flex: 1, background: "#fff", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}</div>
+      <div style={{ flex: 1, overflowY: "auto", padding: "0 16px 30px" }}>
+        {/* Hero header */}
+        <div style={{ textAlign: "center", padding: "10px 0 16px" }}>
+          <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Playfair Display',Georgia,serif", color: "#1B3B32" }}>{trip?.name || "Panama 2026"}</div>
+          <div style={{ fontSize: 13, color: "#888", marginTop: 3 }}>{trip?.subtitle || ""}</div>
+          <div style={{ fontSize: 11, color: "#aaa", marginTop: 2 }}>📅 {days[0]?.full} — {days[days.length-1]?.full}</div>
+        </div>
+        {/* Stats row */}
+        <div style={{ display: "flex", gap: 6, marginBottom: 16 }}>
+          <div style={{ flex: 1, background: "#F7F6F3", borderRadius: 10, padding: "10px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}<span style={{ fontSize: 11, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
             <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>days planned</div>
           </div>
-          <div style={{ flex: 1, background: "#fff", borderRadius: 10, padding: "8px 10px", textAlign: "center" }}>
-            <div style={{ fontSize: 18, fontWeight: 800, color: "#2D9CDB" }}>{totalItems}</div>
+          <div style={{ flex: 1, background: "#F7F6F3", borderRadius: 10, padding: "10px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: "#2D9CDB" }}>{totalItems}</div>
             <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>activities</div>
           </div>
+          <div style={{ flex: 1, background: "#F7F6F3", borderRadius: 10, padding: "10px 8px", textAlign: "center" }}>
+            <div style={{ fontSize: 20, fontWeight: 800, color: "#E8843C" }}>{mods.filter(m => m.rec === "cantmiss").length}</div>
+            <div style={{ fontSize: 9, fontWeight: 600, color: "#999" }}>must-sees</div>
+          </div>
         </div>
-        <button onClick={() => sShareView(true)} style={{ width: "100%", padding: 12, borderRadius: 12, border: "none", background: "#0B4D3B", color: "#fff", fontSize: 13, fontWeight: 700, cursor: "pointer", marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>📤 Shareable Summary</button>
+        {/* Day-by-day timeline */}
         {days.map((day, di) => {
           const items = cal[day.date] || [];
           const meta = DAY_META[day.date] || {};
           return (
-            <button key={day.date} onClick={() => { onJump(di); onClose(); }} style={{ width: "100%", textAlign: "left", padding: "10px 14px", borderRadius: 14, border: "none", background: items.length > 0 ? "#fff" : "#fafafa", marginBottom: 5, cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,0.04)" }}>
-              <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
-                <div style={{ width: 44, textAlign: "center", flexShrink: 0 }}>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa" }}>{day.wd}</div>
-                  <div style={{ fontSize: 14, fontWeight: 800 }}>{day.md}</div>
+            <div key={day.date} style={{ marginBottom: 14 }}>
+              <button onClick={() => { onJump(di); onClose(); }} style={{ width: "100%", background: "#1B3B32", borderRadius: 12, padding: "10px 14px", color: "#fff", marginBottom: 6, border: "none", cursor: "pointer", textAlign: "left", position: "relative", overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: -10, right: -10, fontSize: 50, opacity: 0.06, lineHeight: 1 }}>{meta.icon || "📅"}</div>
+                <div style={{ position: "relative" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    <div>
+                      <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: 1 }}>Day {day.num} · {day.wd}</div>
+                      <div style={{ fontSize: 15, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", marginTop: 2 }}>{meta.icon} {meta.theme}</div>
+                    </div>
+                    <div style={{ textAlign: "right", flexShrink: 0 }}>
+                      <div style={{ fontSize: 16, fontWeight: 800, lineHeight: 1 }}>{day.md.split(" ")[1]}</div>
+                      <div style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>{day.md.split(" ")[0]}</div>
+                    </div>
+                  </div>
+                  {meta.location && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 3 }}>📍 {meta.location} · {items.length} {items.length === 1 ? "stop" : "stops"} · tap to jump →</div>}
                 </div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  {meta.theme && <div style={{ fontSize: 12, fontWeight: 800, color: "#0B4D3B", marginBottom: 2 }}>{meta.icon} {meta.theme}</div>}
-                  {meta.location && <div style={{ fontSize: 10, color: "#999", marginBottom: 4 }}>📍 {meta.location}</div>}
-                  {items.map((item, ii) => {
-                    const mod = mods.find(m => m.id === item.modId);
-                    if (!mod) return null;
-                    const ct = CATS.find(c => c.id === mod.category);
-                    return <div key={ii} style={{ fontSize: 11, color: "#555", padding: "1px 0", display: "flex", alignItems: "center", gap: 4, overflow: "hidden" }}><span style={{ fontSize: 10, color: "#aaa", fontWeight: 600, width: 38, flexShrink: 0 }}>{item.startTime}</span><span style={{ fontSize: 10 }}>{mod.icon || ct?.icon}</span><span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{mod.name}</span></div>;
-                  })}
-                  {items.length === 0 && <div style={{ fontSize: 11, color: "#ddd" }}>No activities planned</div>}
-                </div>
-                <div style={{ fontSize: 11, color: items.length > 0 ? "#0B4D3B" : "#ddd", fontWeight: 700, flexShrink: 0 }}>{items.length}</div>
-              </div>
-            </button>
+              </button>
+              {items.length === 0 && <div style={{ fontSize: 11, color: "#ccc", padding: "2px 14px" }}>Free day</div>}
+              {items.map((item, ii) => {
+                const mod = mods.find(m => m.id === item.modId);
+                if (!mod) return null;
+                const ct = CATS.find(c => c.id === mod.category);
+                return (
+                  <div key={ii} style={{ display: "flex", gap: 8, padding: "3px 4px", alignItems: "center" }}>
+                    <div style={{ width: 44, flexShrink: 0, textAlign: "right" }}>
+                      <span style={{ fontSize: 11, fontWeight: 700, color: "#555" }}>{fmtTime(item.startTime)}</span>
+                    </div>
+                    <div style={{ width: 3, flexShrink: 0, background: ct?.color || "#ddd", borderRadius: 2, alignSelf: "stretch", minHeight: 20 }} />
+                    <div style={{ flex: 1, minWidth: 0 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700 }}>{mod.icon || ct?.icon} {mod.name}</span>
+                      {item.duration > 0 && <span style={{ fontSize: 9, color: "#aaa", marginLeft: 6 }}>{fmtDur(item.duration)}</span>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           );
         })}
       </div>
@@ -1644,25 +1619,34 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
   const totalActivities = Object.values(cal).reduce((n, items) => n + (Array.isArray(items) ? items.length : 0), 0);
 
   return (
-    <div style={{ padding: "16px 16px 100px" }}>
-      {/* Top row — two compact cards */}
+    <div style={{ padding: "0 0 100px" }}>
+      {/* Trip hero banner */}
+      <div style={{ background: "#1B3B32", padding: "20px 20px 16px", marginBottom: 12 }}>
+        <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Playfair Display',Georgia,serif", color: "#fff", lineHeight: 1.1 }}>{trip?.name || "Panama 2026"}</div>
+        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 4 }}>{trip?.subtitle || ""} · 📅 {days[0]?.md} — {days[days.length-1]?.md}</div>
+      </div>
+
+      <div style={{ padding: "0 16px" }}>
+      {/* Two action cards */}
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
-        {/* Discover Panama — compact */}
-        <button onClick={() => { sShowAbout(true); if (onOverlayChange) onOverlayChange("explore"); }} style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 14, border: "none", cursor: "pointer", height: 80, display: "block", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
-          <img src="https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=300&h=160&fit=crop" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.75), rgba(33,147,176,0.6))" }} />
-          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
-            <span style={{ fontSize: 20 }}>🇵🇦</span>
-            <span style={{ fontSize: 12, fontWeight: 800, color: "#fff", marginTop: 2 }}>Discover Panama</span>
+        {/* Discover Panama */}
+        <button onClick={() => { sShowAbout(true); if (onOverlayChange) onOverlayChange("explore"); }} style={{ flex: 1, position: "relative", overflow: "hidden", borderRadius: 16, border: "none", cursor: "pointer", height: 100, display: "block", boxShadow: "0 2px 10px rgba(0,0,0,0.1)" }}>
+          <img src="https://images.unsplash.com/photo-1566140967404-b8b3932483f5?w=400&h=200&fit=crop" alt="" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(135deg, rgba(11,77,59,0.8), rgba(33,147,176,0.65))" }} />
+          <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 10 }}>
+            <span style={{ fontSize: 24 }}>🇵🇦</span>
+            <span style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 3 }}>Discover Panama</span>
+            <span style={{ fontSize: 9, color: "rgba(255,255,255,0.6)", marginTop: 1 }}>Learn more →</span>
           </div>
         </button>
-        {/* Trip progress — compact */}
-        <button onClick={() => onShowOverview && onShowOverview()} style={{ flex: 1, background: "#FEFDFB", borderRadius: 14, border: "1px solid #eee", cursor: "pointer", height: 80, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "8px 12px" }}>
-          <div style={{ fontSize: 22, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}<span style={{ fontSize: 12, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
+        {/* Trip progress */}
+        <button onClick={() => onShowOverview && onShowOverview()} style={{ flex: 1, background: "#FEFDFB", borderRadius: 16, border: "1px solid #eee", cursor: "pointer", height: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "10px 12px" }}>
+          <div style={{ fontSize: 26, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}<span style={{ fontSize: 13, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
           <div style={{ fontSize: 10, fontWeight: 700, color: "#888", marginTop: 2 }}>days planned</div>
-          <div style={{ width: "80%", height: 4, borderRadius: 2, background: "#eee", overflow: "hidden", marginTop: 4 }}>
-            <div style={{ height: "100%", borderRadius: 2, background: "#0B4D3B", width: Math.round(plannedDays / days.length * 100) + "%" }} />
+          <div style={{ width: "80%", height: 5, borderRadius: 3, background: "#eee", overflow: "hidden", marginTop: 5 }}>
+            <div style={{ height: "100%", borderRadius: 3, background: "#0B4D3B", width: Math.round(plannedDays / days.length * 100) + "%" }} />
           </div>
+          <span style={{ fontSize: 9, color: "#aaa", marginTop: 3 }}>{totalActivities} activities · View overview →</span>
         </button>
       </div>
 
@@ -1866,6 +1850,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
           onClose={() => sEditMod(undefined)}
         />
       )}
+      </div>
     </div>
   );
 };
