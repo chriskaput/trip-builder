@@ -720,7 +720,7 @@ const Welcome = ({ trip, days, occ, mods, cal, onStart, onJump }) => {
   return (
     <div style={{ fontFamily: "'DM Sans',-apple-system,sans-serif", minHeight: "100vh", position: "relative", overflow: "hidden", maxWidth: 430, margin: "0 auto", background: "#0f1923" }}>
       <style>{`@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800;900&display=swap");`}</style>
-      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}} @keyframes popIn{0%{transform:scale(0.9);opacity:0}50%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}} @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}} @keyframes slotFill{0%{background:#E8F5E9;transform:scale(0.98)}100%{background:#FEFDFB;transform:scale(1)}} @keyframes bgFade{from{opacity:0}to{opacity:1}} @keyframes heroZoom{from{transform:scale(1.15);opacity:0}to{transform:scale(1);opacity:1}} @keyframes splashIn{0%{opacity:0;transform:scale(0.7)}30%{opacity:1;transform:scale(1.02)}100%{opacity:1;transform:scale(1)}} @keyframes labelAppear{from{opacity:0;letter-spacing:6px}to{opacity:1;letter-spacing:2px}} @keyframes titleRise{from{opacity:0;transform:translateY(40px) scale(0.92)}to{opacity:1;transform:none}} @keyframes subtitleFade{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}} @keyframes btnPop{from{opacity:0;transform:translateY(30px) scale(0.9)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
+      <style>{`@keyframes hf{from{opacity:0}to{opacity:1}} @keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes si{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}} @keyframes popIn{0%{transform:scale(0.9);opacity:0}50%{transform:scale(1.03)}100%{transform:scale(1);opacity:1}} @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}} @keyframes slotFill{0%{background:#E8F5E9;transform:scale(0.98)}100%{background:#FEFDFB;transform:scale(1)}} @keyframes bgFade{from{opacity:0}to{opacity:1}} @keyframes heroZoom{from{transform:scale(1.15);opacity:0}to{transform:scale(1);opacity:1}} @keyframes splashIn{0%{opacity:0;transform:scale(0.7)}30%{opacity:1;transform:scale(1.02)}100%{opacity:1;transform:scale(1)}} @keyframes labelAppear{from{opacity:0;letter-spacing:6px}to{opacity:1;letter-spacing:2px}} @keyframes titleRise{from{opacity:0;transform:translateY(40px) scale(0.92)}to{opacity:1;transform:none}} @keyframes subtitleFade{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:none}} @keyframes btnPop{from{opacity:0;transform:translateY(30px) scale(0.9)}to{opacity:1;transform:none}} @keyframes pulse{0%,100%{transform:scale(1);box-shadow:0 4px 16px rgba(11,77,59,0.35)}50%{transform:scale(1.1);box-shadow:0 6px 24px rgba(11,77,59,0.5)}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
       {/* Cinematic splash overlay — dissolves into the main page */}
       {splashPhase !== "done" && (
@@ -2221,23 +2221,30 @@ export default function App() {
       {/* AI Trip Assistant — chat (root level, accessible from both tabs) */}
       {/* Floating AI assistant button — only on overlay/detail screens where tab bar is hidden */}
       {!showAssist && (showOv || showInfo || eventDetail || overlayOpen) && (
-        <button onClick={() => openAssist(showInfo ? "practical" : showOv ? "overview" : eventDetail ? "experience" : overlayOpen || "general")} style={{
-          position: "fixed", bottom: 20, right: 16, width: 48, height: 48, borderRadius: 24,
-          background: "rgba(27,59,50,0.92)", backdropFilter: "blur(12px)", border: "none",
-          boxShadow: "0 4px 16px rgba(11,77,59,0.35)", cursor: "pointer", zIndex: 400,
-          display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
-        }}>🤖</button>
+        <div style={{ position: "fixed", bottom: 20, right: 16, zIndex: 400 }}>
+          {!localStorage.getItem("tb_assist_used") && <div style={{ position: "absolute", bottom: 54, right: 0, background: "#1B3B32", color: "#fff", fontSize: 10, fontWeight: 700, padding: "6px 10px", borderRadius: 8, whiteSpace: "nowrap", boxShadow: "0 2px 8px rgba(0,0,0,0.2)", animation: "fi 0.5s ease-out 1s both" }}>
+            Ask me anything! 👋
+            <div style={{ position: "absolute", bottom: -5, right: 18, width: 10, height: 10, background: "#1B3B32", transform: "rotate(45deg)" }} />
+          </div>}
+          <button onClick={() => { openAssist(showInfo ? "practical" : showOv ? "overview" : eventDetail ? "experience" : overlayOpen || "general"); try { localStorage.setItem("tb_assist_used", "1"); } catch {} }} style={{
+            width: 48, height: 48, borderRadius: 24,
+            background: "rgba(27,59,50,0.92)", backdropFilter: "blur(12px)", border: "none",
+            boxShadow: "0 4px 16px rgba(11,77,59,0.35)", cursor: "pointer",
+            display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20,
+            animation: !localStorage.getItem("tb_assist_used") ? "pulse 2s ease-in-out infinite" : "none",
+          }}>🤖</button>
+        </div>
       )}
 
       {/* AI Trip Assistant — context-aware chat panel */}
       {showAssist && (() => {
         const ctxPrompts = {
           general: { title: "Trip Assistant", sub: "I know your full itinerary, all experiences, and Panama inside out.", prompts: ["What should we do on a free day?", "Best restaurants for a special dinner?", "What's great with kids in our itinerary?", "What's the weather like in late March?"] },
-          practical: { title: "Travel Questions", sub: "Ask me about getting around, safety, currency, or anything practical.", prompts: ["How do we get from the airport to our hotel?", "Is Uber reliable in Panama?", "Any safety tips for Casco Viejo?", "What SIM card should we get?"] },
-          overview: { title: "Planning Help", sub: "I can see your full trip — let me help you optimize it.", prompts: ["Which days are too packed?", "Any must-sees we're missing?", "Suggest a good order for Day 3", "What should we do on empty days?"] },
-          explore: { title: "Discover More", sub: "Ask me about any experience or get personalized recommendations.", prompts: ["What's the best ceviche spot?", "Where should we watch the sunset?", "Compare Mangle vs Boticario", "Best experiences for my parents?"] },
-          itinerary: { title: "Itinerary Help", sub: "I can help you fine-tune your day-by-day plan.", prompts: ["Is this day too busy?", "What should we do in the evening?", "Best order for today's activities?", "Suggest something nearby for lunch"] },
-          experience: { title: "About This Place", sub: "Ask me anything about the experience you're viewing.", prompts: ["Do we need a reservation?", "Is it good for toddlers?", "What should we order?", "How long should we spend here?"] },
+          practical: { title: "Trip Assistant", sub: "Ask me about getting around, safety, currency, or anything practical.", prompts: ["How do we get from the airport to our hotel?", "Is Uber reliable in Panama?", "Any safety tips for Casco Viejo?", "What SIM card should we get?"] },
+          overview: { title: "Trip Assistant", sub: "I can see your full trip — let me help you optimize it.", prompts: ["Which days are too packed?", "Any must-sees we're missing?", "Suggest a good order for Day 3", "What should we do on empty days?"] },
+          explore: { title: "Trip Assistant", sub: "Ask me about any experience or get personalized recommendations.", prompts: ["What's the best ceviche spot?", "Where should we watch the sunset?", "Compare Mangle vs Boticario", "Best experiences for my parents?"] },
+          itinerary: { title: "Trip Assistant", sub: "I can help you fine-tune your day-by-day plan.", prompts: ["Is this day too busy?", "What should we do in the evening?", "Best order for today's activities?", "Suggest something nearby for lunch"] },
+          experience: { title: "Trip Assistant", sub: "Ask me anything about the experience you're viewing.", prompts: ["Do we need a reservation?", "Is it good for toddlers?", "What should we order?", "How long should we spend here?"] },
         };
         const ctx = ctxPrompts[assistCtx] || ctxPrompts.general;
         return (
@@ -2290,31 +2297,63 @@ export default function App() {
                 if (e.key !== "Enter" || !assistInput.trim() || assistLoading) return;
                 const q = assistInput.trim(); sAssistInput("");
                 const nm = [...assistMsgs, { role: "user", text: q }]; sAssistMsgs(nm); sAssistLoading(true);
-                // Smart pre-generated responses — keyword matching
-                const ql = q.toLowerCase();
-                const responses = [
-                  { keys: ["weather", "climate", "hot", "rain", "temperature"], text: "Late March/early April is the end of dry season — expect 32-34°C in Panama City. It's hot and humid, so schedule outdoor activities before 10 AM or after 3:30 PM. El Valle de Antón (Day 4-5) is noticeably cooler at 600m elevation. Bring sunscreen, hats, and a light layer for AC indoors." },
-                  { keys: ["toddler", "kianu", "kid", "child", "baby"], text: "Kianu joins on Day 9 (Monday). The morning is flexible — parents can rest while you pick him up from school. Lunch at Sassi is right next to the school. Afternoon at home together, no pressure. If energy allows, Parque Natural Metropolitano has easy trails (El Roble: 0.7km, 30 min) where you might spot sloths and monkeys." },
-                  { keys: ["restaurant", "dinner", "eat", "food", "lunch"], text: "The highlight meals: Don Caimán for riverside lunch after Monkey Island (Day 3), Maito for the splurge dinner (Day 7 — book NOW, Easter weekend!), Mercado de Mariscos for the freshest ceviche (Day 8), and La Pulpería with Karyna's parents (Day 9). For casual, Gamboa Bakery (Day 7) and Sassi (Day 9) are solid." },
-                  { keys: ["canal", "miraflores", "lock", "ship"], text: "Canal Day is Tuesday Mar 31. Morning: Monkey Island boat tour (depart 6:30 AM from Gamboa, 4 hours). Afternoon: Miraflores Visitor Center — watch the IMAX film first (Morgan Freeman narration), then the viewing platform for the afternoon transit window from ~2 PM. Museum exhibits are closed for renovation, but the viewing platform + IMAX are worth it. ~$17/adult." },
-                  { keys: ["valle", "mountain", "hike", "waterfall", "e-bike", "bike"], text: "El Valle de Antón is Days 4-5. Day 4: drive from the city (~2.5 hrs), stop in Bejuco, then e-bikes around town — Butterfly Haven, Orchid Nursery, sunset at Cerro La Cruz. Day 5: early morning Cerro La Silla ridge hike (360° views, easy trail), then Chorro El Macho waterfall with a swimming hole. Bring swimwear! Optional hot springs in the afternoon." },
-                  { keys: ["casco", "viejo", "historic", "old town", "easter"], text: "Casco Viejo is Day 8 (Easter Sunday). Self-guided walk ~2km: Plaza Herrera → Cathedral → Plaza Bolívar → Plaza de Francia → Paseo Esteban Huertas along the old wall. Churches will be open with possible processions. Comfortable shoes for cobblestones, modest dress for churches. After the walk, Mercado de Mariscos for ceviche." },
-                  { keys: ["uber", "taxi", "transport", "drive", "airport", "getting"], text: "Chris drives the whole trip in the Outback — handles all roads including El Valle access roads. From the airport to Ciudad del Saber is ~40 min. For backup, Uber works well in Panama City and is cheap. Gas up before leaving the Pan-American Highway for rural areas — no stations on the Bejuco-Sorá road." },
-                  { keys: ["safe", "safety", "danger", "crime"], text: "Panama City is generally safe, especially in Casco Viejo, banking district, and tourist areas. Normal precautions — don't flash valuables. Avoid Curundú and El Chorrillo neighborhoods. Tourist police are present in Casco Viejo. Uber is the safest option at night." },
-                  { keys: ["book", "reserv", "advance", "maito"], text: "Three bookings needed: 1) Monkey Island tour (Tue Mar 31) — Panama Road Trips or Almiza Tours, AM slot. 2) Maito dinner (Sat Apr 4) — reserve NOW, Easter weekend fills up. 3) La Pulpería (Mon Apr 6) — reserve for dinner with Karyna's parents." },
-                  { keys: ["pack", "bring", "clothes", "what to"], text: "Pack: light breathable clothing, reef-safe sunscreen SPF 50+, comfortable walking shoes, light rain jacket (El Valle evenings get cool), hat and sunglasses, insect repellent (DEET), light layer for AC (restaurants are freezing), swimwear for Chorro El Macho waterfall, reusable water bottle." },
-                  { keys: ["money", "currency", "tip", "cost", "budget", "dollar"], text: "USD is the currency — no need to exchange anything. Tip 10-15% at restaurants. Budget estimates per person: Monkey Island tour $30-60, Miraflores $17, Biomuseo $16 (senior non-resident), Maito dinner $60-100, most other meals $12-35/pp. Many activities are $5 entry." },
-                  { keys: ["day 1", "arrival", "march 29", "first day"], text: "Day 1 (Sun Mar 29): Chris picks you up at Tocumen Airport in the afternoon. ~40 min drive to Ciudad del Saber. Light dinner at home — no agenda, just decompress and meet Django the dog. Palm Sunday events happening in Casco Viejo if you're curious." },
-                  { keys: ["flexible", "free", "nothing", "rest", "day off"], text: "Day 9 (Mon Apr 6) is the flexible day. Morning is completely free — rest at home, garden time with Django. Kianu joins at noon. Lunch at Sassi, visit Karyna's ice cream shop. Optional: Parque Natural Metropolitano or Panama Viejo ruins in the late afternoon. Dinner at La Pulpería with the family." },
-                  { keys: ["biomuseo", "gehry", "museum", "amador"], text: "Biomuseo is on Day 7 (Sat Apr 4). Frank Gehry's only Latin American building — eight galleries on Panama's biodiversity, air-conditioned. Botanical gardens outside. $16/senior with proof of age. Budget 2 hours. Combine with Punta Culebra (Smithsonian marine center, ~$8, 1 hour) and a drive along the Amador Causeway." },
-                  { keys: ["monkey", "gamboa", "boat", "animal", "wildlife"], text: "Monkey Island is Day 3 (Tue Mar 31). Depart 6:30-7 AM, drive ~45 min to Gamboa. Cruise Gatun Lake alongside cargo ships. Visit monkey islands — capuchins, howlers, tamarins. Also toucans, herons, kingfishers, possibly crocodiles. ~4 hours total. Book in advance via Panama Road Trips or Almiza Tours." },
-                ];
-                const match = responses.find(r => r.keys.some(k => ql.includes(k)));
-                const fallback = "I can help with questions about the itinerary, restaurants, activities, weather, packing, transport, safety, and bookings. Try asking about specific days, places, or practical details!";
-                setTimeout(() => {
-                  sAssistMsgs([...nm, { role: "assistant", text: match ? match.text : fallback }]);
-                  sAssistLoading(false);
-                }, 600);
+                // Build context for the AI
+                const allPlanned = []; 
+                Object.entries(cal).forEach(([date, items]) => { 
+                  if (Array.isArray(items)) {
+                    const meta = DAY_META[date] || {};
+                    const dayLabel = days.find(d => d.date === date);
+                    items.forEach(item => { 
+                      const m = mods.find(x => x.id === item.modId); 
+                      if (m) allPlanned.push(`${dayLabel?.wd || ""} ${dayLabel?.md || ""} ${item.startTime}: ${m.name} (${m.vibe}) — ${m.notes?.split(".")[0]}`); 
+                    }); 
+                  }
+                });
+                const expList = mods.filter(m => !["home","custom"].includes(m.category)).map(m => `${m.name}: ${m.vibe}. ${m.notes?.split(".").slice(0,2).join(".")}. Cost: ${m.cost || "N/A"}. Address: ${m.address || "N/A"}.`).join("\n");
+                
+                const sysPrompt = `You are a friendly, knowledgeable trip assistant / tour guide for a Panama trip (March 29 – April 7, 2026). 
+
+TRIP CONTEXT:
+- Travelers: Parents (early 70s) visiting their son Chris in Panama. Sometimes joined by 2.5-year-old toddler Kianu.
+- Chris drives a Subaru Outback and lives in Ciudad del Saber, Clayton.
+- Three blocks: City orientation + Canal (Days 1-3), El Valle nature escape (Days 4-6), Easter weekend in Panama City (Days 7-10).
+- Currency: USD. Language: Spanish (English widely understood in tourist areas).
+- Weather: End of dry season, 32-34°C, humid. El Valle is cooler (600m elevation).
+
+CURRENT ITINERARY:
+${allPlanned.join("\n")}
+
+ALL AVAILABLE EXPERIENCES:
+${expList}
+
+GUIDELINES:
+- Be warm, concise (under 150 words), and specific.
+- Reference the actual itinerary when relevant.
+- Give practical tips: times, costs, what to wear, what to book.
+- If asked about a specific experience, give insider-level detail.
+- If asked about a day, summarize what's planned and suggest optimizations.
+- You're like a knowledgeable local friend, not a generic chatbot.`;
+
+                // Call Anthropic API via artifact system
+                fetch("https://api.anthropic.com/v1/messages", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    model: "claude-sonnet-4-20250514",
+                    max_tokens: 1000,
+                    system: sysPrompt,
+                    messages: [...nm.map(m => ({ role: m.role, content: m.text }))],
+                  })
+                })
+                  .then(r => r.json())
+                  .then(d => {
+                    const text = d.content?.map(b => b.type === "text" ? b.text : "").join("") || "Sorry, I couldn't generate a response.";
+                    sAssistMsgs([...nm, { role: "assistant", text }]);
+                  })
+                  .catch(() => {
+                    sAssistMsgs([...nm, { role: "assistant", text: "Couldn't connect to the assistant. Check your internet connection and try again." }]);
+                  })
+                  .finally(() => sAssistLoading(false));
               }} style={{ ...IS, fontSize: 14, padding: "12px 16px" }} />
               <button onClick={() => { document.querySelector("input[placeholder='Ask about Panama...']")?.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true })); }} style={{ padding: "12px 18px", borderRadius: 12, border: "none", background: "#1B3B32", color: "#fff", fontWeight: 700, fontSize: 16, cursor: "pointer", flexShrink: 0 }}>→</button>
             </div>
