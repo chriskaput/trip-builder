@@ -103,12 +103,12 @@ const MODS = [
 
   // ═══ ACTIVITIES — PANAMA CITY ═══
   { id:"a1", name:"Miraflores Visitor Center", category:"activity", icon:"🚢", vibe:"Canal & IMAX", notes:"Watch massive ships transit the locks from the viewing platform. The IMAX film (45 min, Morgan Freeman narration) is excellent — watch it first, then head to the platform for the afternoon transit window (from ~2 PM). Museum exhibits currently closed for renovation — only viewing platform + IMAX open. Still the closest view of the Canal anywhere. ~$17/adult. Budget 1.5–2 hours.", rec:"cantmiss", mapsRating:4.6, mapsReviews:"18K", bookingUrl:"https://visitcanaldepanama.com", hours:"Daily 8AM–5PM, IMAX screenings hourly", address:"Miraflores Locks", tier:"curated", cost:"~$17/adult", tags:["indoor","history","iconic"], photo:"/photos/a1.webp", thumb:"/photos/a1_thumb.webp" },
-  { id:"a2", name:"Amador Causeway", category:"activity", icon:"🚗", vibe:"Scenic Drive", notes:"A scenic road connecting three islands at the Pacific Canal entrance. Drive along with stunning views — skyline on one side, Canal on the other. Bridge of the Americas, ships queuing for the Canal. Biomuseo and Punta Culebra are both here. Best late afternoon when the light is golden.", rec:"recommended", mapsRating:4.2, mapsReviews:"1.8K", hours:"Open 24hrs", address:"Amador Causeway", tier:"curated", cost:"Free", tags:["sunset","scenic"], photo:"/photos/a2.webp", thumb:"/photos/a2_thumb.webp" },
+  { id:"a2", name:"Amador Causeway", category:"activity", icon:"🚗", vibe:"Scenic Drive", notes:"A scenic road connecting three islands at the Pacific Canal entrance. Drive along with stunning views — skyline on one side, Canal on the other. Bridge of the Americas, ships queuing for the Canal. Biomuseo and Punta Culebra are both here. Best late afternoon when the light is golden.", rec:"recommended", mapsRating:4.2, mapsReviews:"1.8K", hours:"Open 24hrs", address:"Amador Causeway", tier:"curated", cost:"Free", tags:["sunset","scenic","great-with-kids"], photo:"/photos/a2.webp", thumb:"/photos/a2_thumb.webp" },
   { id:"a4", name:"Parque Natural Metropolitano", category:"activity", icon:"🌳", vibe:"Urban Rainforest", notes:"265-hectare tropical rainforest right inside the city. Easy trails (El Roble: 0.7 km, 30 min) or moderate (Mono Titi to mirador: ~50 min up). Spot sloths, monkeys, toucans. A unique experience you can't get in any other capital city. Go early morning for best wildlife. $5 adults, $3 children.", rec:"recommended", mapsRating:4.3, mapsReviews:"3.1K", hours:"Daily 6AM–5PM", address:"Av. Juan Pablo II", tier:"curated", cost:"$5 adults / $3 children", tags:["great-with-kids","nature"], photo:"/photos/a4.webp", thumb:"/photos/a4_thumb.webp" },
   { id:"a5", name:"Casco Viejo Walking Tour", category:"activity", icon:"🏛️", vibe:"Historic Walk", notes:"Self-guided ~2 km walk through Panama's UNESCO-listed historic quarter, flat cobblestone. Easter Sunday atmosphere: churches open, possible procession. Route: Plaza Herrera → Plaza de la Independencia (Metropolitan Cathedral) → Plaza Bolívar → Plaza de Francia → Paseo Esteban Huertas along the old defensive wall. Comfortable shoes for cobblestones. Modest dress for churches.", rec:"recommended", mapsRating:4.1, mapsReviews:"340", hours:"Best 8–11AM", address:"Plaza de la Independencia", tier:"curated", cost:"Free", tags:["history","walking","culture"], photo:"" },
-  { id:"a6", name:"Monkey Island Boat Tour", category:"activity", icon:"🐒", vibe:"Wildlife & Canal", notes:"Cruise Gatun Lake alongside cargo ships on the Panama Canal. Visit monkey islands — capuchins, howlers, tamarins. Also toucans, herons, kingfishers, possibly crocodiles. Small group, ~4 hours including transport. Depart early (6:30–7:00 AM) from Gamboa for best wildlife. Book in advance — Panama Road Trips or Almiza Tours.", rec:"cantmiss", mapsRating:4.6, mapsReviews:"800", bookingUrl:"https://www.panamaroadtrips.com", hours:"AM departure, ~4 hours", address:"Gamboa", tier:"curated", cost:"$30–60/pp", tags:["nature","adventure"], photo:"/photos/a6.webp", thumb:"/photos/a6_thumb.webp" },
+  { id:"a6", name:"Monkey Island Boat Tour", category:"activity", icon:"🐒", vibe:"Wildlife & Canal", notes:"Cruise Gatun Lake alongside cargo ships on the Panama Canal. Visit monkey islands — capuchins, howlers, tamarins. Also toucans, herons, kingfishers, possibly crocodiles. Small group, ~4 hours including transport. Depart early (6:30–7:00 AM) from Gamboa for best wildlife. Book in advance — Panama Road Trips or Almiza Tours.", rec:"cantmiss", mapsRating:4.6, mapsReviews:"800", bookingUrl:"https://www.panamaroadtrips.com", hours:"AM departure, ~4 hours", address:"Gamboa", tier:"curated", cost:"$30–60/pp", tags:["nature","adventure","great-with-kids"], photo:"/photos/a6.webp", thumb:"/photos/a6_thumb.webp" },
   { id:"a8", name:"Panama Viejo Ruins", category:"activity", icon:"🏚️", vibe:"Historic Ruins", notes:"The original Panama City, destroyed by pirate Henry Morgan in 1671. UNESCO World Heritage Site. Outdoor walk through the ruins, ~45 min. Stone tower, cathedral remains, and a small museum. Good for a morning visit. Option for Monday or Tuesday.", rec:"worthit", mapsRating:4.3, mapsReviews:"4.5K", hours:"Tue–Sun 8:30AM–4:30PM", address:"Vía Cincuentenario", tier:"extended", cost:"$15 adults", tags:["history","walking"], photo:"/photos/a8.webp", thumb:"/photos/a8_thumb.webp" },
-  { id:"a9", name:"Parque Kiwanis Walk", category:"wellness", icon:"🌿", vibe:"Park & Walk", notes:"Flat, shaded park perfect for a gentle late-afternoon walk. Easy and relaxed — a good first-day option while parents are still adjusting after the flight. No elevation, plenty of shade, nice green space.", rec:"worthit", mapsRating:4.0, mapsReviews:"120", hours:"Daily 6AM–8PM", address:"Clayton, near Ciudad del Saber", tier:"extended", cost:"Free", tags:["walking"], photo:"/photos/a9.webp", thumb:"/photos/a9_thumb.webp" },
+  { id:"a9", name:"Parque Kiwanis Walk", category:"wellness", icon:"🌿", vibe:"Park & Walk", notes:"Flat, shaded park perfect for a gentle late-afternoon walk. Easy and relaxed — a good first-day option while parents are still adjusting after the flight. No elevation, plenty of shade, nice green space.", rec:"worthit", mapsRating:4.0, mapsReviews:"120", hours:"Daily 6AM–8PM", address:"Clayton, near Ciudad del Saber", tier:"extended", cost:"Free", tags:["walking","great-with-kids"], photo:"/photos/a9.webp", thumb:"/photos/a9_thumb.webp" },
   { id:"a10", name:"City Orientation Drive", category:"custom", icon:"🚗", vibe:"Sightseeing Drive", notes:"Drive parents around the city: Cinta Costera waterfront, skyline views, Marbella area. Show them Karyna's ice cream shop. A gentle introduction to Panama City — no walking, just driving and pointing. Drop Kianu at school first.", rec:"worthit", mapsRating:0, mapsReviews:"", hours:"Morning", address:"Panama City", tier:"extended", cost:"Free", tags:[], photo:"/photos/a10.webp", thumb:"/photos/a10_thumb.webp" },
 
   // ═══ CULTURE ═══
@@ -623,11 +623,18 @@ const Overview = ({ days, occ, mods, cal, onClose, onJump, trip }) => {
         {days.map((day, di) => {
           const items = cal[day.date] || [];
           const meta = DAY_META[day.date] || {};
+          // Find best photo for this day — first item with a photo
+          const heroMod = items.map(item => mods.find(m => m.id === item.modId)).find(m => m && m.photo);
           return (
             <div key={day.date} style={{ marginBottom: 14 }}>
-              <button onClick={() => { onJump(di); onClose(); }} style={{ width: "100%", background: "#1B3B32", borderRadius: 12, padding: "10px 14px", color: "#fff", marginBottom: 6, border: "none", cursor: "pointer", textAlign: "left", position: "relative", overflow: "hidden" }}>
-                <div style={{ position: "absolute", top: -10, right: -10, fontSize: 50, opacity: 0.06, lineHeight: 1 }}>{meta.icon || "📅"}</div>
-                <div style={{ position: "relative" }}>
+              <button onClick={() => { onJump(di); onClose(); }} style={{ width: "100%", background: "#1B3B32", borderRadius: 12, color: "#fff", marginBottom: 6, border: "none", cursor: "pointer", textAlign: "left", position: "relative", overflow: "hidden", display: "flex", minHeight: 76 }}>
+                {/* Photo strip on right */}
+                {heroMod && <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "28%", overflow: "hidden" }}>
+                  <img src={heroMod.photo} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                  <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, #1B3B32 0%, rgba(27,59,50,0.3) 60%, transparent 100%)" }} />
+                </div>}
+                {/* Text content */}
+                <div style={{ flex: 1, padding: "10px 14px", position: "relative", paddingRight: heroMod ? "30%" : 14 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                     <div>
                       <div style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: 1 }}>Day {day.num} · {day.wd}</div>
@@ -638,7 +645,7 @@ const Overview = ({ days, occ, mods, cal, onClose, onJump, trip }) => {
                       <div style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>{day.md.split(" ")[0]}</div>
                     </div>
                   </div>
-                  {meta.location && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 3 }}>📍 {meta.location} · {items.length} {items.length === 1 ? "stop" : "stops"} · tap to jump →</div>}
+                  {meta.location && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)", marginTop: 3 }}>📍 {meta.location} · {items.length} {items.length === 1 ? "stop" : "stops"}</div>}
                 </div>
               </button>
               {items.length === 0 && <div style={{ fontSize: 11, color: "#ccc", padding: "2px 14px" }}>Free day</div>}
@@ -1377,7 +1384,6 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
   const filtered = (() => {
     if (filterCat === "_events") {
-      // Show events as experience cards
       const tripDays = days.map(d => d.date);
       return events.filter(ev => {
         const start = ev.date;
@@ -1386,8 +1392,10 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
       }).map(ev => ({ ...ev, duration: 1, tier: "curated", mapsRating: 0, tags: [], rec: "recommended" }));
     }
     return mods.filter(m => {
-      if (filterCat === "_picks") { if (m.tier !== "curated") return false; }
-      else if (filterCat !== "all" && m.category !== filterCat) return false;
+      if (filterCat === "_picks") { if (m.rec !== "cantmiss") return false; }
+      else if (filterCat === "_kids") { if (!(m.tags || []).includes("great-with-kids")) return false; }
+      else if (filterCat === "nature") { if (m.category !== "nature" && !(m.tags || []).includes("nature")) return false; }
+      else if (filterCat !== "all" && filterCat[0] !== "_" && m.category !== filterCat) return false;
       if (filterTags.length > 0 && (!m.tags || !filterTags.some(t => m.tags.includes(t)))) return false;
       if (search.trim()) {
         const q = search.toLowerCase();
@@ -1710,6 +1718,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
         <button onClick={() => { sFilter("all"); setFilterTags([]); }} style={{ flexShrink: 0, padding: "7px 14px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "all" && filterTags.length === 0 ? "#1a1a1a" : "#fff", color: filterCat === "all" && filterTags.length === 0 ? "#fff" : "#777", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>All</button>
         <button onClick={() => { sFilter(filterCat === "_picks" ? "all" : "_picks"); setFilterTags([]); }} style={{ flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "_picks" ? "#0B4D3B" : "#fff", color: filterCat === "_picks" ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>⭐ Chris's Picks</button>
         <button onClick={() => { sFilter(filterCat === "_events" ? "all" : "_events"); setFilterTags([]); }} style={{ flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "_events" ? "#E91E63" : "#fff", color: filterCat === "_events" ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>🎪 Events</button>
+        <button onClick={() => { sFilter(filterCat === "_kids" ? "all" : "_kids"); setFilterTags([]); }} style={{ flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer", background: filterCat === "_kids" ? "#FF9800" : "#fff", color: filterCat === "_kids" ? "#fff" : "#777", display: "flex", alignItems: "center", gap: 4, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>👶 Great with Kids</button>
         {CATS.filter(c => !["custom", "event", "home"].includes(c.id)).map(c => (
           <button key={c.id} onClick={() => { sFilter(filterCat === c.id ? "all" : c.id); setFilterTags([]); }} style={{
             flexShrink: 0, padding: "7px 12px", borderRadius: 10, border: "none", fontSize: 12, fontWeight: 700, cursor: "pointer",
