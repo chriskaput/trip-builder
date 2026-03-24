@@ -937,19 +937,18 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
       <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
       {/* Day strip */}
-      <div style={{ background: "linear-gradient(180deg, #1B3B32 0%, #244A3F 100%)", padding: "12px 16px 0" }}>
-        <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 1.5, marginBottom: 8 }}>📅 Itinerary</div>
-        <div ref={dRef} style={{ display: "flex", gap: 5, overflowX: "auto", paddingBottom: 12, WebkitOverflowScrolling: "touch" }}>
+      <div style={{ background: "#FEFDFB", padding: "10px 16px 0", borderBottom: "1px solid #eee" }}>
+        <div ref={dRef} style={{ display: "flex", gap: 5, overflowX: "auto", paddingBottom: 10, WebkitOverflowScrolling: "touch" }}>
           {days.map((day, i) => {
             const isA = i === aDay;
             const items = cal[day.date] || [];
             const filled = items.length;
             return (
-              <button key={day.date} onClick={() => sDay(i)} style={{ flexShrink: 0, padding: "7px 4px", width: 54, borderRadius: 12, border: "none", cursor: "pointer", background: isA ? "#fff" : filled > 0 ? "rgba(255,255,255,0.15)" : "rgba(255,255,255,0.08)", color: isA ? "#1B3B32" : "#fff", transition: "all 0.2s", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, boxShadow: isA ? "0 2px 10px rgba(0,0,0,0.2)" : "none" }}>
-                <span style={{ fontSize: 9, fontWeight: 700, opacity: isA ? 0.6 : 0.4 }}>{day.wd}</span>
+              <button key={day.date} onClick={() => sDay(i)} style={{ flexShrink: 0, padding: "7px 4px", width: 54, borderRadius: 12, border: isA ? "none" : "1.5px solid #eee", cursor: "pointer", background: isA ? "#1B3B32" : filled > 0 ? "#F7F6F3" : "#fff", color: isA ? "#fff" : "#333", transition: "all 0.2s", display: "flex", flexDirection: "column", alignItems: "center", gap: 2, boxShadow: isA ? "0 2px 10px rgba(27,59,50,0.3)" : "none" }}>
+                <span style={{ fontSize: 9, fontWeight: 700, opacity: 0.5 }}>{day.wd}</span>
                 <span style={{ fontSize: 13, fontWeight: 800, lineHeight: 1 }}>{day.md.split(" ")[1]}</span>
-                <span style={{ fontSize: 8, fontWeight: 600, opacity: isA ? 0.5 : 0.3 }}>{day.md.split(" ")[0]}</span>
-                {filled > 0 && <span style={{ fontSize: 8, fontWeight: 700, color: isA ? "#0B4D3B" : "rgba(255,255,255,0.5)" }}>{filled} stops</span>}
+                <span style={{ fontSize: 8, fontWeight: 600, opacity: 0.4 }}>{day.md.split(" ")[0]}</span>
+                {filled > 0 && <span style={{ fontSize: 8, fontWeight: 700, color: isA ? "rgba(255,255,255,0.7)" : "#0B4D3B" }}>{filled} stops</span>}
               </button>
             );
           })}
@@ -959,25 +958,25 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
       {/* Day content — scrollable */}
       <div style={{ padding: "0 16px 120px", background: "linear-gradient(180deg, #F2F1EE 0%, #CDD5CE 100%)", backgroundAttachment: "fixed", minHeight: "calc(100vh - 120px)" }}>
         
-        {/* Day header — prominent card */}
-        <div style={{ margin: "14px 0 14px", background: "#1B3B32", borderRadius: 18, padding: "18px 20px", color: "#fff", position: "relative", overflow: "hidden" }}>
+        {/* Day header — lighter card */}
+        <div style={{ margin: "14px 0 14px", background: "#FEFDFB", borderRadius: 18, padding: "16px 18px", border: "1.5px solid #1B3B3220", position: "relative", overflow: "hidden" }}>
           {/* Subtle pattern overlay */}
-          <div style={{ position: "absolute", top: -20, right: -20, fontSize: 80, opacity: 0.06, lineHeight: 1 }}>{meta.icon || "📅"}</div>
+          <div style={{ position: "absolute", top: -20, right: -20, fontSize: 80, opacity: 0.04, lineHeight: 1 }}>{meta.icon || "📅"}</div>
           <div style={{ position: "relative" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
               <div>
-                <div style={{ fontSize: 11, fontWeight: 700, color: "rgba(255,255,255,0.45)", textTransform: "uppercase", letterSpacing: 1.2 }}>Day {cDay.num} · {cDay.wd}</div>
-                <div style={{ fontSize: 22, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.1, marginTop: 4 }}>{meta.icon} {meta.theme || cDay.full}</div>
+                <div style={{ fontSize: 10, fontWeight: 700, color: "#0B4D3B", textTransform: "uppercase", letterSpacing: 1, opacity: 0.5 }}>Day {cDay.num} · {cDay.wd}</div>
+                <div style={{ fontSize: 20, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", lineHeight: 1.1, marginTop: 3, color: "#1B3B32" }}>{meta.icon} {meta.theme || cDay.full}</div>
               </div>
-              <div style={{ textAlign: "right", flexShrink: 0 }}>
-                <div style={{ fontSize: 20, fontWeight: 800, lineHeight: 1 }}>{cDay.md.split(" ")[1]}</div>
-                <div style={{ fontSize: 10, fontWeight: 600, color: "rgba(255,255,255,0.5)" }}>{cDay.md.split(" ")[0]}</div>
+              <div style={{ textAlign: "right", flexShrink: 0, background: "#1B3B32", borderRadius: 10, padding: "6px 10px", color: "#fff" }}>
+                <div style={{ fontSize: 18, fontWeight: 800, lineHeight: 1 }}>{cDay.md.split(" ")[1]}</div>
+                <div style={{ fontSize: 9, fontWeight: 600, opacity: 0.6 }}>{cDay.md.split(" ")[0]}</div>
               </div>
             </div>
-            {meta.brief && <div style={{ fontSize: 12, color: "rgba(255,255,255,0.65)", lineHeight: 1.5, marginTop: 8, fontStyle: "italic" }}>{meta.brief}</div>}
-            <div style={{ display: "flex", gap: 10, marginTop: 10 }}>
-              {meta.location && <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.8)", background: "rgba(255,255,255,0.12)", padding: "3px 10px", borderRadius: 6 }}>📍 {meta.location}</span>}
-              {dayItems.length > 0 && <span style={{ fontSize: 10, fontWeight: 700, color: "rgba(255,255,255,0.8)", background: "rgba(255,255,255,0.12)", padding: "3px 10px", borderRadius: 6 }}>{dayItems.length} {dayItems.length === 1 ? "stop" : "stops"}</span>}
+            {meta.brief && <div style={{ fontSize: 11, color: "#888", lineHeight: 1.5, marginTop: 6, fontStyle: "italic" }}>{meta.brief}</div>}
+            <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
+              {meta.location && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B", background: "#0B4D3B12", padding: "3px 10px", borderRadius: 6 }}>📍 {meta.location}</span>}
+              {dayItems.length > 0 && <span style={{ fontSize: 9, fontWeight: 700, color: "#0B4D3B", background: "#0B4D3B12", padding: "3px 10px", borderRadius: 6 }}>{dayItems.length} {dayItems.length === 1 ? "stop" : "stops"}</span>}
             </div>
           </div>
         </div>
@@ -1652,13 +1651,7 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
 
   return (
     <div style={{ padding: "0 0 100px" }}>
-      {/* Trip hero banner */}
-      <div style={{ background: "#1B3B32", padding: "20px 20px 16px", marginBottom: 12 }}>
-        <div style={{ fontSize: 28, fontWeight: 900, fontFamily: "'Playfair Display',Georgia,serif", color: "#fff", lineHeight: 1.1 }}>{trip?.name || "Panama 2026"}</div>
-        <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", marginTop: 4 }}>{trip?.subtitle || ""} · 📅 {days[0]?.md} — {days[days.length-1]?.md}</div>
-      </div>
-
-      <div style={{ padding: "0 16px" }}>
+      <div style={{ padding: "12px 16px 0" }}>
       {/* Two action cards */}
       <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
         {/* Discover Panama */}
@@ -1672,13 +1665,13 @@ const Explore = ({ mods, setMods, cal, setCal, days, occ, isAdmin, favs, setFavs
           </div>
         </button>
         {/* Trip progress */}
-        <button onClick={() => onShowOverview && onShowOverview()} style={{ flex: 1, background: "#FEFDFB", borderRadius: 16, border: "1px solid #eee", cursor: "pointer", height: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "10px 12px" }}>
-          <div style={{ fontSize: 26, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}<span style={{ fontSize: 13, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
-          <div style={{ fontSize: 10, fontWeight: 700, color: "#888", marginTop: 2 }}>days planned</div>
-          <div style={{ width: "80%", height: 5, borderRadius: 3, background: "#eee", overflow: "hidden", marginTop: 5 }}>
-            <div style={{ height: "100%", borderRadius: 3, background: "#0B4D3B", width: Math.round(plannedDays / days.length * 100) + "%" }} />
+        <button onClick={() => onShowOverview && onShowOverview()} style={{ flex: 1, background: "#FEFDFB", borderRadius: 16, border: "1px solid #eee", cursor: "pointer", height: 100, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "8px 12px" }}>
+          <div style={{ fontSize: 24, fontWeight: 800, color: "#0B4D3B" }}>{plannedDays}<span style={{ fontSize: 12, fontWeight: 600, color: "#aaa" }}>/{days.length}</span></div>
+          <div style={{ fontSize: 10, fontWeight: 700, color: "#888", marginTop: 1 }}>days planned</div>
+          <div style={{ width: "80%", height: 4, borderRadius: 2, background: "#eee", overflow: "hidden", marginTop: 4 }}>
+            <div style={{ height: "100%", borderRadius: 2, background: "#0B4D3B", width: Math.round(plannedDays / days.length * 100) + "%" }} />
           </div>
-          <span style={{ fontSize: 9, color: "#aaa", marginTop: 3 }}>{totalActivities} activities · View overview →</span>
+          <span style={{ fontSize: 9, color: "#aaa", marginTop: 3 }}>📅 {days[0]?.md} — {days[days.length-1]?.md}</span>
         </button>
       </div>
 
@@ -1976,16 +1969,16 @@ export default function App() {
       <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet" />
       <style>{`@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}} @keyframes fi{from{opacity:0}to{opacity:1}} @keyframes ci{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}} *{-webkit-tap-highlight-color:transparent} ::-webkit-scrollbar{display:none}`}</style>
 
-      {/* Shared fixed header — always visible on both tabs */}
-      <div style={{ background: "#fff", padding: "10px 16px 10px", borderBottom: "1px solid #eee", position: "sticky", top: 0, zIndex: 100 }}>
+      {/* Dark green header — always visible on both tabs */}
+      <div style={{ background: "#1B3B32", padding: "12px 16px 10px", position: "sticky", top: 0, zIndex: 100 }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div onClick={() => isAdmin ? sEditTrip(true) : sScr("welcome")} style={{ cursor: "pointer" }}>
-            <h1 style={{ margin: 0, fontSize: 15, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif" }}>{trip.name} {isAdmin && <span style={{ fontSize: 10, color: "#aaa" }}>✏️</span>}</h1>
-            <div style={{ fontSize: 10, color: "#999", marginTop: 1 }}>{trip.subtitle}{isAdmin && <span style={{ color: "#E53935", fontWeight: 800, marginLeft: 6 }}>ADMIN</span>}</div>
+            <h1 style={{ margin: 0, fontSize: 16, fontWeight: 800, fontFamily: "'Playfair Display',Georgia,serif", color: "#fff" }}>{trip.name} {isAdmin && <span style={{ fontSize: 10, color: "rgba(255,255,255,0.4)" }}>✏️</span>}</h1>
+            <div style={{ fontSize: 10, color: "rgba(255,255,255,0.45)", marginTop: 1 }}>{trip.subtitle}{isAdmin && <span style={{ color: "#FF8A80", fontWeight: 800, marginLeft: 6 }}>ADMIN</span>}</div>
           </div>
           <div style={{ display: "flex", gap: 5 }}>
-            <button onClick={() => setShowOv(true)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "#555" }}>📋 Trip Overview</button>
-            <button onClick={() => setShowInfo(true)} style={{ background: "linear-gradient(135deg,#E8F5E9,#C8E6C9)", border: "none", borderRadius: 10, padding: "6px 10px", fontSize: 10, fontWeight: 800, cursor: "pointer", color: "#2E7D32" }}>💡 Practical Info</button>
+            <button onClick={() => setShowOv(true)} style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "6px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "rgba(255,255,255,0.8)" }}>📋 Overview</button>
+            <button onClick={() => setShowInfo(true)} style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "6px 10px", fontSize: 10, fontWeight: 700, cursor: "pointer", color: "rgba(255,255,255,0.8)" }}>💡 Info</button>
           </div>
         </div>
       </div>
@@ -2199,22 +2192,26 @@ export default function App() {
         const ctx = ctxPrompts[assistCtx] || ctxPrompts.general;
         return (
         <SwipeSheet onClose={() => sAssist(false)} zIndex={500} maxH="85vh">
-            <div style={{ padding: "4px 20px 14px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                  <div style={{ width: 28, height: 28, borderRadius: 14, background: "linear-gradient(135deg, #0B4D3B, #1A6B52)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 14 }}>🤖</div>
-                  <div style={{ fontSize: 16, fontWeight: 800 }}>{ctx.title}</div>
+            {/* Green header */}
+            <div style={{ background: "#1B3B32", padding: "12px 20px 14px", borderRadius: "0", margin: "-1px 0 0" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 32, height: 32, borderRadius: 16, background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🤖</div>
+                  <div>
+                    <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>{ctx.title}</div>
+                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>Ask me anything about your trip</div>
+                  </div>
                 </div>
+                <button onClick={() => sAssist(false)} style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "6px 12px", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.8)", cursor: "pointer" }}>Close</button>
               </div>
-              <button onClick={() => sAssist(false)} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
             </div>
             <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
               {assistMsgs.length === 0 && (
-                <div style={{ padding: "12px 0" }}>
-                  <div style={{ background: "linear-gradient(135deg, #F7F6F3, #EEF2ED)", borderRadius: 16, padding: "18px 20px", marginBottom: 16 }}>
-                    <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>{ctx.sub}</div>
+                <div style={{ padding: "4px 0" }}>
+                  <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "16px 18px", marginBottom: 14 }}>
+                    <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>👋 I'm your virtual trip assistant for Panama. I know your full itinerary, all {mods.length} experiences, travel tips, weather, restaurants, and everything you need. Just ask!</div>
                   </div>
-                  <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Suggested questions</div>
+                  <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Try asking</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     {ctx.prompts.map(q => (
                       <button key={q} onClick={() => sAssistInput(q)} style={{ padding: "11px 14px", borderRadius: 12, border: "1.5px solid #eee", background: "#fff", fontSize: 13, fontWeight: 600, color: "#333", cursor: "pointer", textAlign: "left", display: "flex", alignItems: "center", gap: 8 }}>
