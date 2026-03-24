@@ -1968,12 +1968,13 @@ export default function App() {
   const [showInfo, setShowInfo] = useState(false);
   const [showAssist, sAssist] = useState(false);
   const [assistCtx, sAssistCtx] = useState("general");
+  const [assistMode, sAssistMode] = useState("full"); // "full" = tab bar, "quick" = floating
   const [assistMsgs, sAssistMsgs] = useState([]);
   const [assistInput, sAssistInput] = useState("");
   const [assistLoading, sAssistLoading] = useState(false);
   const [listening, sListening] = useState(false);
   const recognitionRef = useRef(null);
-  const openAssist = (ctx) => { sAssistCtx(ctx || "general"); sAssist(true); };
+  const openAssist = (ctx, mode) => { sAssistCtx(ctx || "general"); sAssistMode(mode || "full"); sAssist(true); };
   const [eventDetail, sEventDetail] = useState(null);
   const [evSlotPicker, sEvSlotPicker] = useState(false);
   const [overlayOpen, sOverlayOpen] = useState(false);
@@ -2209,7 +2210,7 @@ export default function App() {
           <span style={{ fontSize: 14 }}>📅</span>
           <span style={{ fontSize: 11, fontWeight: 700, color: tab === "itinerary" && !showAssist ? "#1B3B32" : "rgba(255,255,255,0.6)" }}>Itinerary</span>
         </button>
-        <button onClick={() => openAssist(tab === 'explore' ? 'explore' : 'itinerary')} style={{
+        <button onClick={() => openAssist(tab === 'explore' ? 'explore' : 'itinerary', 'full')} style={{
           flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 5,
           background: showAssist ? "#fff" : "transparent",
           border: "none", cursor: "pointer", padding: "10px 8px", borderRadius: 16,
@@ -2228,7 +2229,7 @@ export default function App() {
             Ask me anything! 👋
             <div style={{ position: "absolute", bottom: -5, right: 18, width: 10, height: 10, background: "#1B3B32", transform: "rotate(45deg)" }} />
           </div>}
-          <button onClick={() => { openAssist(showInfo ? "practical" : showOv ? "overview" : eventDetail ? "experience" : overlayOpen || "general"); try { localStorage.setItem("tb_assist_used", "1"); } catch {} }} style={{
+          <button onClick={() => { openAssist(showInfo ? "practical" : showOv ? "overview" : eventDetail ? "experience" : overlayOpen || "general", "quick"); try { localStorage.setItem("tb_assist_used", "1"); } catch {} }} style={{
             width: 48, height: 48, borderRadius: 24,
             background: "rgba(27,59,50,0.92)", backdropFilter: "blur(12px)", border: "none",
             boxShadow: "0 4px 16px rgba(11,77,59,0.35)", cursor: "pointer",
@@ -2249,26 +2250,38 @@ export default function App() {
           experience: { title: "Trip Assistant", sub: "Ask me anything about the experience you're viewing.", prompts: ["Do we need a reservation?", "Is it good for toddlers?", "What should we order?", "How long should we spend here?"] },
         };
         const ctx = ctxPrompts[assistCtx] || ctxPrompts.general;
+        const isQuick = assistMode === "quick";
         return (
-        <SwipeSheet onClose={() => sAssist(false)} zIndex={500} maxH="85vh">
+        <SwipeSheet onClose={() => sAssist(false)} zIndex={500} maxH={isQuick ? "55vh" : "85vh"}>
             {/* Green header */}
-            <div style={{ background: "#1B3B32", padding: "12px 20px 14px", borderRadius: "0", margin: "-1px 0 0" }}>
+            <div style={{ background: "#1B3B32", padding: isQuick ? "10px 20px 12px" : "12px 20px 14px", margin: "-1px 0 0" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                   <div style={{ width: 32, height: 32, borderRadius: 16, background: "rgba(255,255,255,0.15)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 16 }}>🤖</div>
                   <div>
-                    <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>{ctx.title}</div>
-                    <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>Ask me anything about your trip</div>
+                    <div style={{ fontSize: 15, fontWeight: 800, color: "#fff" }}>Trip Assistant</div>
+                    {!isQuick && <div style={{ fontSize: 9, color: "rgba(255,255,255,0.5)" }}>Your personal Panama guide</div>}
                   </div>
                 </div>
                 <button onClick={() => sAssist(false)} style={{ background: "rgba(255,255,255,0.12)", border: "1px solid rgba(255,255,255,0.2)", borderRadius: 10, padding: "6px 12px", fontSize: 12, fontWeight: 600, color: "rgba(255,255,255,0.8)", cursor: "pointer" }}>Close</button>
               </div>
             </div>
-            <div style={{ flex: 1, overflowY: "auto", padding: "16px 20px" }}>
-              {assistMsgs.length === 0 && (
+            <div style={{ flex: 1, overflowY: "auto", padding: isQuick ? "12px 20px" : "16px 20px" }}>
+              {assistMsgs.length === 0 && isQuick && (
+                <div style={{ textAlign: "center", padding: "20px 10px" }}>
+                  <div style={{ fontSize: 36, marginBottom: 8 }}>🤖</div>
+                  <div style={{ fontSize: 16, fontWeight: 800, color: "#1B3B32", fontFamily: "'Playfair Display',Georgia,serif" }}>How can I help?</div>
+                  <div style={{ fontSize: 12, color: "#999", marginTop: 4 }}>Ask me anything about this trip</div>
+                </div>
+              )}
+              {assistMsgs.length === 0 && !isQuick && (
                 <div style={{ padding: "4px 0" }}>
                   <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "16px 18px", marginBottom: 14 }}>
-                    <div style={{ fontSize: 13, color: "#555", lineHeight: 1.6 }}>👋 I'm your virtual trip assistant for Panama. I know your full itinerary, all {mods.length} experiences, travel tips, weather, restaurants, and everything you need. Just ask!</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "#1B3B32", marginBottom: 6 }}>👋 Hi! I'm your Trip Assistant</div>
+                    <div style={{ fontSize: 12, color: "#555", lineHeight: 1.6 }}>I know your full itinerary, all {mods.length} experiences, restaurants, activities, and practical details about Panama. Ask me anything — from "what should we order at Maito?" to "is Day 3 too packed?"</div>
+                  </div>
+                  <div style={{ background: "#F7F6F3", borderRadius: 14, padding: "14px 18px", marginBottom: 14 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: "#888", marginBottom: 6 }}>💡 You'll also see me as a floating 🤖 button when browsing experiences — tap it anytime for context-specific help.</div>
                   </div>
                   <div style={{ fontSize: 10, fontWeight: 700, color: "#aaa", textTransform: "uppercase", letterSpacing: 0.8, marginBottom: 8 }}>Try asking</div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
