@@ -300,6 +300,77 @@ const DragHandle = ({ onClose }) => {
   );
 };
 
+// ═══ EDIT EXPERIENCE MODAL (Admin) ═══
+const EMOJI_PICKS = ["🍽️","🍦","🍹","🥐","🐙","🐟","🏆","🍷","🍸","🌇","🧪","🚢","🚲","🌳","🏛️","🐒","🥾","🏚️","🌿","🎨","🌊","🦋","🌺","🌅","💦","♨️","🐸","✈️","🐕","🏡","🍖","🏗️","🏖️","👶","🚗","📌","🎪","⛪","🎬","🕯️","🎷","🧺"];
+
+const EditExperience = ({ mod, onSave, onDelete, onClose }) => {
+  const isNew = !mod;
+  const [data, setData] = useState(mod ? { ...mod } : { id: "x" + Date.now(), name: "", category: "activity", icon: "📌", vibe: "", notes: "", photo: "", thumb: "", rec: "worthit", mapsRating: 0, mapsReviews: "", hours: "", address: "", cost: "", tier: "extended", tags: [], bookingUrl: "" });
+  const [showEmoji, setShowEmoji] = useState(false);
+  const u = (k, v) => setData(p => ({ ...p, [k]: v }));
+  const IS = { width: "100%", boxSizing: "border-box", padding: "10px 14px", borderRadius: 10, border: "1.5px solid #e0e0e0", fontSize: 13, fontFamily: "inherit" };
+
+  return (
+    <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.5)", zIndex: 350, display: "flex", alignItems: "flex-end", justifyContent: "center" }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{ maxWidth: 430, width: "100%", background: "#fff", borderRadius: "24px 24px 0 0", maxHeight: "90vh", display: "flex", flexDirection: "column", animation: "su 0.25s ease-out" }}>
+        <DragHandle onClose={onClose} />
+        <div style={{ padding: "4px 20px 10px", borderBottom: "1px solid #f0f0f0", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <h3 style={{ margin: 0, fontSize: 16, fontWeight: 800 }}>{isNew ? "➕ New Experience" : "✏️ Edit Experience"}</h3>
+          <button onClick={onClose} style={{ background: "#f0f0f0", border: "none", borderRadius: 10, padding: "6px 12px", fontSize: 13, fontWeight: 600, color: "#888", cursor: "pointer" }}>Close</button>
+        </div>
+        <div style={{ flex: 1, overflowY: "auto", padding: "12px 20px 24px" }}>
+          {/* Icon + Name row */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <div style={{ position: "relative" }}>
+              <button onClick={() => setShowEmoji(!showEmoji)} style={{ width: 48, height: 48, borderRadius: 12, border: "1.5px solid #e0e0e0", background: "#FAFAF8", fontSize: 24, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>{data.icon || "📌"}</button>
+              {showEmoji && (
+                <div style={{ position: "absolute", top: 52, left: 0, background: "#fff", border: "1.5px solid #e0e0e0", borderRadius: 12, padding: 8, zIndex: 10, boxShadow: "0 4px 16px rgba(0,0,0,0.15)", display: "grid", gridTemplateColumns: "repeat(7, 1fr)", gap: 4, width: 240 }}>
+                  {EMOJI_PICKS.map(e => <button key={e} onClick={() => { u("icon", e); setShowEmoji(false); }} style={{ fontSize: 20, background: "none", border: "none", cursor: "pointer", padding: 4, borderRadius: 6 }}>{e}</button>)}
+                </div>
+              )}
+            </div>
+            <input value={data.name} onChange={e => u("name", e.target.value)} placeholder="Experience name" style={{ ...IS, flex: 1 }} />
+          </div>
+          {/* Vibe + Category */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <input value={data.vibe} onChange={e => u("vibe", e.target.value)} placeholder="Vibe (e.g. Cocktail Bar)" style={{ ...IS, flex: 1 }} />
+            <select value={data.category} onChange={e => u("category", e.target.value)} style={{ ...IS, flex: 1 }}>
+              {CATS.map(c => <option key={c.id} value={c.id}>{c.icon} {c.label}</option>)}
+            </select>
+          </div>
+          {/* Description */}
+          <textarea value={data.notes} onChange={e => u("notes", e.target.value)} placeholder="Description..." rows={4} style={{ ...IS, marginBottom: 10, resize: "vertical" }} />
+          {/* Photo URL */}
+          <input value={data.photo} onChange={e => u("photo", e.target.value)} placeholder="Photo URL (e.g. /photos/f1.webp)" style={{ ...IS, marginBottom: 6 }} />
+          <input value={data.thumb || ""} onChange={e => u("thumb", e.target.value)} placeholder="Thumbnail URL (e.g. /photos/f1_thumb.webp)" style={{ ...IS, marginBottom: 10 }} />
+          {/* Practical info */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <input value={data.hours || ""} onChange={e => u("hours", e.target.value)} placeholder="Hours" style={{ ...IS, flex: 1 }} />
+            <input value={data.cost || ""} onChange={e => u("cost", e.target.value)} placeholder="Cost" style={{ ...IS, flex: 1 }} />
+          </div>
+          <input value={data.address || ""} onChange={e => u("address", e.target.value)} placeholder="Address" style={{ ...IS, marginBottom: 10 }} />
+          <input value={data.bookingUrl || ""} onChange={e => u("bookingUrl", e.target.value)} placeholder="Booking URL (optional)" style={{ ...IS, marginBottom: 10 }} />
+          {/* Rating */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+            <input type="number" step="0.1" value={data.mapsRating || ""} onChange={e => u("mapsRating", parseFloat(e.target.value) || 0)} placeholder="Google rating" style={{ ...IS, flex: 1 }} />
+            <input value={data.mapsReviews || ""} onChange={e => u("mapsReviews", e.target.value)} placeholder="Reviews count" style={{ ...IS, flex: 1 }} />
+          </div>
+          {/* Tier */}
+          <div style={{ display: "flex", gap: 6, marginBottom: 14 }}>
+            {["curated", "extended"].map(t => (
+              <button key={t} onClick={() => u("tier", t)} style={{ flex: 1, padding: 10, borderRadius: 10, border: "none", background: data.tier === t ? "#0B4D3B" : "#f0f0f0", color: data.tier === t ? "#fff" : "#888", fontSize: 12, fontWeight: 700, cursor: "pointer" }}>{t === "curated" ? "⭐ Chris's Pick" : "📋 Extended"}</button>
+            ))}
+          </div>
+          {/* Save / Delete */}
+          <button disabled={!data.name.trim()} onClick={() => data.name.trim() && onSave(data)} style={{ width: "100%", padding: 14, borderRadius: 14, border: "none", background: data.name.trim() ? "#0B4D3B" : "#ccc", color: "#fff", fontSize: 15, fontWeight: 700, cursor: data.name.trim() ? "pointer" : "default", marginBottom: 8 }}>💾 Save</button>
+          {onDelete && mod && <button onClick={() => { if (window.confirm("Delete this experience?")) onDelete(mod.id); }} style={{ width: "100%", padding: 12, borderRadius: 12, border: "1.5px solid #FFCDD2", background: "#FFF5F5", color: "#E53935", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>🗑️ Delete Experience</button>}
+        </div>
+      </div>
+    </div>
+  );
+};
+const EditModal = EditExperience; // alias for Explore component
+
 // ═══ MAP POPUP ═══
 const MapPopup = ({ mod, onClose }) => {
   const q = encodeURIComponent(mod.name + " " + (mod.address || "") + " Panama");
@@ -703,6 +774,8 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
   const [mapMod, sMap] = useState(null);
   const [itinDetail, sItinDetail] = useState(null);
   const [dragIdx, sDragIdx] = useState(null);
+  const [dragY, sDragY] = useState(0);
+  const [dragMod, sDragMod] = useState(null);
   const [editMod, sEditMod] = useState(undefined);
   const [travelEdit, sTravelEdit] = useState(null); // index of item being travel-edited
   const dRef = useRef(null);
@@ -955,21 +1028,28 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
                   <div style={{ width: 60, flexShrink: 0, position: "relative" }}><Vis mod={mod} cat={cat} h="100%" st={{ position: "absolute", inset: 0 }} /></div>
                   {/* Drag handle — dark green with white dots */}
                   <div style={{ width: 26, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", cursor: "grab", touchAction: "none", background: "#1B3B32", borderRadius: "0 14px 14px 0" }}
-                    onTouchStart={e => { touchRef.current = { idx, y: e.touches[0].clientY }; sDragIdx(idx); }}
+                    onTouchStart={e => {
+                      const y = e.touches[0].clientY;
+                      touchRef.current = { idx, y, startY: y };
+                      sDragIdx(idx); sDragY(y); sDragMod(mod);
+                    }}
                     onTouchMove={e => {
                       if (!touchRef.current) return;
-                      const dy = e.touches[0].clientY - touchRef.current.y;
+                      e.preventDefault();
+                      const cy = e.touches[0].clientY;
+                      sDragY(cy);
+                      const dy = cy - touchRef.current.y;
                       const step = 80;
                       const offset = Math.round(dy / step);
                       if (offset !== 0) {
                         const newIdx = Math.max(0, Math.min(dayItems.length - 1, touchRef.current.idx + offset));
                         if (newIdx !== idx) {
                           moveItem(idx, newIdx);
-                          touchRef.current = { idx: newIdx, y: e.touches[0].clientY };
+                          touchRef.current = { idx: newIdx, y: cy, startY: touchRef.current.startY };
                         }
                       }
                     }}
-                    onTouchEnd={() => { touchRef.current = null; sDragIdx(null); }}
+                    onTouchEnd={() => { touchRef.current = null; sDragIdx(null); sDragMod(null); }}
                     onClick={e => e.stopPropagation()}
                   >
                     <svg width="8" height="18" viewBox="0 0 8 18">
@@ -992,6 +1072,24 @@ const Itin = ({ trip, mods, setMods, cal, setCal, onBack, initDay, events, onSho
             </div>
           );
         })}
+
+        {/* Floating drag overlay — follows finger */}
+        {dragMod && dragIdx !== null && (
+          <div style={{
+            position: "fixed", left: 16, right: 16, maxWidth: 400,
+            top: dragY - 34, zIndex: 300, pointerEvents: "none",
+            transform: "scale(1.03)", opacity: 0.92,
+          }}>
+            <div style={{ background: "#FEFDFB", borderRadius: 16, overflow: "hidden", border: "2px solid #0B4D3B", boxShadow: "0 8px 32px rgba(0,0,0,0.18)", display: "flex", minHeight: 68 }}>
+              <div style={{ width: 56, flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "8px 0" }}>
+                <span style={{ fontSize: 20 }}>{dragMod.icon || "📍"}</span>
+              </div>
+              <div style={{ flex: 1, padding: "10px 12px", borderLeft: "3px solid #0B4D3B", display: "flex", alignItems: "center" }}>
+                <span style={{ fontSize: 14, fontWeight: 700, fontFamily: "'Playfair Display',Georgia,serif" }}>{dragMod.name}</span>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Events for this day */}
         {(() => {
